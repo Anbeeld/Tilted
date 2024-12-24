@@ -1,0 +1,26 @@
+{
+  "name": "tilted",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {},
+  "keywords": [
+    "map",
+    "game"
+  ],
+  "author": "Anbeeld <anbeeld@gmail.com>",
+  "license": "MIT",
+  "description": "Tilted is a lightweight TS library for displaying game maps and other content in a modern way.",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "bezier-easing": "^2.1.0",
+    "uuid": "^11.0.3"
+  },
+  "type": "module"
+}

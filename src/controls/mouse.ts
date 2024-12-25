@@ -9,10 +9,11 @@ export interface MouseParams {
 
 export function getMouseParams(event: MouseEvent|TouchEvent, surface: Surface) : MouseParams {
   let bounds = surface.elements.container.getBoundingClientRect();
+  let isTouchEvent = window.TouchEvent && event instanceof TouchEvent;
   return {
-    button: (event instanceof TouchEvent ? 0 : event.button),
-    x: (event instanceof TouchEvent ? event.touches[0].clientX - bounds.left : event.clientX - bounds.left),
-    y: (event instanceof TouchEvent ? event.touches[0].clientY - bounds.top : event.clientY - bounds.top)
+    button: (isTouchEvent ? 0 : (event as MouseEvent).button),
+    x: (isTouchEvent ? (event as TouchEvent).touches[0].clientX - bounds.left : (event as MouseEvent).clientX - bounds.left),
+    y: (isTouchEvent ? (event as TouchEvent).touches[0].clientY - bounds.top : (event as MouseEvent).clientY - bounds.top)
   };
 }
 

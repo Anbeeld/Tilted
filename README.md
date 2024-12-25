@@ -1,6 +1,7 @@
 # Tilted
 
 Tilted is a lightweight TS library for displaying game maps and other content in a modern way.
+
 Here's [live example](https://anbeeld.github.io/Tilted) via GitHub Pages.
 
 ## Features
@@ -14,11 +15,12 @@ Here's [live example](https://anbeeld.github.io/Tilted) via GitHub Pages.
 
 ## Installation
 
-`npm i tilted` or grab [JS dist file](https://github.com/Anbeeld/tilted/dist) from GitHub repo.
+`npm i tilted` or grab [JS dist file](https://github.com/Anbeeld/Tilted/tree/main/dist) from GitHub repo.
 
 ## Usage
 
 `import Tilted from 'tilted'` if using npm
+
 `new Tilted(container, surface, config?)`
 
 `surface` is HTML element with content, and `container` is HTML element used to determine viewport size that has `surface` as a child. Fixed width and height are preferred for both.

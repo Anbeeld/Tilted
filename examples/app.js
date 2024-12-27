@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
     });
     return;
   } else if (req.url === '/map.jpg') {
-    fs.readFile('./example/map.jpg', function(err, data) {
+    fs.readFile('./examples/map.jpg', function(err, data) {
       if (err) {
         res.statusCode = 500;
         res.end(`Error getting the file: ${err}.`);
@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
     });
     return;
   } else if (req.url === '/html') {
-    fs.readFile('./example/html.html', function(err, data) {
+    fs.readFile('./examples/html.html', function(err, data) {
       if (err) {
         res.statusCode = 500;
         res.end(`Error getting the file: ${err}.`);
@@ -42,7 +42,7 @@ const server = http.createServer((req, res) => {
     });
     return;
   } else if (req.url === '/image') {
-    fs.readFile('./example/image.html', function(err, data) {
+    fs.readFile('./examples/image.html', function(err, data) {
       if (err) {
         res.statusCode = 500;
         res.end(`Error getting the file: ${err}.`);
@@ -54,7 +54,7 @@ const server = http.createServer((req, res) => {
     });
     return;
   } else if (req.url === '/') {
-    fs.readFile('./example/index.html', function(err, data) {
+    fs.readFile('./examples/index.html', function(err, data) {
       if (err) {
         res.statusCode = 500;
         res.end(`Error getting the file: ${err}.`);

@@ -1,8 +1,12 @@
+[![NPM](https://img.shields.io/npm/v/tilted?label=NPM)](https://www.npmjs.com/package/tilted)
+
 # Tilted
 
 Tilted is a lightweight TS library for displaying game maps and other content in a modern way.
 
 Here's [live example](https://anbeeld.github.io/Tilted) via GitHub Pages.
+
+[![Support my work!](https://raw.githubusercontent.com/Anbeeld/Anbeeld.github.io/refs/heads/main/support/button.jpg)](https://anbeeld.github.io/support/)
 
 ## Features
 

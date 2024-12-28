@@ -11,10 +11,10 @@ export default class Scale {
     this._value = value;
 
     this.surface.updateSkew(this._value);
-    this.surface.elements.scale.classList.add('tilted-notransition-' + this.surface.uuid);
+    this.surface.elements.scale.classList.add('tilted-notransition-' + this.surface.id);
     this.surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this.surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotate3d(1, 0, 0, ' + this.surface.skew.x + 'deg)';
     this.surface.elements.scale.offsetHeight;
-    this.surface.elements.scale.classList.remove('tilted-notransition-' + this.surface.uuid);
+    this.surface.elements.scale.classList.remove('tilted-notransition-' + this.surface.id);
   }
 
   public get value() : number {

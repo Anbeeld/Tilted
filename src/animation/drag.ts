@@ -1,11 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import Surface from '../index.js';
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
+import Raoi from 'raoi';
 
 export default class AnimationSurfaceDrag extends Animation {
-  public id: string;
+  public id: number = Raoi.new(this);
   private prev = {x: 0, y: 0};
   private cumulated = {x: 0, y: 0};
 
@@ -14,7 +13,6 @@ export default class AnimationSurfaceDrag extends Animation {
 
     this.surface.cancelOngoingMoves();
 
-    this.id = uuidv4();
     this.prev = {
       x: mouse.x,
       y: mouse.y

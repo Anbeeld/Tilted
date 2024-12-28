@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { roundFloat, clamp } from './utils.js';
 import { ConfigProperties, setupConfig } from './config.js';
 import { initControls } from './controls/controls.js';
+import Raoi from 'raoi';
 
 import AnimationExecutor from './animation/executor.js';
 import AnimationStorage from './animation/storage.js';
@@ -26,7 +25,7 @@ interface SurfaceStyles {
 }
 
 export default class Surface {
-  public uuid: string = uuidv4();
+  public id: number = Raoi.new(this);
 
   public CONFIG: ConfigProperties;
 
@@ -71,25 +70,25 @@ export default class Surface {
   }
 
   private setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {
-    elementContainer.classList.add('tilted-container-' + this.uuid);
+    elementContainer.classList.add('tilted-container-' + this.id);
 
     let elementViewport = document.createElement('div');
-    elementViewport.classList.add('tilted-viewport-' + this.uuid);
+    elementViewport.classList.add('tilted-viewport-' + this.id);
 
     let elementScale = document.createElement('div');
-    elementScale.classList.add('tilted-scale-' + this.uuid);
+    elementScale.classList.add('tilted-scale-' + this.id);
 
     let elementPosition = document.createElement('div');
-    elementPosition.classList.add('tilted-position-' + this.uuid);
+    elementPosition.classList.add('tilted-position-' + this.id);
 
-    elementMap.classList.add('tilted-surface-' + this.uuid);
+    elementMap.classList.add('tilted-surface-' + this.id);
 
     let elementControls = document.createElement('div');
-    elementControls.classList.add('tilted-controls-' + this.uuid);
+    elementControls.classList.add('tilted-controls-' + this.id);
     let elementControlsZoomIn = document.createElement('div');
-    elementControlsZoomIn.classList.add('tilted-controls-zoom-in-' + this.uuid);
+    elementControlsZoomIn.classList.add('tilted-controls-zoom-in-' + this.id);
     let elementControlsZoomOut = document.createElement('div');
-    elementControlsZoomOut.classList.add('tilted-controls-zoom-out-' + this.uuid);
+    elementControlsZoomOut.classList.add('tilted-controls-zoom-out-' + this.id);
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
@@ -113,12 +112,12 @@ export default class Surface {
 
   private setupStyles() : SurfaceStyles {
     let elementStyleStatic = document.createElement('style');
-    elementStyleStatic.classList.add('tilted-css-static-' + this.uuid);
+    elementStyleStatic.classList.add('tilted-css-static-' + this.id);
     elementStyleStatic.innerHTML = generateCssStatic(this);
     document.head.appendChild(elementStyleStatic);
 
     let elementStyleDynamic = document.createElement('style');
-    elementStyleDynamic.classList.add('tilted-css-dynamic-' + this.uuid);
+    elementStyleDynamic.classList.add('tilted-css-dynamic-' + this.id);
     elementStyleDynamic.innerHTML = generateCssDynamic(this);
     document.head.appendChild(elementStyleDynamic);
 

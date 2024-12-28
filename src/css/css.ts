@@ -2,23 +2,23 @@ import Surface from '../index.js';
 
 export function generateCssDynamic(surface: Surface) {
   return `
-  @property --tilted-container-width-` + surface.uuid + ` {
+  @property --tilted-container-width-` + surface.id + ` {
     syntax: "<length>";
     inherits: true;
     initial-value: ` + surface.containerWidth + `px;
   }
-  @property --tilted-container-height-` + surface.uuid + ` {
+  @property --tilted-container-height-` + surface.id + ` {
     syntax: "<length>";
     inherits: true;
     initial-value: ` + surface.containerHeight + `px;
   }
 
-  @property --tilted-surface-width-` + surface.uuid + ` {
+  @property --tilted-surface-width-` + surface.id + ` {
     syntax: "<length>";
     inherits: true;
     initial-value: ` + surface.surfaceWidth + `px;
   }
-  @property --tilted-surface-height-` + surface.uuid + ` {
+  @property --tilted-surface-height-` + surface.id + ` {
     syntax: "<length>";
     inherits: true;
     initial-value: ` + surface.surfaceHeight + `px;
@@ -46,7 +46,7 @@ export function generateCssStatic(surface: Surface) {
 
   string += `
 
-  .tilted-container-` + surface.uuid + ` {
+  .tilted-container-` + surface.id + ` {
     position: relative !important;
 
     cursor: move;
@@ -62,13 +62,13 @@ export function generateCssStatic(surface: Surface) {
     user-select: none;
   }
 
-  .tilted-container-` + surface.uuid + `:active {
+  .tilted-container-` + surface.id + `:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
   }
 
-  .tilted-controls-` + surface.uuid + ` {
+  .tilted-controls-` + surface.id + ` {
     position: absolute;
     top: 100px;
     right: 30px;
@@ -79,8 +79,8 @@ export function generateCssStatic(surface: Surface) {
     overflow: hidden;
   }
 
-  .tilted-controls-zoom-in-` + surface.uuid + `,
-  .tilted-controls-zoom-out-` + surface.uuid + ` {
+  .tilted-controls-zoom-in-` + surface.id + `,
+  .tilted-controls-zoom-out-` + surface.id + ` {
     position: relative;
     width: 30px;
     height: 30px;
@@ -88,61 +88,61 @@ export function generateCssStatic(surface: Surface) {
     cursor: pointer;
     box-sizing: content-box;
   }
-  .tilted-controls-zoom-in-` + surface.uuid + `{
+  .tilted-controls-zoom-in-` + surface.id + `{
     border-bottom: 1px solid #444444;
   }
-  .tilted-controls-zoom-in-` + surface.uuid + `:active,
-  .tilted-controls-zoom-out-` + surface.uuid + `:active {
+  .tilted-controls-zoom-in-` + surface.id + `:active,
+  .tilted-controls-zoom-out-` + surface.id + `:active {
     background: #ffffff;
   }
   
     
 
   
-  .tilted-controls-zoom-in-` + surface.uuid + `:before,
-  .tilted-controls-zoom-in-` + surface.uuid + `:after,
-  .tilted-controls-zoom-out-` + surface.uuid + `:before {
+  .tilted-controls-zoom-in-` + surface.id + `:before,
+  .tilted-controls-zoom-in-` + surface.id + `:after,
+  .tilted-controls-zoom-out-` + surface.id + `:before {
     content: "";
     display: block;
     position: absolute;
     background: #444444;
   }
 
-  .tilted-controls-zoom-in-` + surface.uuid + `:before,
-  .tilted-controls-zoom-out-` + surface.uuid + `:before {
+  .tilted-controls-zoom-in-` + surface.id + `:before,
+  .tilted-controls-zoom-out-` + surface.id + `:before {
     height: 2px;
     width: 18px;
     top: 14px;
     left: 6px;
   }
-  .tilted-controls-zoom-in-` + surface.uuid + `:after {
+  .tilted-controls-zoom-in-` + surface.id + `:after {
     height: 18px;
     width: 2px;
     top: 6px;
     left: 14px;
   }
   
-  .tilted-viewport-` + surface.uuid + ` {
-    width: var(--tilted-surface-width-` + surface.uuid + `) !important;
-    height: var(--tilted-surface-height-` + surface.uuid + `) !important;
+  .tilted-viewport-` + surface.id + ` {
+    width: var(--tilted-surface-width-` + surface.id + `) !important;
+    height: var(--tilted-surface-height-` + surface.id + `) !important;
   
     position: relative !important;
   
     will-change: top, left;
   }
   
-  .tilted-scale-` + surface.uuid + ` {   
-    width: var(--tilted-surface-width-` + surface.uuid + `) !important;
-    height: var(--tilted-surface-height-` + surface.uuid + `) !important;
+  .tilted-scale-` + surface.id + ` {   
+    width: var(--tilted-surface-width-` + surface.id + `) !important;
+    height: var(--tilted-surface-height-` + surface.id + `) !important;
   
     transition: transform var(--ANIMATION_SCALE_TIME) !important;
   
     will-change: transform;
   }
   
-  .tilted-position-` + surface.uuid + ` {
-    width: var(--tilted-surface-width-` + surface.uuid + `) !important;
-    height: var(--tilted-surface-height-` + surface.uuid + `) !important;
+  .tilted-position-` + surface.id + ` {
+    width: var(--tilted-surface-width-` + surface.id + `) !important;
+    height: var(--tilted-surface-height-` + surface.id + `) !important;
 
     position: relative !important;
     top: 0;
@@ -151,7 +151,7 @@ export function generateCssStatic(surface: Surface) {
     will-change: transform;
   }
   
-  .tilted-surface-` + surface.uuid + ` {
+  .tilted-surface-` + surface.id + ` {
     position: relative !important;
     
     overflow: visible !important;
@@ -159,7 +159,7 @@ export function generateCssStatic(surface: Surface) {
     z-index: 100 !important;
   }
     
-  .tilted-notransition-` + surface.uuid + ` {
+  .tilted-notransition-` + surface.id + ` {
     -webkit-transition: none !important;
     -moz-transition: none !important;
     -o-transition: none !important;

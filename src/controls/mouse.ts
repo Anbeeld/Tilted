@@ -12,8 +12,8 @@ export function getMouseParams(event: MouseEvent|TouchEvent, surface: Surface) :
   let isTouchEvent = window.TouchEvent && event instanceof TouchEvent;
   return {
     button: (isTouchEvent ? 0 : (event as MouseEvent).button),
-    x: (isTouchEvent ? (event as TouchEvent).touches[0].clientX - bounds.left : (event as MouseEvent).clientX - bounds.left),
-    y: (isTouchEvent ? (event as TouchEvent).touches[0].clientY - bounds.top : (event as MouseEvent).clientY - bounds.top)
+    x: (isTouchEvent ? (event as TouchEvent).touches[0]!.clientX - bounds.left : (event as MouseEvent).clientX - bounds.left),
+    y: (isTouchEvent ? (event as TouchEvent).touches[0]!.clientY - bounds.top : (event as MouseEvent).clientY - bounds.top)
   };
 }
 

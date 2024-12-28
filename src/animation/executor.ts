@@ -1,14 +1,11 @@
-import Surface from '../index.js';
 import AnimationStorage from './storage.js';
 
 export default class AnimationExecutor {
-  private surface: Surface;
   private animationStorage: AnimationStorage;
 
   private executing: boolean = false;
   
-  constructor(surface: Surface, animationStorage: AnimationStorage) {
-    this.surface = surface;
+  constructor(animationStorage: AnimationStorage) {
     this.animationStorage = animationStorage;
   }
 

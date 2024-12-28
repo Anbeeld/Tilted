@@ -59,7 +59,7 @@ export default class Surface {
     this.styles = this.setupStyles();
 
     this.animationStorage = new AnimationStorage(this);
-    this.animationExecutor = new AnimationExecutor(this, this.animationStorage);
+    this.animationExecutor = new AnimationExecutor(this.animationStorage);
 
     initControls(this);
 

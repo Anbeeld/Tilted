@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import Surface from '../index.js';
-import { MouseParams, getMouseParams } from '../controls/mouse.js';
+import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
 
 export default class AnimationSurfaceDrag extends Animation {
@@ -35,7 +35,7 @@ export default class AnimationSurfaceDrag extends Animation {
     return wasMoved;
   }
 
-  public destroy() : void {
+  public override destroy() : void {
     if (performance.now() - this.timestampStart < this.surface.CONFIG.DURATION_FOR_THROW.VALUE) {
       this.throw();
     }

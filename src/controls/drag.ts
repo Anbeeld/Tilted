@@ -1,5 +1,5 @@
 import Surface from '../index.js';
-import { MouseParams, getMouseParams } from '../controls/mouse.js';
+import { getMouseParams } from '../controls/mouse.js';
 
 export function initDrag(surface: Surface) {
   function moveToDrag(event: MouseEvent|TouchEvent) : void {

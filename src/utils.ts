@@ -40,3 +40,39 @@ export function clamp(value: number, min: number, max: number) : number {
 export function clampRatio(value: number) : number {
   return clamp(value, -1, 1);
 }
+
+export enum EasingFunctions {
+  EaseInOutSine = 'easeInOutSine',
+  EaseInOutQuad = 'easeInOutQuad',
+  EaseInOutCubic = 'easeInOutCubic',
+  EaseInOutQuart = 'easeInOutQuart',
+  EaseInOutQuint = 'easeInOutQuint',
+  EaseInOutExpo = 'easeInOutExpo',
+  EaseInOutCirc = 'easeInOutCirc'
+}
+
+export function applyEasingFunction(x: number, easingFunction: EasingFunctions = EasingFunctions.EaseInOutSine) : number {
+  switch (easingFunction) {
+    case EasingFunctions.EaseInOutSine:
+      return -(Math.cos(Math.PI * x) - 1) / 2;
+    case EasingFunctions.EaseInOutQuad:
+      return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    case EasingFunctions.EaseInOutCubic:
+      return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    case EasingFunctions.EaseInOutQuart:
+      return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+    case EasingFunctions.EaseInOutQuint:
+      return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+    case EasingFunctions.EaseInOutExpo:
+      return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+    case EasingFunctions.EaseInOutCirc:
+      return x < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
+  }
+}
+
+// https://stackoverflow.com/a/66836940
+export function nameOfProperty<T>(obj: T, expression: (x: { [Property in keyof T]: () => string }) => () => string): string {
+  const res: { [Property in keyof T]: () => string } = {} as { [Property in keyof T]: () => string };
+  Object.keys(obj!).map(k => res[k as keyof T] = () => k);
+  return expression(res)();
+}

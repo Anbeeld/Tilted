@@ -1,26 +1,19 @@
-import { roundFloat, clampRatio } from '../utils.js';
+import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '../utils.js';
 import Animation from './animation.js';
-import bezierEasing from 'bezier-easing';
 import Surface from '../index.js';
 
 export default class AnimationSurfaceGlide extends Animation {
-
   private _initial: {x: number, y: number};
-
   private _vector: {
     x: {value: number, sign: number},
     y: {value: number, sign: number}
   };
-
   private _current: {x: number, y: number} = {x: 0, y: 0};
-
   private _target: {x: number, y: number};
-
-  private _bezierEasing: any;
-
+  private _bezierEasing: EasingFunctions;
   private _animationTime: number;
 
-  constructor(surface: Surface, vector: {x: number, y: number}, animationTime: number, easingFormula: [number, number, number, number]) {
+  constructor(surface: Surface, vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) {
     super(surface);
 
     this._initial = {
@@ -46,7 +39,7 @@ export default class AnimationSurfaceGlide extends Animation {
 
     this._animationTime = animationTime;
 
-    this._bezierEasing = bezierEasing(easingFormula[0], easingFormula[1], easingFormula[2], easingFormula[3]);
+    this._bezierEasing = easingFormula;
 
     this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this._vector.x.value + ', y ' + this._vector.y.value + ', initial.x ' + this._initial.x + ', initial.y ' + this._initial.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
   }
@@ -57,7 +50,7 @@ export default class AnimationSurfaceGlide extends Animation {
     }
 
     let timeRatio = clampRatio((timestampCurrent - this._timestampStart) / this._animationTime);
-    let moveRatio = clampRatio(this._bezierEasing(timeRatio));
+    let moveRatio = clampRatio(applyEasingFunction(timeRatio, this._bezierEasing));
 
     if (moveRatio >= 1) {
 

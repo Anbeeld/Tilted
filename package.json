@@ -14,13 +14,13 @@
   "repository": "github:Anbeeld/Tilted",
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "terser-webpack-plugin": "^5.3.11",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "bezier-easing": "^2.1.0",
     "raoi": "^0.2.1"
   },
   "type": "module"

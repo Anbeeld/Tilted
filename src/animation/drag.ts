@@ -2,6 +2,7 @@ import Surface from '../index.js';
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
 import Raoi from 'raoi';
+import { EasingFunctions } from '../utils.js';
 
 export default class AnimationSurfaceDrag extends Animation {
   public id: number = Raoi.new(this);
@@ -46,7 +47,7 @@ export default class AnimationSurfaceDrag extends Animation {
         x: this._cumulated.x * this._surface.CONFIG.THROW_MULTIPLIER.VALUE,
         y: this._cumulated.y * this._surface.CONFIG.THROW_MULTIPLIER.VALUE
       },
-      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, [0, 0.55, 0.45, 1]
+      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, EasingFunctions.EaseInOutCubic
     );
   }
 }

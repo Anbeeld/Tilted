@@ -3,6 +3,7 @@ import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
 import Surface from '../index.js';
 import { MouseParams } from '../controls/mouse.js';
+import { EasingFunctions } from '../utils.js';
 
 export default class AnimationStorage {
   private _surface: Surface;
@@ -15,7 +16,7 @@ export default class AnimationStorage {
     this._surface = surface;
   }
   
-  public createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: [number, number, number, number]) : void {
+  public createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) : void {
     this.surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);
   }
   public destroySurfaceGlide() : void {

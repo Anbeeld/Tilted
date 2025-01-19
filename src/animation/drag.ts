@@ -47,7 +47,7 @@ export default class AnimationSurfaceDrag extends Animation {
         x: this._cumulated.x * this._surface.CONFIG.THROW_MULTIPLIER.VALUE,
         y: this._cumulated.y * this._surface.CONFIG.THROW_MULTIPLIER.VALUE
       },
-      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, EasingFunctions.EaseInOutCubic
+      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, EasingFunctions.EaseOutCirc
     );
   }
 }

@@ -41,6 +41,7 @@ export function clampRatio(value: number) : number {
   return clamp(value, -1, 1);
 }
 
+// https://easings.net
 export enum EasingFunctions {
   EaseInOutSine = 'easeInOutSine',
   EaseInOutQuad = 'easeInOutQuad',
@@ -48,6 +49,7 @@ export enum EasingFunctions {
   EaseInOutQuart = 'easeInOutQuart',
   EaseInOutQuint = 'easeInOutQuint',
   EaseInOutExpo = 'easeInOutExpo',
+  EaseOutCirc = 'easeOutCirc',
   EaseInOutCirc = 'easeInOutCirc'
 }
 
@@ -65,6 +67,8 @@ export function applyEasingFunction(x: number, easingFunction: EasingFunctions =
       return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
     case EasingFunctions.EaseInOutExpo:
       return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+    case EasingFunctions.EaseOutCirc:
+      return Math.sqrt(1 - Math.pow(x - 1, 2));
     case EasingFunctions.EaseInOutCirc:
       return x < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
   }

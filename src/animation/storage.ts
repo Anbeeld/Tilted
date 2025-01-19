@@ -5,18 +5,18 @@ import Surface from '../index.js';
 import { MouseParams } from '../controls/mouse.js';
 
 export default class AnimationStorage {
-  private surface: Surface;
+  private _surface: Surface;
 
   public surfaceGlide: AnimationSurfaceGlide | null = null;
   public surfaceEdge: AnimationSurfaceEdge | null = null;
   public surfaceDrag: AnimationSurfaceDrag | null = null;
   
   constructor(surface: Surface) {
-    this.surface = surface;
+    this._surface = surface;
   }
   
   public createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: [number, number, number, number]) : void {
-    this.surfaceGlide = new AnimationSurfaceGlide(this.surface, vector, animationTime, easingFormula);
+    this.surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);
   }
   public destroySurfaceGlide() : void {
     if (this.surfaceGlideIsSet()) {
@@ -29,7 +29,7 @@ export default class AnimationStorage {
   }
   
   public createSurfaceEdge(vector: {x: number, y: number}) : void {
-    this.surfaceEdge = new AnimationSurfaceEdge(this.surface, vector);
+    this.surfaceEdge = new AnimationSurfaceEdge(this._surface, vector);
   }
   public destroySurfaceEdge() : void {
     if (this.surfaceEdgeIsSet()) {
@@ -42,7 +42,7 @@ export default class AnimationStorage {
   }
 
   public createSurfaceDrag(mouse: MouseParams) : void {
-    this.surfaceDrag = new AnimationSurfaceDrag(this.surface, mouse);
+    this.surfaceDrag = new AnimationSurfaceDrag(this._surface, mouse);
   }
   public destroySurfaceDrag() : void {
     if (this.surfaceDragIsSet()) {

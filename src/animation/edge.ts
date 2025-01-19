@@ -2,20 +2,20 @@ import Surface from '../index.js';
 import Animation from './animation.js';
 
 export default class AnimationSurfaceEdge extends Animation {
-  private vector: {x: number, y: number};
+  private _vector: {x: number, y: number};
 
   constructor(surface: Surface, vector: {x: number, y: number}) {
     super(surface);
 
-    this.vector = vector;
+    this._vector = vector;
   }
 
   public update(vector: {x: number, y: number}) : void {
-    if (this.vector.x !== vector.x) {
-      this.vector.x = vector.x;
+    if (this._vector.x !== vector.x) {
+      this._vector.x = vector.x;
     }
-    if (this.vector.y !== vector.y) {
-      this.vector.y = vector.y;
+    if (this._vector.y !== vector.y) {
+      this._vector.y = vector.y;
     }
   }
 
@@ -24,13 +24,13 @@ export default class AnimationSurfaceEdge extends Animation {
       return false;
     }
 
-    let timeFactor = Math.max(1, (timestampCurrent - this.timestampLast)) / 10;
+    let timeFactor = Math.max(1, (timestampCurrent - this._timestampLast)) / 10;
 
-    let x = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE * this.vector.x / this.surface.scale.value * timeFactor;
-    let y = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE  * this.vector.y / this.surface.scale.value * timeFactor;
+    let x = this._surface.CONFIG.EDGE_MOVE_SPEED.VALUE * this._vector.x / this._surface.scale.value * timeFactor;
+    let y = this._surface.CONFIG.EDGE_MOVE_SPEED.VALUE  * this._vector.y / this._surface.scale.value * timeFactor;
 
-    this.timestampLast = timestampCurrent;
+    this._timestampLast = timestampCurrent;
     
-    return this.surface.move({x, y});
+    return this._surface.move({x, y});
   }
 }

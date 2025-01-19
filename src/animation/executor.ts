@@ -1,52 +1,52 @@
 import AnimationStorage from './storage.js';
 
 export default class AnimationExecutor {
-  private animationStorage: AnimationStorage;
+  private _animationStorage: AnimationStorage;
 
-  private executing: boolean = false;
+  private _isExecuting: boolean = false;
   
   constructor(animationStorage: AnimationStorage) {
-    this.animationStorage = animationStorage;
+    this._animationStorage = animationStorage;
   }
 
   public initiate() : void {
-    if (!this.executing) {
-      this.executing = true;
-      this.step();
+    if (!this._isExecuting) {
+      this._isExecuting = true;
+      this._step();
     }
   }
 
-  private step() : void {
+  private _step() : void {
     let timestampCurrent = performance.now();
     requestAnimationFrame(() => {
-      this.executing = false || this.stepSurfaceGlide(timestampCurrent) || this.stepSurfaceEdge(timestampCurrent);
-      if (this.executing) {
-        this.step();
+      this._isExecuting = false || this._stepSurfaceGlide(timestampCurrent) || this._stepSurfaceEdge(timestampCurrent);
+      if (this._isExecuting) {
+        this._step();
       }
     });
   }
 
-  private stepSurfaceGlide(timestampCurrent: number) {
-    if (!this.animationStorage.surfaceGlideIsSet()) {
+  private _stepSurfaceGlide(timestampCurrent: number) {
+    if (!this._animationStorage.surfaceGlideIsSet()) {
       return false;
     }
 
-    let shouldContinue = this.animationStorage.surfaceGlide!.step(timestampCurrent);
+    let shouldContinue = this._animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
-      this.animationStorage.destroySurfaceGlide();
+      this._animationStorage.destroySurfaceGlide();
     }
     
     return shouldContinue;
   }
 
-  private stepSurfaceEdge(timestampCurrent: number) : boolean {
-    if (!this.animationStorage.surfaceEdgeIsSet()) {
+  private _stepSurfaceEdge(timestampCurrent: number) : boolean {
+    if (!this._animationStorage.surfaceEdgeIsSet()) {
       return false;
     }
 
-    let shouldContinue = this.animationStorage.surfaceEdge!.step(timestampCurrent);
+    let shouldContinue = this._animationStorage.surfaceEdge!.step(timestampCurrent);
     if (!shouldContinue) {
-      this.animationStorage.destroySurfaceEdge();
+      this._animationStorage.destroySurfaceEdge();
     }
     
     return shouldContinue;

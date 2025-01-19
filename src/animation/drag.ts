@@ -5,15 +5,15 @@ import Raoi from 'raoi';
 
 export default class AnimationSurfaceDrag extends Animation {
   public id: number = Raoi.new(this);
-  private prev = {x: 0, y: 0};
-  private cumulated = {x: 0, y: 0};
+  private _prev = {x: 0, y: 0};
+  private _cumulated = {x: 0, y: 0};
 
   constructor (surface: Surface, mouse: MouseParams) {
     super(surface);
 
-    this.surface.cancelOngoingMoves();
+    this._surface.cancelOngoingMoves();
 
-    this.prev = {
+    this._prev = {
       x: mouse.x,
       y: mouse.y
     }
@@ -21,12 +21,12 @@ export default class AnimationSurfaceDrag extends Animation {
 
   public step(mouse: MouseParams) : boolean {
     // this.timestampLast = performance.now();
-    let wasMoved = this.surface.move({x: (this.prev.x - mouse.x) / this.surface.scale.value, y: (this.prev.y - mouse.y) / this.surface.scale.value});
-    this.cumulated = {
-      x: this.cumulated.x + this.prev.x - mouse.x,
-      y: this.cumulated.y + this.prev.y - mouse.y
+    let wasMoved = this._surface.move({x: (this._prev.x - mouse.x) / this._surface.scale.value, y: (this._prev.y - mouse.y) / this._surface.scale.value});
+    this._cumulated = {
+      x: this._cumulated.x + this._prev.x - mouse.x,
+      y: this._cumulated.y + this._prev.y - mouse.y
     }
-    this.prev = {
+    this._prev = {
       x: mouse.x,
       y: mouse.y
     };
@@ -34,19 +34,19 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   public override destroy() : void {
-    if (performance.now() - this.timestampStart < this.surface.CONFIG.DURATION_FOR_THROW.VALUE) {
-      this.throw();
+    if (performance.now() - this._timestampStart < this._surface.CONFIG.DURATION_FOR_THROW.VALUE) {
+      this._throw();
     }
     this.destroyed = true;
   }
 
-  private throw() : void {
-    this.surface.glide(
+  private _throw() : void {
+    this._surface.glide(
       {
-        x: this.cumulated.x * this.surface.CONFIG.THROW_MULTIPLIER.VALUE,
-        y: this.cumulated.y * this.surface.CONFIG.THROW_MULTIPLIER.VALUE
+        x: this._cumulated.x * this._surface.CONFIG.THROW_MULTIPLIER.VALUE,
+        y: this._cumulated.y * this._surface.CONFIG.THROW_MULTIPLIER.VALUE
       },
-      this.surface.CONFIG.ANIMATION_THROW_TIME.VALUE, [0, 0.55, 0.45, 1]
+      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, [0, 0.55, 0.45, 1]
     );
   }
 }

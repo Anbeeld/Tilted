@@ -25,22 +25,26 @@ interface SurfaceStyles {
 }
 
 export default class Surface {
-  public id: number = Raoi.new(this);
+  private _id: number;
+  public get id() : number {return this._id;}
 
-  public CONFIG: ConfigProperties;
+  public readonly CONFIG: ConfigProperties;
+  // public readonly get CONFIG() : ConfigProperties {return this.CONFIG;}
 
-  public elements: SurfaceElements;
-  public styles: SurfaceStyles;
+  private _elements: SurfaceElements;
+  public get elements() : SurfaceElements {return this._elements;}
 
-  public scale: Scale;
-  public animationExecutor: AnimationExecutor;
-  public animationStorage: AnimationStorage;
+  private _styles: SurfaceStyles;
+
+  private _scale: Scale;
+  public get scale() : Scale {return this._scale;}
+
+  private _animationExecutor: AnimationExecutor;
+  public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
+  private _animationStorage: AnimationStorage;
+  public get animationStorage() : AnimationStorage {return this._animationStorage;}
 
   private _viewport = {x: 0, y: 0};
-  public get viewport() : {x: number, y: number} {
-    return {x: this._viewport.x, y: this._viewport.y};
-  }
-
   private _coords = {x: 0, y: 0};
   public get coords() : {x: number, y: number} {
     return {x: this._coords.x, y: this._coords.y};
@@ -52,24 +56,25 @@ export default class Surface {
   }
 
   public constructor(elementContainer: HTMLElement, elementMap: HTMLElement, config: {} = {}) {
+    this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
 
-    this.elements = this.setupElements(elementContainer, elementMap);
-    this.styles = this.setupStyles();
+    this._elements = this._setupElements(elementContainer, elementMap);
+    this._styles = this._setupStyles();
 
-    this.animationStorage = new AnimationStorage(this);
-    this.animationExecutor = new AnimationExecutor(this.animationStorage);
+    this._animationStorage = new AnimationStorage(this);
+    this._animationExecutor = new AnimationExecutor(this._animationStorage);
 
     initControls(this);
 
-    this.updateViewport();
-    new ResizeObserver(() => {this.updateCssDynamic();this.updateViewport();this.enforceLimits();}).observe(this.elements.container);
-    new ResizeObserver(() => {this.updateCssDynamic();this.enforceLimits();}).observe(this.elements.surface);
+    this._updateViewport();
+    new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._enforceLimits();}).observe(this.elements.container);
+    new ResizeObserver(() => {this._updateCssDynamic();this._enforceLimits();}).observe(this.elements.surface);
 
-    this.scale = new Scale(this, this.CONFIG.SCALE_DEFAULT.VALUE);
+    this._scale = new Scale(this, this.CONFIG.SCALE_DEFAULT.VALUE);
   }
 
-  private setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {
+  private _setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {
     elementContainer.classList.add('tilted-container-' + this.id);
 
     let elementViewport = document.createElement('div');
@@ -110,7 +115,7 @@ export default class Surface {
     };
   }
 
-  private setupStyles() : SurfaceStyles {
+  private _setupStyles() : SurfaceStyles {
     let elementStyleStatic = document.createElement('style');
     elementStyleStatic.classList.add('tilted-css-static-' + this.id);
     elementStyleStatic.innerHTML = generateCssStatic(this);
@@ -127,8 +132,8 @@ export default class Surface {
     };
   }
 
-  private updateCssDynamic() : void {
-    this.styles.dynamic.innerHTML = generateCssDynamic(this);
+  private _updateCssDynamic() : void {
+    this._styles.dynamic.innerHTML = generateCssDynamic(this);
   }
 
   public get containerWidth() : number {
@@ -144,7 +149,7 @@ export default class Surface {
     return this.elements.surface.offsetHeight;
   }
 
-  private get limit() : {x: number, y: number} {
+  private get _limit() : {x: number, y: number} {
     return {
       x: Math.round(this.surfaceWidth / 2 - this.containerWidth * 0.25),
       y: Math.round(this.surfaceHeight / 2 - this.containerHeight * 0.25)
@@ -152,14 +157,14 @@ export default class Surface {
   }
   public get min() : {x: number, y: number} {
     return {
-      x: this.limit.x * -1,
-      y: this.limit.y * -1
+      x: this._limit.x * -1,
+      y: this._limit.y * -1
     };
   }
   public get max() : {x: number, y: number} {
     return {
-      x: this.limit.x,
-      y: this.limit.y
+      x: this._limit.x,
+      y: this._limit.y
     };
   }
 
@@ -174,22 +179,22 @@ export default class Surface {
     }
 
     let coords = {
-      x: clamp(roundFloat(this.coords.x + vector.x, finalRounding), this.min.x, this.max.x),
-      y: clamp(roundFloat(this.coords.y + vector.y, finalRounding), this.min.y, this.max.y)
+      x: clamp(roundFloat(this._coords.x + vector.x, finalRounding), this.min.x, this.max.x),
+      y: clamp(roundFloat(this._coords.y + vector.y, finalRounding), this.min.y, this.max.y)
     };
 
-    if (coords.x === this.coords.x && coords.y === this.coords.y) {
+    if (coords.x === this._coords.x && coords.y === this._coords.y) {
       return false;
     }
 
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'move coords.x', from: this.coords.x, to: coords.x},
-      {desc: 'move coords.y', from: this.coords.y, to: coords.y}
+      {desc: 'move coords.x', from: this._coords.x, to: coords.x},
+      {desc: 'move coords.y', from: this._coords.y, to: coords.y}
     ]);
 
     this._coords = coords;
 
-    this.elements.position.style.transform = 'translate3d(' + (this.coords.x * -1) + 'px, ' + (this.coords.y * -1) + 'px, 0)';
+    this.elements.position.style.transform = 'translate3d(' + (this._coords.x * -1) + 'px, ' + (this._coords.y * -1) + 'px, 0)';
 
     return true;
   }
@@ -198,22 +203,22 @@ export default class Surface {
     coords.x = roundFloat(coords.x, finalRounding);
     coords.y = roundFloat(coords.y, finalRounding);
 
-    if (this.coords.x === coords.x && this.coords.y === coords.y) {
+    if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
 
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'moveTo coords.x', from: this.coords.x, to: coords.x},
-      {desc: 'moveTo coords.y', from: this.coords.y, to: coords.y}
+      {desc: 'moveTo coords.x', from: this._coords.x, to: coords.x},
+      {desc: 'moveTo coords.y', from: this._coords.y, to: coords.y}
     ]);
 
-    return this.move({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, -1, finalRounding);
+    return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
   }
 
   public glide(vector: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: [number, number, number, number] = [0.25, 0.1, 0.25, 1], interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     if (finalRounding >= 0) {
-      vector.x = roundFloat(this.coords.x + vector.x, finalRounding) - this.coords.x;
-      vector.y = roundFloat(this.coords.y + vector.y, finalRounding) - this.coords.y;
+      vector.x = roundFloat(this._coords.x + vector.x, finalRounding) - this._coords.x;
+      vector.y = roundFloat(this._coords.y + vector.y, finalRounding) - this._coords.y;
     }
 
     if (interimRounding >= 0) {
@@ -230,8 +235,8 @@ export default class Surface {
       {desc: 'glide coords.y', to: vector.y}
     ]);
     
-    this.animationStorage.createSurfaceGlide({x: vector.x, y: vector.y}, time, easingFormula);
-    this.animationExecutor.initiate();
+    this._animationStorage.createSurfaceGlide({x: vector.x, y: vector.y}, time, easingFormula);
+    this._animationExecutor.initiate();
 
     return true;
   }
@@ -240,26 +245,26 @@ export default class Surface {
     coords.x = roundFloat(coords.x, finalRounding);
     coords.y = roundFloat(coords.y, finalRounding);
 
-    if (this.coords.x === coords.x && this.coords.y === coords.y) {
+    if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
 
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'glideTo coords.x', from: this.coords.x, to: coords.x},
-      {desc: 'glideTo coords.y', from: this.coords.y, to: coords.y}
+      {desc: 'glideTo coords.x', from: this._coords.x, to: coords.x},
+      {desc: 'glideTo coords.y', from: this._coords.y, to: coords.y}
     ]);
 
-    return this.glide({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, time, easingFormula, -1, finalRounding);
+    return this.glide({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, time, easingFormula, -1, finalRounding);
   }
 
-  private updateViewport() : void {
+  private _updateViewport() : void {
     this._viewport = {
       x: 0 - this.surfaceWidth / 2 + this.containerWidth / 2,
       y: 0 - this.surfaceHeight / 2 + this.containerHeight / 2
     }
 
-    this.elements.viewport.style.top = this.viewport.y + 'px';
-    this.elements.viewport.style.left = this.viewport.x + 'px';
+    this.elements.viewport.style.top = this._viewport.y + 'px';
+    this.elements.viewport.style.left = this._viewport.x + 'px';
   }
 
   public updateSkew(scale: number|null = null) : void {
@@ -287,19 +292,19 @@ export default class Surface {
 
     console.log(
       changesString +
-      `x: ${this.coords.x}\n` +
-      `y: ${this.coords.y}\n` +
-      `limit.x: ${this.limit.x}\n` +
-      `limit.y: ${this.limit.y}\n` +
+      `x: ${this._coords.x}\n` +
+      `y: ${this._coords.y}\n` +
+      `limit.x: ${this._limit.x}\n` +
+      `limit.y: ${this._limit.y}\n` +
       `scale: ${this.scale.value}`
     );
   }
 
   public cancelOngoingMoves() : void {
-    this.animationStorage.destroySurfaceGlide();
+    this._animationStorage.destroySurfaceGlide();
   }
 
-  private enforceLimits() : void {
-    this.moveTo({x: clamp(this.coords.x, this.min.x, this.max.x), y: clamp(this.coords.y, this.min.y, this.max.y)});
+  private _enforceLimits() : void {
+    this.moveTo({x: clamp(this._coords.x, this.min.x, this.max.x), y: clamp(this._coords.y, this.min.y, this.max.y)});
   }
 }

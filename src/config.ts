@@ -49,7 +49,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     SCALE_DEFAULT: 0.50,
     SCALE_MAX: 1.00,
     SCALE_ROUNDING: 3,
-    SCALE_GLIDE: 0.25,
+    SCALE_GLIDE: 0.10,
 
     PERSPECTIVE_DISTANCE: 600,
     SKEW_X_MAX: 35,

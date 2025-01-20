@@ -17,6 +17,12 @@ export default class AnimationStorage {
   }
   
   public createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) : void {
+    if (this.surfaceGlideIsSet()) {
+      vector.x += this.surfaceGlide!.remaining.x;
+      vector.y += this.surfaceGlide!.remaining.y;
+      easingFormula = EasingFunctions.EaseOutSine;
+      this.destroySurfaceGlide();
+    }
     this.surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);
   }
   public destroySurfaceGlide() : void {
@@ -30,6 +36,7 @@ export default class AnimationStorage {
   }
   
   public createSurfaceEdge(vector: {x: number, y: number}) : void {
+    this.destroySurfaceEdge();
     this.surfaceEdge = new AnimationSurfaceEdge(this._surface, vector);
   }
   public destroySurfaceEdge() : void {
@@ -43,6 +50,7 @@ export default class AnimationStorage {
   }
 
   public createSurfaceDrag(mouse: MouseParams) : void {
+    this.destroySurfaceDrag();
     this.surfaceDrag = new AnimationSurfaceDrag(this._surface, mouse);
   }
   public destroySurfaceDrag() : void {

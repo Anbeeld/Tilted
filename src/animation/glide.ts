@@ -9,9 +9,21 @@ export default class AnimationSurfaceGlide extends Animation {
     y: {value: number, sign: number}
   };
   private _current: {x: number, y: number} = {x: 0, y: 0};
-  private _target: {x: number, y: number};
+  private get _target(): {x: number, y: number} {
+    return {
+      x: this._initial.x + this._vector.x.value * this._vector.x.sign,
+      y: this._initial.y + this._vector.y.value * this._vector.y.sign
+    };
+  }
   private _bezierEasing: EasingFunctions;
   private _animationTime: number;
+
+  public get remaining() : {x: number, y: number} {
+    return {
+      x: (this._vector.x.value - this._current.x) * this._vector.x.sign,
+      y: (this._vector.y.value - this._current.y) * this._vector.y.sign
+    };
+  }
 
   constructor(surface: Surface, vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) {
     super(surface);
@@ -19,11 +31,6 @@ export default class AnimationSurfaceGlide extends Animation {
     this._initial = {
       x: surface.coords.x,
       y: surface.coords.y
-    };
-
-    this._target = {
-      x: this._initial.x + vector.x,
-      y: this._initial.y + vector.y
     };
 
     this._vector = {
@@ -62,26 +69,26 @@ export default class AnimationSurfaceGlide extends Animation {
       return false;
 
     } else { 
-      let vector = {
+      let step = {
         x: 0,
         y: 0
       };
       
       if (this._vector.x.value > 0 && this._vector.x.value > this._current.x) {
-        vector.x = roundFloat(Math.max(0, this._vector.x.value * moveRatio - this._current.x), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        step.x = roundFloat(Math.max(0, this._vector.x.value * moveRatio - this._current.x), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
       }
 
       if (this._vector.y.value > 0 && this._vector.y.value > this._current.y) {
-        vector.y = roundFloat(Math.max(0, this._vector.y.value * moveRatio - this._current.y), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        step.y = roundFloat(Math.max(0, this._vector.y.value * moveRatio - this._current.y), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
       }
 
-      if (vector.x > 0 || vector.y > 0) {
-        this._surface.move({x: vector.x * this._vector.x.sign, y: vector.y * this._vector.y.sign}, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
-        this._current.x = roundFloat(this._current.x + vector.x, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
-        this._current.y = roundFloat(this._current.y + vector.y, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+      if (step.x > 0 || step.y > 0) {
+        this._surface.move({x: step.x * this._vector.x.sign, y: step.y * this._vector.y.sign}, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this._current.x = roundFloat(this._current.x + step.x, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this._current.y = roundFloat(this._current.y + step.y, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
         this._timestampLast = timestampCurrent;
 
-        this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + vector.x + ', y ' + vector.y);
+        this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
       }
       return true;
     }

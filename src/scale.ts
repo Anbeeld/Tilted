@@ -71,9 +71,10 @@ export default class Scale {
 
   public glidePerStep(mouse: MouseParams, positive: boolean) : {x: number, y: number} {
     let positiveMultiplier = positive ? 1 : -1;
+    let scaleValue = positive ? this._value : this._value + this._surface.scale.stepSize(positive);
     return {
-      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / this._value, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
-      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / this._value, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
+      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
+      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
     }
   }
 }

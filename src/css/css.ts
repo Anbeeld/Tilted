@@ -130,7 +130,7 @@ export function generateCssStatic(surface: Surface) {
   `.tilted-scale-` + surface.id + `{   ` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
-    `transition:transform var(--${nameOfProperty(surface.CONFIG, x => x.ANIMATION_SCALE_TIME)}) cubic-bezier(0.37, 0, 0.63, 1) !important;` +
+    `transition:transform var(--${nameOfProperty(surface.CONFIG, x => x.ANIMATION_SCALE_TIME)}) linear !important;` +
     `will-change:transform;` +
   `}` +
 

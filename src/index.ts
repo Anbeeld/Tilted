@@ -187,10 +187,10 @@ export default class Surface {
       return false;
     }
 
-    this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'move coords.x', from: this._coords.x, to: coords.x},
-      {desc: 'move coords.y', from: this._coords.y, to: coords.y}
-    ]);
+    // this.CONFIG.DEBUG_MODE.VALUE && this.log([
+    //   {desc: 'move coords.x', from: this._coords.x, to: coords.x},
+    //   {desc: 'move coords.y', from: this._coords.y, to: coords.y}
+    // ]);
 
     this._coords = coords;
 
@@ -215,7 +215,7 @@ export default class Surface {
     return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
   }
 
-  public glide(vector: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseInOutSine, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public glide(vector: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.Linear, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     if (finalRounding >= 0) {
       vector.x = roundFloat(this._coords.x + vector.x, finalRounding) - this._coords.x;
       vector.y = roundFloat(this._coords.y + vector.y, finalRounding) - this._coords.y;
@@ -241,7 +241,7 @@ export default class Surface {
     return true;
   }
 
-  public glideTo(coords: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseInOutSine, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public glideTo(coords: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.Linear, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     coords.x = roundFloat(coords.x, finalRounding);
     coords.y = roundFloat(coords.y, finalRounding);
 

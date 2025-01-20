@@ -43,37 +43,16 @@ export function clampRatio(value: number) : number {
 
 // https://easings.net
 export enum EasingFunctions {
-  EaseOutSine = 'easeOutSine',
-  EaseInOutSine = 'easeInOutSine',
-  EaseInOutQuad = 'easeInOutQuad',
-  EaseInOutCubic = 'easeInOutCubic',
-  EaseInOutQuart = 'easeInOutQuart',
-  EaseInOutQuint = 'easeInOutQuint',
-  EaseInOutExpo = 'easeInOutExpo',
+  Linear = 'linear',
   EaseOutCirc = 'easeOutCirc',
-  EaseInOutCirc = 'easeInOutCirc'
 }
 
-export function applyEasingFunction(x: number, easingFunction: EasingFunctions = EasingFunctions.EaseInOutSine) : number {
+export function applyEasingFunction(x: number, easingFunction: EasingFunctions = EasingFunctions.Linear) : number {
   switch (easingFunction) {
-    case EasingFunctions.EaseOutSine:
-      return Math.sin((x * Math.PI) / 2);
-    case EasingFunctions.EaseInOutSine:
-      return -(Math.cos(Math.PI * x) - 1) / 2;
-    case EasingFunctions.EaseInOutQuad:
-      return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
-    case EasingFunctions.EaseInOutCubic:
-      return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-    case EasingFunctions.EaseInOutQuart:
-      return x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
-    case EasingFunctions.EaseInOutQuint:
-      return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
-    case EasingFunctions.EaseInOutExpo:
-      return x === 0 ? 0 : x === 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2;
+    case EasingFunctions.Linear:
+      return x;
     case EasingFunctions.EaseOutCirc:
       return Math.sqrt(1 - Math.pow(x - 1, 2));
-    case EasingFunctions.EaseInOutCirc:
-      return x < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
   }
 }
 

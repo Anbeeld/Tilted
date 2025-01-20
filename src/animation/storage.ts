@@ -20,7 +20,6 @@ export default class AnimationStorage {
     if (this.surfaceGlideIsSet()) {
       vector.x += this.surfaceGlide!.remaining.x;
       vector.y += this.surfaceGlide!.remaining.y;
-      easingFormula = EasingFunctions.EaseOutSine;
       this.destroySurfaceGlide();
     }
     this.surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);

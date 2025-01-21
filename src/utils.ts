@@ -14,6 +14,10 @@ export function roundFloat(value: number, precision: number) : number {
   return parseFloat(value.toFixed(precision));
 }
 
+export function roundTo(value: number, precision: number) : number {
+  return Math.round(value / precision) * precision;
+}
+
 export function coordsToDirections(x: number, y: number) : {x: Direction, y: Direction} {
   return {
     x: x === 0 ? Direction.None : x < 0 ? Direction.Left : Direction.Right,
@@ -54,11 +58,4 @@ export function applyEasingFunction(x: number, easingFunction: EasingFunctions =
     case EasingFunctions.EaseOutCirc:
       return Math.sqrt(1 - Math.pow(x - 1, 2));
   }
-}
-
-// https://stackoverflow.com/a/66836940
-export function nameOfProperty<T>(obj: T, expression: (x: { [Property in keyof T]: () => string }) => () => string): string {
-  const res: { [Property in keyof T]: () => string } = {} as { [Property in keyof T]: () => string };
-  Object.keys(obj!).map(k => res[k as keyof T] = () => k);
-  return expression(res)();
 }

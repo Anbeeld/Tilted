@@ -1,14 +1,16 @@
 import AnimationSurfaceGlide from './glide.js';
+import AnimationSurfaceZoom from './zoom.js';
 import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
 import Surface from '../index.js';
 import { MouseParams } from '../controls/mouse.js';
-import { EasingFunctions } from '../utils.js';
+import { EasingFunctions, roundFloat } from '../utils.js';
 
 export default class AnimationStorage {
   private _surface: Surface;
 
   public surfaceGlide: AnimationSurfaceGlide | null = null;
+  public surfaceZoom: AnimationSurfaceZoom | null = null;
   public surfaceEdge: AnimationSurfaceEdge | null = null;
   public surfaceDrag: AnimationSurfaceDrag | null = null;
   
@@ -18,8 +20,10 @@ export default class AnimationStorage {
   
   public createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) : void {
     if (this.surfaceGlideIsSet()) {
-      vector.x += this.surfaceGlide!.remaining.x;
-      vector.y += this.surfaceGlide!.remaining.y;
+      vector = {
+        x: roundFloat(vector.x + this.surfaceGlide!.remaining.x, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE),
+        y: roundFloat(vector.y + this.surfaceGlide!.remaining.y, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE)
+      }
       this.destroySurfaceGlide();
     }
     this.surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);
@@ -32,6 +36,23 @@ export default class AnimationStorage {
   }
   public surfaceGlideIsSet() : boolean {
     return this.surfaceGlide !== null;
+  }
+  
+  public createSurfaceZoom(change: number, animationTime: number, easingFormula: EasingFunctions) : void {
+    if (this.surfaceZoomIsSet()) {
+      change = this._surface.scale.roundToStep(change + this.surfaceZoom!.remaining);
+      this.destroySurfaceZoom();
+    }
+    this.surfaceZoom = new AnimationSurfaceZoom(this._surface, change, animationTime, easingFormula);
+  }
+  public destroySurfaceZoom() : void {
+    if (this.surfaceZoomIsSet()) {
+      this.surfaceZoom!.destroy();
+      this.surfaceZoom = null;
+    }
+  }
+  public surfaceZoomIsSet() : boolean {
+    return this.surfaceZoom !== null;
   }
   
   public createSurfaceEdge(vector: {x: number, y: number}) : void {

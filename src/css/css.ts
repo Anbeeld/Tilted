@@ -1,4 +1,3 @@
-import { nameOfProperty } from '../utils.js';
 import Surface from '../index.js';
 
 export function generateCssDynamic(surface: Surface) {
@@ -130,7 +129,6 @@ export function generateCssStatic(surface: Surface) {
   `.tilted-scale-` + surface.id + `{   ` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
-    `transition:transform var(--${nameOfProperty(surface.CONFIG, x => x.ANIMATION_SCALE_TIME)}) linear !important;` +
     `will-change:transform;` +
   `}` +
 
@@ -147,13 +145,6 @@ export function generateCssStatic(surface: Surface) {
     `position:relative !important;` +
     `overflow:visible !important;` +
     `z-index:100 !important;` +
-  `}` +
-
-  `.tilted-notransition-` + surface.id + `{` +
-    `-webkit-transition:none !important;` +
-    `-moz-transition:none !important;` +
-    `-o-transition:none !important;` +
-    `transition:none !important;` +
   `}`;
 
   return string;

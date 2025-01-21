@@ -19,7 +19,11 @@ export default class AnimationExecutor {
   private _step() : void {
     let timestampCurrent = performance.now();
     requestAnimationFrame(() => {
-      this._isExecuting = false || this._stepSurfaceGlide(timestampCurrent) || this._stepSurfaceEdge(timestampCurrent);
+      let continueSurfaceGlide = this._stepSurfaceGlide(timestampCurrent);
+      let continueSurfaceZoom = this._stepSurfaceZoom(timestampCurrent);
+      let continueSurfaceEdge = this._stepSurfaceEdge(timestampCurrent);
+
+      this._isExecuting = false || continueSurfaceGlide || continueSurfaceZoom || continueSurfaceEdge;
       if (this._isExecuting) {
         this._step();
       }
@@ -34,6 +38,19 @@ export default class AnimationExecutor {
     let shouldContinue = this._animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
       this._animationStorage.destroySurfaceGlide();
+    }
+    
+    return shouldContinue;
+  }
+
+  private _stepSurfaceZoom(timestampCurrent: number) {
+    if (!this._animationStorage.surfaceZoomIsSet()) {
+      return false;
+    }
+
+    let shouldContinue = this._animationStorage.surfaceZoom!.step(timestampCurrent);
+    if (!shouldContinue) {
+      this._animationStorage.destroySurfaceZoom();
     }
     
     return shouldContinue;

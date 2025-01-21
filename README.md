@@ -4,17 +4,16 @@
 
 Tilted is a lightweight TS library for displaying game maps and other content in a modern way.
 
-Here's [live example](https://anbeeld.github.io/Tilted) via GitHub Pages.
+Live demo is available [on my website](https://anbeeld.com/tilted).
 
-[![Support my work!](https://raw.githubusercontent.com/Anbeeld/Anbeeld.github.io/refs/heads/main/support/button.jpg)](https://anbeeld.github.io/support/)
+[![Support my work!](https://anbeeld.com/images/support.jpg)](https://anbeeld.com/support)
 
 ## Features
 
 - Works with any content, all visual modifications are done through CSS transform.
-- Smooth scaling, animated with CSS transition.
+- Smooth scaling with the content gliding towards the cursor, animated with pure JS/TS.
 - Content perspective depends on how close you look at it, getting more and more, well, *tilted*.
 - Dragging functionality with limits so the content don't move off screen.
-- Changing scaling with mouse wheel glides the content towards the cursor, animated with pure JS/TS.
 - Everything is plenty configurable.
 
 ## Installation

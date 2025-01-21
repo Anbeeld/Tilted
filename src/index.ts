@@ -169,91 +169,130 @@ export default class Surface {
   }
 
   public move(vector: {x: number, y: number}, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+    // Check if vector is zero
+    if (vector.x === 0 && vector.y === 0) {
+      return false;
+    }
+    // Round vector
     if (interimRounding >= 0) {
       vector.x = roundFloat(vector.x, interimRounding);
       vector.y = roundFloat(vector.y, interimRounding);
     }
-
+    // Check if vector is zero
     if (vector.x === 0 && vector.y === 0) {
       return false;
     }
-
-    let coords = {
-      x: clamp(roundFloat(this._coords.x + vector.x, finalRounding), this.min.x, this.max.x),
-      y: clamp(roundFloat(this._coords.y + vector.y, finalRounding), this.min.y, this.max.y)
+    // Calculate move result with limits and final rounding
+    let result;
+    if (finalRounding >= 0) {
+      result = {
+        x: roundFloat(this._coords.x + vector.x, finalRounding),
+        y: roundFloat(this._coords.y + vector.y, finalRounding)
+      };
+    } else {
+      result = {
+        x: this._coords.x + vector.x,
+        y: this._coords.y + vector.y
+      };
+    }
+    result = {
+      x: clamp(result.x, this.min.x, this.max.x),
+      y: clamp(result.y, this.min.y, this.max.y)
     };
-
-    if (coords.x === this._coords.x && coords.y === this._coords.y) {
+    // Check if coords will change
+    if (result.x === this._coords.x && result.y === this._coords.y) {
       return false;
     }
-
     // this.CONFIG.DEBUG_MODE.VALUE && this.log([
     //   {desc: 'move coords.x', from: this._coords.x, to: coords.x},
     //   {desc: 'move coords.y', from: this._coords.y, to: coords.y}
     // ]);
-
-    this._coords = coords;
-
+    // Change surface coords to new ones
+    this._coords = result;
     this.elements.position.style.transform = 'translate3d(' + (this._coords.x * -1) + 'px, ' + (this._coords.y * -1) + 'px, 0)';
-
+    // Indicate that there is change of coords
     return true;
   }
 
   public moveTo(coords: {x: number, y: number}, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    coords.x = roundFloat(coords.x, finalRounding);
-    coords.y = roundFloat(coords.y, finalRounding);
-
+    if (finalRounding >= 0) {
+      coords = {
+        x: roundFloat(coords.x, finalRounding),
+        y: roundFloat(coords.y, finalRounding)
+      }
+    }
     if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
-
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
       {desc: 'moveTo coords.x', from: this._coords.x, to: coords.x},
       {desc: 'moveTo coords.y', from: this._coords.y, to: coords.y}
     ]);
-
     return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
   }
 
   public glide(vector: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.Linear, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    if (finalRounding >= 0) {
-      vector.x = roundFloat(this._coords.x + vector.x, finalRounding) - this._coords.x;
-      vector.y = roundFloat(this._coords.y + vector.y, finalRounding) - this._coords.y;
+    // Check if vector is zero
+    if (vector.x === 0 && vector.y === 0) {
+      return false;
     }
-
+    // Round vector
     if (interimRounding >= 0) {
       vector.x = roundFloat(vector.x, interimRounding);
       vector.y = roundFloat(vector.y, interimRounding);
     }
-
+    // Check if vector is zero
     if (vector.x === 0 && vector.y === 0) {
       return false;
     }
-
+    // Calculate glide result with final rounding
+    let result;
+    if (finalRounding >= 0) {
+      result = {
+        x: roundFloat(this._coords.x + vector.x, finalRounding),
+        y: roundFloat(this._coords.y + vector.y, finalRounding)
+      }
+    } else {
+      result = {
+        x: this._coords.x + vector.x,
+        y: this._coords.y + vector.y
+      }
+    }
+    // Set vector = result - current, enforsing limits and final rounding
+    vector = {
+      x: clamp(result.x, this.min.x, this.max.x) - this._coords.x,
+      y: clamp(result.y, this.min.y, this.max.y) - this._coords.y
+    }
+    // Check if vector is zero
+    if (vector.x === 0 && vector.y === 0) {
+      return false;
+    }
+    // Log
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
       {desc: 'glide coords.x', to: vector.x},
       {desc: 'glide coords.y', to: vector.y}
     ]);
-    
+    // Perform animation
     this._animationStorage.createSurfaceGlide({x: vector.x, y: vector.y}, time, easingFormula);
     this._animationExecutor.initiate();
-
+    // Indicate that there is change of coords
     return true;
   }
 
   public glideTo(coords: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.Linear, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    coords.x = roundFloat(coords.x, finalRounding);
-    coords.y = roundFloat(coords.y, finalRounding);
-
+    if (finalRounding >= 0) {
+      coords = {
+        x: roundFloat(coords.x, finalRounding),
+        y: roundFloat(coords.y, finalRounding)
+      }
+    }
     if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
-
     this.CONFIG.DEBUG_MODE.VALUE && this.log([
       {desc: 'glideTo coords.x', from: this._coords.x, to: coords.x},
       {desc: 'glideTo coords.y', from: this._coords.y, to: coords.y}
     ]);
-
     return this.glide({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, time, easingFormula, -1, finalRounding);
   }
 

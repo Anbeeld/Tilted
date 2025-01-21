@@ -1,4 +1,4 @@
-import Surface from '../index.js';
+import Surface from '../surface.js';
 
 export function generateCssDynamic(surface: Surface) {
   return `` +

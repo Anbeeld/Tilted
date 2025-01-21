@@ -2,7 +2,7 @@ import AnimationSurfaceGlide from './glide.js';
 import AnimationSurfaceZoom from './zoom.js';
 import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
-import Surface from '../index.js';
+import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import { EasingFunctions, roundFloat } from '../utils.js';
 

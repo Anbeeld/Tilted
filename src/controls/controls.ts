@@ -1,6 +1,6 @@
 import { mouseMove, mouseWheel, mouseDown } from './mouse.js';
 import { buttonPressed } from './keyboard.js';
-import Surface from '../index.js';
+import Surface from '../surface.js';
 import { initDrag } from './drag.js';
 
 export function initControls(surface: Surface) : void {

@@ -1,4 +1,4 @@
-import Surface from '../index.js';
+import Surface from '../surface.js';
 import Animation from './animation.js';
 
 export default class AnimationSurfaceEdge extends Animation {

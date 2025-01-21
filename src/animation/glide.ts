@@ -1,6 +1,6 @@
 import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '../utils.js';
 import Animation from './animation.js';
-import Surface from '../index.js';
+import Surface from '../surface.js';
 
 export default class AnimationSurfaceGlide extends Animation {
   private _initial: {x: number, y: number};

@@ -1,4 +1,4 @@
-import Surface from './index.js';
+import Surface from './surface.js';
 import { clamp, EasingFunctions, roundFloat, roundTo } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 

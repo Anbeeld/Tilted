@@ -1,4 +1,4 @@
-import Surface from '../index.js';
+import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
 import Raoi from 'raoi';

@@ -1,5 +1,5 @@
 import { moveSurfaceByEdge } from './edge.js';
-import Surface from '../index.js';
+import Surface from '../surface.js';
 
 export interface MouseParams {
   button: number;

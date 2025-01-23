@@ -18,25 +18,25 @@ export default class Scale {
     return this._value;
   }
 
-  public change(change: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : boolean {
-    // Check if change is zero
-    if (change === 0) {
+  public change(shift: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : boolean {
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
-    // Round change
+    // Round shift
     if (interimRounding >= 0) {
-      change = roundFloat(change, interimRounding);
+      shift = roundFloat(shift, interimRounding);
     }
-    // Check if change is zero
-    if (change === 0) {
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
     // Calculate scale result with limits and final rounding
     let result;
     if (finalRounding >= 0) {
-      result = roundFloat(this._value + change, finalRounding);
+      result = roundFloat(this._value + shift, finalRounding);
     } else {
-      result = this._value + change;
+      result = this._value + shift;
     }
     result = clamp(result, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE)
     // Check if scale will change
@@ -61,42 +61,42 @@ export default class Scale {
     return this.change(value - this._value, -1, finalRounding);
   }
 
-  public zoom(change: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE) : boolean {
-    // Check if change is zero
-    if (change === 0) {
+  public zoom(shift: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE) : boolean {
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
-    // Round change
+    // Round shift
     if (interimRounding >= 0) {
-      change = roundFloat(change, interimRounding);
+      shift = roundFloat(shift, interimRounding);
     }
-    // Check if change is zero
-    if (change === 0) {
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
     // Calculate zoom result with final rounding
     let result;
     if (finalRounding >= 0) {
-      result = roundFloat(this._value + change, finalRounding);
+      result = roundFloat(this._value + shift, finalRounding);
     } else {
-      result = this._value + change;
+      result = this._value + shift;
     }
-    // Set change = result - current, enforsing limits and final rounding
-    change = clamp(result, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE) - this._value;
-    // Check if change is zero
-    if (change === 0) {
+    // Set shift = result - current, enforsing limits and final rounding
+    shift = clamp(result, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE) - this._value;
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
-    // Round change
+    // Round shift
     if (interimRounding >= 0) {
-      change = roundFloat(change, interimRounding);
+      shift = roundFloat(shift, interimRounding);
     }
-    // Check if change is zero
-    if (change === 0) {
+    // Check if shift is zero
+    if (shift === 0) {
       return false;
     }
     // Perform animation
-    this._surface.animationStorage.createSurfaceZoom(change, 400, EasingFunctions.EaseOutCirc);
+    this._surface.animationStorage.createSurfaceZoom(shift, 400, EasingFunctions.EaseOutCirc);
     this._surface.animationExecutor.initiate();
     // Indicate that there is change of scale
     return true;
@@ -160,12 +160,12 @@ export default class Scale {
     }
   }
 
-  public roundToStep(change: number) : number {
+  public roundToStep(shift: number) : number {
     let projection = roundTo(
-      clamp(roundFloat(this._surface.scale.value + change, this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
-      this._surface.scale.stepSize(change > 0 ? true : false, this._surface.scale.value + change)
+      clamp(roundFloat(this._surface.scale.value + shift, this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
+      this._surface.scale.stepSize(shift > 0 ? true : false, this._surface.scale.value + shift)
     );
-    change = roundFloat(projection - this._surface.scale.value, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE);
-    return change;
+    shift = roundFloat(projection - this._surface.scale.value, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE);
+    return shift;
   }
 }

@@ -38,12 +38,12 @@ export default class AnimationStorage {
     return this.surfaceGlide !== null;
   }
   
-  public createSurfaceZoom(change: number, animationTime: number, easingFormula: EasingFunctions) : void {
+  public createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
     if (this.surfaceZoomIsSet()) {
-      change = this._surface.scale.roundToStep(change + this.surfaceZoom!.remaining);
+      shift = this._surface.scale.roundToStep(shift + this.surfaceZoom!.remaining);
       this.destroySurfaceZoom();
     }
-    this.surfaceZoom = new AnimationSurfaceZoom(this._surface, change, animationTime, easingFormula);
+    this.surfaceZoom = new AnimationSurfaceZoom(this._surface, shift, animationTime, easingFormula);
   }
   public destroySurfaceZoom() : void {
     if (this.surfaceZoomIsSet()) {

@@ -39,7 +39,6 @@ export default class Surface {
   public get id() : number {return this._id;}
 
   public readonly CONFIG: ConfigProperties;
-  // public readonly get CONFIG() : ConfigProperties {return this.CONFIG;}
 
   private _elements: SurfaceElements;
   public get elements() : SurfaceElements {return this._elements;}

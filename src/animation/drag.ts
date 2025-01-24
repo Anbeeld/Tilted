@@ -21,7 +21,6 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   public step(mouse: MouseParams) : boolean {
-    // this.timestampLast = performance.now();
     let wasMoved = this._surface.move({x: (this._prev.x - mouse.x) / this._surface.scale.value, y: (this._prev.y - mouse.y) / this._surface.scale.value});
     this._cumulated = {
       x: this._cumulated.x + this._prev.x - mouse.x,

@@ -11,7 +11,7 @@ export default class Scale {
     this._value = value;
 
     this._surface.updateSkew(this._value);
-    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotate3d(1, 0, 0, ' + this._surface.skew.x + 'deg)';
+    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotateX(' + this._surface.skew.x + 'deg)';
   }
 
   public get value() : number {
@@ -46,7 +46,7 @@ export default class Scale {
     // Set surface scale to a new value
     this._value = result;
     this._surface.updateSkew();
-    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotate3d(1, 0, 0, ' + this._surface.skew.x + 'deg)';
+    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotateX(' + this._surface.skew.x + 'deg)';
     // Indicate that there was a change of scale
     return true;
   }

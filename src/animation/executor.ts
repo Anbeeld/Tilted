@@ -1,4 +1,5 @@
 import Surface from '../surface.js';
+import { Animations } from './storage.js';
 
 export default class AnimationExecutor {
   protected _surface: Surface; 
@@ -33,39 +34,39 @@ export default class AnimationExecutor {
   }
 
   private _stepSurfaceGlide(timestampCurrent: number) {
-    if (!this._surface.animationStorage.exists('surfaceGlide')) {
+    if (!this._surface.animationStorage.exists(Animations.SurfaceGlide)) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroy('surfaceGlide');
+      this._surface.animationStorage.destroy(Animations.SurfaceGlide);
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceZoom(timestampCurrent: number) {
-    if (!this._surface.animationStorage.exists('surfaceZoom')) {
+    if (!this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceZoom!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroy('surfaceZoom');
+      this._surface.animationStorage.destroy(Animations.SurfaceZoom);
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceEdge(timestampCurrent: number) : boolean {
-    if (!this._surface.animationStorage.exists('surfaceEdge')) {
+    if (!this._surface.animationStorage.exists(Animations.SurfaceEdge)) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceEdge!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroy('surfaceEdge');
+      this._surface.animationStorage.destroy(Animations.SurfaceEdge);
     }
     
     return shouldContinue;

@@ -4,7 +4,7 @@ import { initControls } from './controls/controls.js';
 import Raoi from 'raoi';
 
 import AnimationExecutor from './animation/executor.js';
-import AnimationStorage from './animation/storage.js';
+import { AnimationStorage, Animations } from './animation/storage.js';
 import { generateCssDynamic, generateCssStatic } from './css/css.js';
 import Scale from './scale.js';
 
@@ -327,7 +327,7 @@ export default class Surface {
       {desc: 'glide coords.y', to: vector.y}
     ]);
     // Perform animation
-    this._animationStorage.create('surfaceGlide', [{x: vector.x, y: vector.y}, time, easingFormula]);
+    this._animationStorage.create(Animations.SurfaceGlide, [{x: vector.x, y: vector.y}, time, easingFormula]);
     this._animationExecutor.initiate();
     // Indicate that there is change of coords
     return true;
@@ -394,7 +394,7 @@ export default class Surface {
   }
 
   public cancelOngoingMoves() : void {
-    this._animationStorage.destroy('surfaceGlide');
+    this._animationStorage.destroy(Animations.SurfaceGlide);
   }
 
   private _enforceLimits() : void {

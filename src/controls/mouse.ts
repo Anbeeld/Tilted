@@ -1,5 +1,6 @@
 import { moveSurfaceByEdge } from './edge.js';
 import Surface from '../surface.js';
+import { Animations } from '../animation/storage.js';
 
 export interface MouseParams {
   button: number;
@@ -43,6 +44,6 @@ export function mouseWheel(event: WheelEvent, surface: Surface) : void {
 export function mouseDown(event: MouseEvent|TouchEvent, surface: Surface) : void {
   let mouse = getMouseParams(event, surface);
   if (mouse.button === 0) {
-    surface.animationStorage.create('surfaceDrag', [mouse]);
+    surface.animationStorage.create(Animations.SurfaceDrag, [mouse]);
   }
 }

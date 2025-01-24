@@ -6,9 +6,14 @@ import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import { EasingFunctions, roundFloat } from '../utils.js';
 
-type Animation = 'surfaceGlide'|'surfaceZoom'|'surfaceEdge'|'surfaceDrag';
+export enum Animations {
+  SurfaceGlide = 'surfaceGlide',
+  SurfaceZoom = 'surfaceZoom',
+  SurfaceEdge = 'surfaceEdge',
+  SurfaceDrag = 'surfaceDrag'
+};
 
-export default class AnimationStorage {
+export class AnimationStorage {
   private _surface: Surface;
 
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
@@ -28,36 +33,35 @@ export default class AnimationStorage {
   }
 
   // Uses "as any" cause it's already limited by type
-  public create(animation: Animation, args: any) : void {
+  public create(animation: Animations, args: any) : void {
     switch (animation) {
       // @ts-ignore
-      case 'surfaceGlide': return this._createSurfaceGlide(...args);
+      case Animations.SurfaceGlide: return this._createSurfaceGlide(...args);
       // @ts-ignore
-      case 'surfaceZoom': return this._createSurfaceZoom(...args);
+      case Animations.SurfaceZoom: return this._createSurfaceZoom(...args);
       // @ts-ignore
-      case 'surfaceEdge': return this._createSurfaceEdge(...args);
+      case Animations.SurfaceEdge: return this._createSurfaceEdge(...args);
       // @ts-ignore
-      case 'surfaceDrag': return this._createSurfaceDrag(...args);
+      case Animations.SurfaceDrag: return this._createSurfaceDrag(...args);
     }
   }
-  public destroy(animation: Animation) : void {
+  public destroy(animation: Animations) : void {
     switch (animation) {
-      case 'surfaceGlide': return this._destroySurfaceGlide();
-      case 'surfaceZoom': return this._destroySurfaceZoom();
-      case 'surfaceEdge': return this._destroySurfaceEdge();
-      case 'surfaceDrag': return this._destroySurfaceDrag();
+      case Animations.SurfaceGlide: return this._destroySurfaceGlide();
+      case Animations.SurfaceZoom: return this._destroySurfaceZoom();
+      case Animations.SurfaceEdge: return this._destroySurfaceEdge();
+      case Animations.SurfaceDrag: return this._destroySurfaceDrag();
     }
   }
-  public exists(animation: Animation) : boolean {
+  public exists(animation: Animations) : boolean {
     switch (animation) {
-      case 'surfaceGlide': return this._existsSurfaceGlide();
-      case 'surfaceZoom': return this._existsSurfaceZoom();
-      case 'surfaceEdge': return this._existsSurfaceEdge();
-      case 'surfaceDrag': return this._existsSurfaceDrag();
+      case Animations.SurfaceGlide: return this._existsSurfaceGlide();
+      case Animations.SurfaceZoom: return this._existsSurfaceZoom();
+      case Animations.SurfaceEdge: return this._existsSurfaceEdge();
+      case Animations.SurfaceDrag: return this._existsSurfaceDrag();
     }
   }
   
-  // @ts-ignore
   private _createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) : void {
     if (this._existsSurfaceGlide()) {
       vector = {
@@ -78,7 +82,6 @@ export default class AnimationStorage {
     return this._surfaceGlide !== null;
   }
   
-  // @ts-ignore
   private _createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
     this._destroySurfaceZoom();
     this._surfaceZoom = new AnimationSurfaceZoom(this._surface, shift, animationTime, easingFormula);
@@ -93,7 +96,6 @@ export default class AnimationStorage {
     return this._surfaceZoom !== null;
   }
   
-  // @ts-ignore
   private _createSurfaceEdge(vector: {x: number, y: number}) : void {
     this._destroySurfaceEdge();
     this._surfaceEdge = new AnimationSurfaceEdge(this._surface, vector);
@@ -108,7 +110,6 @@ export default class AnimationStorage {
     return this._surfaceEdge !== null;
   }
 
-  // @ts-ignore
   private _createSurfaceDrag(mouse: MouseParams) : void {
     this._destroySurfaceDrag();
     this._surfaceDrag = new AnimationSurfaceDrag(this._surface, mouse);

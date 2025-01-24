@@ -1,9 +1,10 @@
 import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import { Direction } from '../utils.js';
+import { Animations } from '../animation/storage.js';
 
 export function moveSurfaceByEdge(surface: Surface, mouse: MouseParams) : boolean {
-  if (surface.animationStorage.exists('surfaceDrag')) {
+  if (surface.animationStorage.exists(Animations.SurfaceDrag)) {
     return false;
   }
 
@@ -67,14 +68,14 @@ export function moveSurfaceByEdge(surface: Surface, mouse: MouseParams) : boolea
   }
 
   if (xMoveIsZero && yMoveIsZero) {
-    if (surface.animationStorage.exists('surfaceEdge')) {
-      surface.animationStorage.destroy('surfaceEdge');
+    if (surface.animationStorage.exists(Animations.SurfaceEdge)) {
+      surface.animationStorage.destroy(Animations.SurfaceEdge);
     }
     return false;
   }
 
-  if (!surface.animationStorage.exists('surfaceEdge')) {
-    surface.animationStorage.create('surfaceEdge', [{x, y}]);
+  if (!surface.animationStorage.exists(Animations.SurfaceEdge)) {
+    surface.animationStorage.create(Animations.SurfaceEdge, [{x, y}]);
     surface.animationExecutor.initiate();
   } else {
     surface.animationStorage.surfaceEdge!.update({x, y});

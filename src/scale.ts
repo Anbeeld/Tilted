@@ -105,7 +105,7 @@ export default class Scale {
       return 0;
     }
     // Perform animation
-    this._surface.animationStorage.createSurfaceZoom(shift, time * clamp(Math.abs(shift / initialShift), 0, 1), easingFormula);
+    this._surface.animationStorage.create('surfaceZoom', [shift, time * clamp(Math.abs(shift / initialShift), 0, 1), easingFormula]);
     this._surface.animationExecutor.initiate();
     // Indicate that there is change of scale
     return shift;
@@ -166,7 +166,7 @@ export default class Scale {
   }
 
   private _addCurrentZoom(shift: number) : number {
-    if (this._surface.animationStorage.surfaceZoomIsSet() && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
+    if (this._surface.animationStorage.exists('surfaceZoom') && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
       return shift + this._surface.animationStorage.surfaceZoom!.remaining;
     }
     return shift;
@@ -174,7 +174,7 @@ export default class Scale {
 
   private get _projection() : number {
     let projection = this._surface.scale.value;
-    if (this._surface.animationStorage.surfaceZoomIsSet() && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
+    if (this._surface.animationStorage.exists('surfaceZoom') && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
       projection += this._surface.animationStorage.surfaceZoom!.remaining;
     }
     return clamp(roundFloat(projection, 4), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);

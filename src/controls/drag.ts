@@ -3,7 +3,7 @@ import { getMouseParams } from '../controls/mouse.js';
 
 export function initDrag(surface: Surface) {
   function moveToDrag(event: MouseEvent|TouchEvent) : void {
-    if (surface.animationStorage.surfaceDragIsSet()) {
+    if (surface.animationStorage.exists('surfaceDrag')) {
       surface.animationStorage.surfaceDrag!.step(getMouseParams(event, surface));
     }
   }
@@ -12,7 +12,7 @@ export function initDrag(surface: Surface) {
   surface.elements.container.addEventListener('touchmove', moveToDrag);
 
   function clearSurfaceDrag() : void {
-    surface.animationStorage.destroySurfaceDrag();
+    surface.animationStorage.destroy('surfaceDrag');
   }
 
   document.body.addEventListener('mouseup', clearSurfaceDrag);

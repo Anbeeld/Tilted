@@ -327,7 +327,7 @@ export default class Surface {
       {desc: 'glide coords.y', to: vector.y}
     ]);
     // Perform animation
-    this._animationStorage.createSurfaceGlide({x: vector.x, y: vector.y}, time, easingFormula);
+    this._animationStorage.create('surfaceGlide', [{x: vector.x, y: vector.y}, time, easingFormula]);
     this._animationExecutor.initiate();
     // Indicate that there is change of coords
     return true;
@@ -394,7 +394,7 @@ export default class Surface {
   }
 
   public cancelOngoingMoves() : void {
-    this._animationStorage.destroySurfaceGlide();
+    this._animationStorage.destroy('surfaceGlide');
   }
 
   private _enforceLimits() : void {

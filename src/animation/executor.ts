@@ -33,39 +33,39 @@ export default class AnimationExecutor {
   }
 
   private _stepSurfaceGlide(timestampCurrent: number) {
-    if (!this._surface.animationStorage.surfaceGlideIsSet()) {
+    if (!this._surface.animationStorage.exists('surfaceGlide')) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroySurfaceGlide();
+      this._surface.animationStorage.destroy('surfaceGlide');
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceZoom(timestampCurrent: number) {
-    if (!this._surface.animationStorage.surfaceZoomIsSet()) {
+    if (!this._surface.animationStorage.exists('surfaceZoom')) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceZoom!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroySurfaceZoom();
+      this._surface.animationStorage.destroy('surfaceZoom');
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceEdge(timestampCurrent: number) : boolean {
-    if (!this._surface.animationStorage.surfaceEdgeIsSet()) {
+    if (!this._surface.animationStorage.exists('surfaceEdge')) {
       return false;
     }
 
     let shouldContinue = this._surface.animationStorage.surfaceEdge!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._surface.animationStorage.destroySurfaceEdge();
+      this._surface.animationStorage.destroy('surfaceEdge');
     }
     
     return shouldContinue;

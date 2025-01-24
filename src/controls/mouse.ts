@@ -43,6 +43,6 @@ export function mouseWheel(event: WheelEvent, surface: Surface) : void {
 export function mouseDown(event: MouseEvent|TouchEvent, surface: Surface) : void {
   let mouse = getMouseParams(event, surface);
   if (mouse.button === 0) {
-    surface.animationStorage.createSurfaceDrag(mouse);
+    surface.animationStorage.create('surfaceDrag', [mouse]);
   }
 }

@@ -60,9 +60,9 @@ export default class Surface {
     return {x: this._coords.x, y: this._coords.y};
   }
 
-  private _skew = {x: 0, y: 0};
-  public get skew() : {x: number, y: number} {
-    return {x: this._skew.x, y: this._skew.y};
+  private _rotate = {x: 0, y: 0};
+  public get rotate() : {x: number, y: number} {
+    return {x: this._rotate.x, y: this._rotate.y};
   }
 
   private _transformProperty: TransformProperty;
@@ -361,13 +361,13 @@ export default class Surface {
     this.elements.viewport.style.left = this._viewport.x + 'px';
   }
 
-  public updateSkew(scale: number|null = null) : void {
+  public updateRotate(scale: number|null = null) : void {
     if (scale === null) {
       scale = this.scale.value;
     }
     let percentOfMaxScale = (scale - this.CONFIG.SCALE_MIN.VALUE) / (this.CONFIG.SCALE_MAX.VALUE - this.CONFIG.SCALE_MIN.VALUE);
-    this._skew = {
-      x: roundFloat(percentOfMaxScale * this.CONFIG.SKEW_X_MAX.VALUE, 2),
+    this._rotate = {
+      x: roundFloat(percentOfMaxScale * this.CONFIG.ROTATE_X_MAX.VALUE, 2),
       y: 0
     }
   }

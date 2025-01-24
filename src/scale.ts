@@ -10,7 +10,7 @@ export default class Scale {
     this._surface = surface;
     this._value = value;
 
-    this._surface.updateSkew(this._value);
+    this._surface.updateRotate(this._value);
     this._setTransformValues(true);
   }
 
@@ -30,7 +30,7 @@ export default class Scale {
       },
       {
         name: 'rotateX',
-        value: this._surface.skew.x + 'deg'
+        value: this._surface.rotate.x + 'deg'
       }
     ], immediately);
   }
@@ -62,7 +62,7 @@ export default class Scale {
     }
     // Set surface scale to a new value
     this._value = result;
-    this._surface.updateSkew();
+    this._surface.updateRotate();
     this._setTransformValues();
     // Indicate that there was a change of scale
     return true;

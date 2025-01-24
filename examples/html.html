@@ -42,22 +42,27 @@
       margin: calc(var(--percent) * 5);
       overflow: hidden;
       border: 1px solid #000000;
-      background: #ffffca;
+      background: #fbe697;
     }
 
     #tilted-surface {
-      display: flex;
-      flex-wrap: wrap;
-      width: calc(var(--percent) * 400 + 4px);
-      height: calc(var(--percent) * 400 + 4px);
+      width: 6004px;
+      height: 6004px;
       border: 2px solid #000000;
     }
 
     #tilted-surface > div {
-      width: calc(var(--percent) * 20);
-      height: calc(var(--percent) * 20);
+      display: flex;
+      width: 6000px;
+      height: 300px;
+      background: #b2e090;
+    }
+
+    #tilted-surface > div > div {
+      width: 300px;
+      height: 300px;
       border: 2px solid #000000;
-      background: #81cf81;
+      background: #b2e090;
     }
   </style>
 </head>
@@ -66,8 +71,12 @@
   <div id="tilted-container">
     <div id="tilted-surface">
       <script>
-        for (let i = 0; i < 400; i++) {
-          document.getElementById("tilted-surface").appendChild(document.createElement("div"));
+        for (let i = 0; i < 20; i++) {
+          let row = document.createElement("div");
+          document.getElementById("tilted-surface").appendChild(row);
+          for (let i = 0; i < 20; i++) {
+            row.appendChild(document.createElement("div"));
+          }
         }
       </script>
     </div>

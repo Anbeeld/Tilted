@@ -126,18 +126,9 @@ export function generateCssStatic(surface: Surface) {
     `will-change:top,left;` +
   `}` +
 
-  `.tilted-scale-` + surface.id + `{   ` +
+  `.tilted-transform-` + surface.id + `{   ` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
-    `will-change:transform;` +
-  `}` +
-
-  `.tilted-position-` + surface.id + `{` +
-    `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
-    `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
-    `position:relative !important;` +
-    `top:0;` +
-    `left:0;` +
     `will-change:transform;` +
   `}` +
 

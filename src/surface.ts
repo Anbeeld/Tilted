@@ -14,8 +14,7 @@ interface SurfaceElements {
   controlsZoomIn: HTMLElement,
   controlsZoomOut: HTMLElement,
   viewport: HTMLElement,
-  scale: HTMLElement,
-  position: HTMLElement,
+  transform: HTMLElement,
   surface: HTMLElement
 }
 
@@ -103,11 +102,8 @@ export default class Surface {
     let elementViewport = document.createElement('div');
     elementViewport.classList.add('tilted-viewport-' + this.id);
 
-    let elementScale = document.createElement('div');
-    elementScale.classList.add('tilted-scale-' + this.id);
-
-    let elementPosition = document.createElement('div');
-    elementPosition.classList.add('tilted-position-' + this.id);
+    let elementTransform = document.createElement('div');
+    elementTransform.classList.add('tilted-transform-' + this.id);
 
     elementMap.classList.add('tilted-surface-' + this.id);
 
@@ -120,9 +116,8 @@ export default class Surface {
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
-    elementPosition.appendChild(elementMap);
-    elementScale.appendChild(elementPosition);
-    elementViewport.appendChild(elementScale);
+    elementTransform.appendChild(elementMap);
+    elementViewport.appendChild(elementTransform);
     elementContainer.appendChild(elementViewport);
     elementContainer.appendChild(elementControls);
 
@@ -132,8 +127,7 @@ export default class Surface {
       controlsZoomIn: elementControlsZoomIn,
       controlsZoomOut: elementControlsZoomOut,
       viewport: elementViewport,
-      scale: elementScale,
-      position: elementPosition,
+      transform: elementTransform,
       surface: elementMap
     };
   }
@@ -210,7 +204,7 @@ export default class Surface {
     }
     this._transformProperty.changed = false;
     
-    this._elements.position.style.transform = 
+    this._elements.transform.style.transform = 
     `scale(${this._transformProperty.values.scale}) ` +
     `perspective(${this._transformProperty.values.perspective}) ` +
     `rotateX(${this._transformProperty.values.rotateX}) ` +

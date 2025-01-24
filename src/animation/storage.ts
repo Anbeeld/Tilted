@@ -39,10 +39,7 @@ export default class AnimationStorage {
   }
   
   public createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
-    if (this.surfaceZoomIsSet()) {
-      shift = this._surface.scale.roundToStep(shift + this.surfaceZoom!.remaining);
-      this.destroySurfaceZoom();
-    }
+    this.destroySurfaceZoom();
     this.surfaceZoom = new AnimationSurfaceZoom(this._surface, shift, animationTime, easingFormula);
   }
   public destroySurfaceZoom() : void {

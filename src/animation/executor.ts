@@ -1,12 +1,12 @@
-import AnimationStorage from './storage.js';
+import Surface from '../surface.js';
 
 export default class AnimationExecutor {
-  private _animationStorage: AnimationStorage;
+  protected _surface: Surface; 
 
   private _isExecuting: boolean = false;
   
-  constructor(animationStorage: AnimationStorage) {
-    this._animationStorage = animationStorage;
+  constructor(surface: Surface) {
+    this._surface = surface;
   }
 
   public initiate() : void {
@@ -23,6 +23,8 @@ export default class AnimationExecutor {
       let continueSurfaceZoom = this._stepSurfaceZoom(timestampCurrent);
       let continueSurfaceEdge = this._stepSurfaceEdge(timestampCurrent);
 
+      this._surface.applyTransformProperty();
+
       this._isExecuting = false || continueSurfaceGlide || continueSurfaceZoom || continueSurfaceEdge;
       if (this._isExecuting) {
         this._step();
@@ -31,39 +33,39 @@ export default class AnimationExecutor {
   }
 
   private _stepSurfaceGlide(timestampCurrent: number) {
-    if (!this._animationStorage.surfaceGlideIsSet()) {
+    if (!this._surface.animationStorage.surfaceGlideIsSet()) {
       return false;
     }
 
-    let shouldContinue = this._animationStorage.surfaceGlide!.step(timestampCurrent);
+    let shouldContinue = this._surface.animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._animationStorage.destroySurfaceGlide();
+      this._surface.animationStorage.destroySurfaceGlide();
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceZoom(timestampCurrent: number) {
-    if (!this._animationStorage.surfaceZoomIsSet()) {
+    if (!this._surface.animationStorage.surfaceZoomIsSet()) {
       return false;
     }
 
-    let shouldContinue = this._animationStorage.surfaceZoom!.step(timestampCurrent);
+    let shouldContinue = this._surface.animationStorage.surfaceZoom!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._animationStorage.destroySurfaceZoom();
+      this._surface.animationStorage.destroySurfaceZoom();
     }
     
     return shouldContinue;
   }
 
   private _stepSurfaceEdge(timestampCurrent: number) : boolean {
-    if (!this._animationStorage.surfaceEdgeIsSet()) {
+    if (!this._surface.animationStorage.surfaceEdgeIsSet()) {
       return false;
     }
 
-    let shouldContinue = this._animationStorage.surfaceEdge!.step(timestampCurrent);
+    let shouldContinue = this._surface.animationStorage.surfaceEdge!.step(timestampCurrent);
     if (!shouldContinue) {
-      this._animationStorage.destroySurfaceEdge();
+      this._surface.animationStorage.destroySurfaceEdge();
     }
     
     return shouldContinue;

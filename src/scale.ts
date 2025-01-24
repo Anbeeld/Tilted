@@ -11,11 +11,28 @@ export default class Scale {
     this._value = value;
 
     this._surface.updateSkew(this._value);
-    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotateX(' + this._surface.skew.x + 'deg)';
+    this._setTransformValues(true);
   }
 
   public get value() : number {
     return this._value;
+  }
+
+  private _setTransformValues(immediately: boolean = false) : void {
+    this._surface.setTransformValues([
+      {
+        name: 'scale',
+        value: this._value.toString()
+      },
+      {
+        name: 'perspective',
+        value: this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px'
+      },
+      {
+        name: 'rotateX',
+        value: this._surface.skew.x + 'deg'
+      }
+    ], immediately);
   }
 
   public change(shift: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : boolean {
@@ -46,7 +63,7 @@ export default class Scale {
     // Set surface scale to a new value
     this._value = result;
     this._surface.updateSkew();
-    this._surface.elements.scale.style.transform = 'scale(' + this._value + ') perspective(' + this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px) rotateX(' + this._surface.skew.x + 'deg)';
+    this._setTransformValues();
     // Indicate that there was a change of scale
     return true;
   }

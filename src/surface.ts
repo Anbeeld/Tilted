@@ -24,6 +24,17 @@ interface SurfaceStyles {
   dynamic: HTMLElement
 }
 
+type TransformValues = {
+  scale: string,
+  perspective: string,
+  rotateX: string,
+  translate3d: string
+}
+type TransformProperty = {
+  changed: boolean,
+  values: TransformValues
+}
+
 export default class Surface {
   private _id: number;
   public get id() : number {return this._id;}
@@ -55,6 +66,8 @@ export default class Surface {
     return {x: this._skew.x, y: this._skew.y};
   }
 
+  private _transformProperty: TransformProperty;
+
   public constructor(elementContainer: HTMLElement, elementMap: HTMLElement, config: {} = {}) {
     this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
@@ -62,8 +75,18 @@ export default class Surface {
     this._elements = this._setupElements(elementContainer, elementMap);
     this._styles = this._setupStyles();
 
+    this._transformProperty = {
+      changed: false,
+      values: {
+        scale: '',
+        perspective: '',
+        rotateX: '',
+        translate3d: '0, 0, 0'
+      }
+    };
+
     this._animationStorage = new AnimationStorage(this);
-    this._animationExecutor = new AnimationExecutor(this._animationStorage);
+    this._animationExecutor = new AnimationExecutor(this);
 
     initControls(this);
 
@@ -167,6 +190,32 @@ export default class Surface {
       y: this._limit.y
     };
   }
+  
+  public setTransformValues(values: {name: string, value: string}[], immediately: boolean = false) : void {
+    for (let {name, value} of values) {
+      if (this._transformProperty.values.hasOwnProperty(name as keyof TransformValues)) {
+        this._transformProperty.values[name as keyof TransformValues] = value;
+      }
+    }
+    if (immediately) {
+      this.applyTransformProperty(true);
+    } else {
+      this._transformProperty.changed = true;
+      this._animationExecutor.initiate();
+    }
+  }
+  public applyTransformProperty(forced: boolean = false) : void {
+    if (!this._transformProperty.changed && !forced) {
+      return;
+    }
+    this._transformProperty.changed = false;
+    
+    this._elements.position.style.transform = 
+    `scale(${this._transformProperty.values.scale}) ` +
+    `perspective(${this._transformProperty.values.perspective}) ` +
+    `rotateX(${this._transformProperty.values.rotateX}) ` +
+    `translate3d(${this._transformProperty.values.translate3d})`;
+  }
 
   public move(vector: {x: number, y: number}, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     // Check if vector is zero
@@ -205,7 +254,10 @@ export default class Surface {
     }
     // Change surface coords to new ones
     this._coords = result;
-    this.elements.position.style.transform = 'translate3d(' + (this._coords.x * -1) + 'px, ' + (this._coords.y * -1) + 'px, 0)';
+    this.setTransformValues([{
+      name: 'translate3d',
+      value: (this._coords.x * -1) + 'px, ' + (this._coords.y * -1) + 'px, 0'
+    }]);
     // Indicate that there is change of coords
     return true;
   }

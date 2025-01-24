@@ -42,7 +42,7 @@ export default class AnimationSurfaceZoom extends Animation {
     let shiftRatio = clampRatio(applyEasingFunction(timeRatio, this._bezierEasing));
 
     if (shiftRatio >= 1) {
-      // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.coords.x ' + this._surface.coords.x + ', surface.coords.y ' + this._surface.coords.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
+      this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.scale.value ' + this._surface.scale.value + ', target ' + this._target);
 
       this._surface.scale.changeTo(this._target);
       return false;

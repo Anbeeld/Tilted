@@ -45,34 +45,34 @@ export interface ConfigProperties {
 
 export function setupConfig(configCustom: {}) : ConfigProperties {
   let config = {
-    DEBUG_MODE: 0,
+    debugMode: 0,
 
-    SCALE_STEP: 0.20, // Percent of 1/2 total scale, e.g. 0.20 means 5 steps from 0.25 to 0.50 and 5 steps from 0.50 to 1
-    SCALE_MIN: 0.25,
-    SCALE_DEFAULT: 0.50,
-    SCALE_MAX: 1.00,
-    SCALE_ROUNDING: 3,
-    SCALE_GLIDE: 0.10,
+    scaleStep: 0.20, // Percent of 1/2 total scale, e.g. 0.20 means 5 steps from 0.25 to 0.50 and 5 steps from 0.50 to 1
+    scaleMin: 0.25,
+    scaleDefault: 0.50,
+    scaleMax: 1.00,
+    scaleRounding: 3,
+    scaleGlide: 0.10,
 
-    PERSPECTIVE_DISTANCE: 600,
-    ROTATE_X_MAX: 35,
+    perspectiveDistance: 600,
+    rotateXMax: 35,
 
-    EDGE_MOVE_ENABLED: 0,
-    EDGE_MOVE_AREA: 20,
-    EDGE_MOVE_SPEED: 10,
+    edgeMoveEnabled: 0,
+    edgeMoveArea: 20,
+    edgeMoveSpeed: 10,
     
-    ANIMATION_SCALE_TIME: 400,
-    ANIMATION_GLIDE_TIME: 400,
+    animationScaleTime: 400,
+    animationGlideTime: 400,
 
-    DURATION_FOR_THROW: 150,
-    THROW_MULTIPLIER: 4,
-    ANIMATION_THROW_TIME: 1000,
+    durationForThrow: 150,
+    throwMultiplier: 4,
+    animationThrowTime: 1000,
 
-    COORD_ROUNDING_INTERIM: 1,
-    COORD_ROUNDING_FINAL: 0,
+    coordRoundingInterim: 1,
+    coordRoundingFinal: 0,
 
-    SCALE_ROUNDING_INTERIM: 4,
-    SCALE_ROUNDING_FINAL: 2
+    scaleRoundingInterim: 4,
+    scaleRoundingFinal: 2
   }
 
   for (const parameter in configCustom) {
@@ -89,94 +89,94 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
 
   const CONFIG = {
     DEBUG_MODE: {
-      VALUE: config.DEBUG_MODE,
+      VALUE: config.debugMode,
       TYPE: ConfigPropertyType.Integer
     },
 
     SCALE_STEP: {
-      VALUE: config.SCALE_STEP,
+      VALUE: config.scaleStep,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_MIN: {
-      VALUE: config.SCALE_MIN,
+      VALUE: config.scaleMin,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_DEFAULT: {
-      VALUE: config.SCALE_DEFAULT,
+      VALUE: config.scaleDefault,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_MAX: {
-      VALUE: config.SCALE_MAX,
+      VALUE: config.scaleMax,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_ROUNDING: {
-      VALUE: config.SCALE_ROUNDING,
+      VALUE: config.scaleRounding,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_GLIDE: {
-      VALUE: config.SCALE_GLIDE,
+      VALUE: config.scaleGlide,
       TYPE: ConfigPropertyType.Number
     },
 
     PERSPECTIVE_DISTANCE: {
-      VALUE: Math.round(config.PERSPECTIVE_DISTANCE),
+      VALUE: Math.round(config.perspectiveDistance),
       TYPE: ConfigPropertyType.Length
     },
     ROTATE_X_MAX: {
-      VALUE: Math.round(config.ROTATE_X_MAX),
+      VALUE: Math.round(config.rotateXMax),
       TYPE: ConfigPropertyType.Angle
     },
 
     EDGE_MOVE_ENABLED: {
-      VALUE: config.EDGE_MOVE_ENABLED,
+      VALUE: config.edgeMoveEnabled,
       TYPE: ConfigPropertyType.Integer
     },
     EDGE_MOVE_AREA: {
-      VALUE: Math.round(config.EDGE_MOVE_AREA),
+      VALUE: Math.round(config.edgeMoveArea),
       TYPE: ConfigPropertyType.Length
     },
     EDGE_MOVE_SPEED: {
-      VALUE: Math.round(config.EDGE_MOVE_SPEED),
+      VALUE: Math.round(config.edgeMoveSpeed),
       TYPE: ConfigPropertyType.Length
     },
 
     ANIMATION_SCALE_TIME: {
-      VALUE: Math.round(config.ANIMATION_SCALE_TIME),
+      VALUE: Math.round(config.animationScaleTime),
       TYPE: ConfigPropertyType.Time
     },
     ANIMATION_GLIDE_TIME: {
-      VALUE: Math.round(config.ANIMATION_GLIDE_TIME),
+      VALUE: Math.round(config.animationGlideTime),
       TYPE: ConfigPropertyType.Time
     },
     
     DURATION_FOR_THROW: {
-      VALUE: Math.round(config.DURATION_FOR_THROW),
+      VALUE: Math.round(config.durationForThrow),
       TYPE: ConfigPropertyType.Time
     },
     THROW_MULTIPLIER: {
-      VALUE: config.THROW_MULTIPLIER,
+      VALUE: config.throwMultiplier,
       TYPE: ConfigPropertyType.Number
     },
     ANIMATION_THROW_TIME: {
-      VALUE: Math.round(config.ANIMATION_THROW_TIME),
+      VALUE: Math.round(config.animationThrowTime),
       TYPE: ConfigPropertyType.Time
     },
 
     COORD_ROUNDING_INTERIM: {
-      VALUE: config.COORD_ROUNDING_INTERIM,
+      VALUE: config.coordRoundingInterim,
       TYPE: ConfigPropertyType.Integer
     },
     COORD_ROUNDING_FINAL: {
-      VALUE: config.COORD_ROUNDING_FINAL,
+      VALUE: config.coordRoundingFinal,
       TYPE: ConfigPropertyType.Integer
     },
 
     SCALE_ROUNDING_INTERIM: {
-      VALUE: config.SCALE_ROUNDING_INTERIM,
+      VALUE: config.scaleRoundingInterim,
       TYPE: ConfigPropertyType.Integer
     },
     SCALE_ROUNDING_FINAL: {
-      VALUE: config.SCALE_ROUNDING_FINAL,
+      VALUE: config.scaleRoundingFinal,
       TYPE: ConfigPropertyType.Integer
     }
   };

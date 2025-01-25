@@ -1,5 +1,5 @@
 import Surface from './surface.js';
-import { clamp, EasingFunctions, roundFloat, roundTo } from './utils.js';
+import { clamp, clampRatio, EasingFunctions, roundFloat, roundTo } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
 
@@ -79,23 +79,17 @@ export default class Scale {
     return this.change(value - this._value, -1, finalRounding);
   }
 
-  public zoom(shift: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : number {
+  public zoom(shift: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : false|{new: number, combined: number, time: number} {
     let initialShift = shift;
     // Check if shift is zero
     if (shift === 0) {
-      return 0;
+      return false;
     }
-    // Add remaining shift of current animation if it exists
-    shift = this._addCurrentZoom(shift);
-    // Check if shift is zero
-    if (shift === 0) {
-      return 0;
-    }
-    // Change shift value so that current scale + shift would equal step value
+    // Change shift value so that current scale + remaining + shift would equal step value
     shift = this._roundToStep(shift);
     // Check if shift is zero
     if (shift === 0) {
-      return 0;
+      return false;
     }
     // Round shift
     if (interimRounding >= 0) {
@@ -103,25 +97,36 @@ export default class Scale {
     }
     // Check if shift is zero
     if (shift === 0) {
-      return 0;
+      return false;
     }
+    // Preserve "new" shift to return it later
+    let newShift = shift;
+    // Add remaining shift to get "combined" one
+    shift += this._remaining;
+    // Calculate ratio of initial vs combined shift, clamped because we only want shorter animations
+    let ratio = clampRatio(Math.abs(shift / initialShift));
+    time = time * ratio;
     // Perform animation
-    this._surface.animationStorage.create(Animations.SurfaceZoom, [shift, time * clamp(Math.abs(shift / initialShift), 0, 1), easingFormula]);
+    this._surface.animationStorage.create(Animations.SurfaceZoom, [shift, time, easingFormula]);
     this._surface.animationExecutor.initiate();
     // Indicate that there is change of scale
-    return shift;
+    return {
+      new: newShift,
+      combined: shift,
+      time: time
+    };
   }
 
   public zoomTo(value: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc) : boolean {
     if (this._value === value) {
       return false;
     }
-    return this.zoom(value - this._value, time, easingFormula, -1) > 0;
+    return this.zoom(value - this._value, time, easingFormula, -1) !== false;
   }
 
   public step(steps: number) : boolean {
     let positive = steps > 0 ? true : false;
-    return this._surface.scale.zoom(steps * this._surface.scale.stepSize(positive)) !== 0;
+    return this._surface.scale.zoom(steps * this._surface.scale.stepSize(positive)) !== false;
   }
   
   public stepAndGlide(steps: number, mouse: MouseParams|null = null) : void {
@@ -134,15 +139,18 @@ export default class Scale {
     let shiftPerStep = this.stepSize(positive);
 
     let initialShift = steps * shiftPerStep;
-    let actualShift = this.zoom(initialShift);
+    let zoom = this.zoom(initialShift);
 
-    if (actualShift !== 0 && mouse !== null) {
+    // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
+    // "combined" shift because by default glide animation time is always the same.
+    if (zoom !== false && mouse !== null) {
       let vector = this._surface.scale.glidePerStep(mouse, positive);
-      let factor = actualShift / initialShift;
-      console.log(factor);
-      // vector.x *= factor;
-      // vector.y *= factor;
-      this._surface.glide(vector, this._surface.CONFIG.ANIMATION_GLIDE_TIME.VALUE * clamp(Math.abs(actualShift / initialShift), 0, 1));
+
+      let factor = Math.abs(zoom.new / initialShift);
+      vector.x *= factor;
+      vector.y *= factor;
+
+      this._surface.glide(vector, zoom.time);
     }
   }
 
@@ -166,26 +174,23 @@ export default class Scale {
     }
   }
 
-  private _addCurrentZoom(shift: number) : number {
-    if (this._surface.animationStorage.exists(Animations.SurfaceZoom) && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
-      return shift + this._surface.animationStorage.surfaceZoom!.remaining;
+  private get _remaining() : number {
+    if (this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
+      return this._surface.animationStorage.surfaceZoom!.remaining;
     }
-    return shift;
-  }
-
-  private get _projection() : number {
-    let projection = this._surface.scale.value;
-    if (this._surface.animationStorage.exists(Animations.SurfaceZoom) && this._surface.animationStorage.surfaceZoom!.remaining !== 0) {
-      projection += this._surface.animationStorage.surfaceZoom!.remaining;
-    }
-    return clamp(roundFloat(projection, 4), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+    return 0;
   }
 
   private _roundToStep(shift: number) : number {
     let projection = roundTo(
-      clamp(this._surface.scale.value + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
+      clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
       this._surface.scale.stepSize(shift > 0 ? true : false, this._surface.scale.value + shift)
     );
-    return projection - this._surface.scale.value;
+
+    return projection - this._surface.scale.value - this._remaining;
+  }
+
+  private get _projection() : number {
+    return clamp(roundFloat(this._surface.scale.value + this._remaining, 4), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
   }
 }

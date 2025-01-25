@@ -48,7 +48,7 @@ export default class AnimationSurfaceGlide extends Animation {
 
     this._bezierEasing = easingFormula;
 
-    this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this._vector.x.value + ', y ' + this._vector.y.value + ', initial.x ' + this._initial.x + ', initial.y ' + this._initial.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
+    this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this._vector.x.value * this._vector.x.sign + ', y ' + this._vector.y.value * this._vector.y.sign + ', initial.x ' + this._initial.x + ', initial.y ' + this._initial.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
   }
 
   public step(timestampCurrent: number) : boolean {

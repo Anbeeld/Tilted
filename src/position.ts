@@ -91,10 +91,10 @@ export default class Position {
     if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
-    this._surface.CONFIG.DEBUG_MODE.VALUE && this._surface.log([
-      {desc: 'moveTo coords.x', from: this._coords.x, to: coords.x},
-      {desc: 'moveTo coords.y', from: this._coords.y, to: coords.y}
-    ]);
+    // this._surface.CONFIG.DEBUG_MODE.VALUE && this._surface.log([
+    //   {desc: 'moveTo coords.x', from: this._coords.x, to: coords.x},
+    //   {desc: 'moveTo coords.y', from: this._coords.y, to: coords.y}
+    // ]);
     return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
   }
 
@@ -174,10 +174,10 @@ export default class Position {
     if (this._coords.x === coords.x && this._coords.y === coords.y) {
       return false;
     }
-    this._surface.CONFIG.DEBUG_MODE.VALUE && this._surface.log([
-      {desc: 'glideTo coords.x', from: this._coords.x, to: coords.x},
-      {desc: 'glideTo coords.y', from: this._coords.y, to: coords.y}
-    ]);
+    // this._surface.CONFIG.DEBUG_MODE.VALUE && this._surface.log([
+    //   {desc: 'glideTo coords.x', from: this._coords.x, to: coords.x},
+    //   {desc: 'glideTo coords.y', from: this._coords.y, to: coords.y}
+    // ]);
     return this.glide({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, time, easingFormula, -1, finalRounding);
   }
 

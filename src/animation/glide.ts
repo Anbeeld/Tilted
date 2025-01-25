@@ -29,8 +29,8 @@ export default class AnimationSurfaceGlide extends Animation {
     super(surface);
 
     this._initial = {
-      x: surface.coords.x,
-      y: surface.coords.y
+      x: surface.position.coords.x,
+      y: surface.position.coords.y
     };
 
     this._vector = {
@@ -61,9 +61,9 @@ export default class AnimationSurfaceGlide extends Animation {
 
     if (moveRatio >= 1) {
 
-      this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.coords.x ' + this._surface.coords.x + ', surface.coords.y ' + this._surface.coords.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
+      this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.coords.x ' + this._surface.position.coords.x + ', surface.coords.y ' + this._surface.position.coords.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
 
-      this._surface.moveTo({x: this._target.x, y: this._target.y});
+      this._surface.position.moveTo({x: this._target.x, y: this._target.y});
 
 
       return false;
@@ -83,12 +83,12 @@ export default class AnimationSurfaceGlide extends Animation {
       }
 
       if (step.x > 0 || step.y > 0) {
-        this._surface.move({x: step.x * this._vector.x.sign, y: step.y * this._vector.y.sign}, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this._surface.position.move({x: step.x * this._vector.x.sign, y: step.y * this._vector.y.sign}, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
         this._current.x = roundFloat(this._current.x + step.x, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
         this._current.y = roundFloat(this._current.y + step.y, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
         this._timestampLast = timestampCurrent;
 
-        this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
+        // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
       }
       return true;
     }

@@ -58,12 +58,12 @@ export function moveSurfaceByEdge(surface: Surface, mouse: MouseParams) : boolea
   }
 
   let xMoveIsZero = false;
-  if (x === 0 || (x > 0 && surface.coords.x >= surface.max.x) || (x < 0 && surface.coords.x <= surface.min.x)) {
+  if (x === 0 || (x > 0 && surface.position.coords.x >= surface.position.max.x) || (x < 0 && surface.position.coords.x <= surface.position.min.x)) {
     xMoveIsZero = true;
   }
 
   let yMoveIsZero = false;
-  if (y === 0 || (y > 0 && surface.coords.y >= surface.max.y) || (y < 0 && surface.coords.y <= surface.min.y)) {
+  if (y === 0 || (y > 0 && surface.position.coords.y >= surface.position.max.y) || (y < 0 && surface.position.coords.y <= surface.position.min.y)) {
     yMoveIsZero = true;
   }
 

@@ -58,7 +58,7 @@ export default class AnimationSurfaceZoom extends Animation {
         this._current = roundFloat(this._current + step, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE);
         this._timestampLast = timestampCurrent;
 
-        this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
+        // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
       }
       return true;
     }

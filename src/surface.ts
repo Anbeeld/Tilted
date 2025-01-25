@@ -1,4 +1,4 @@
-import { roundFloat, clamp, EasingFunctions } from './utils.js';
+import { roundFloat } from './utils.js';
 import { ConfigProperties, setupConfig } from './config.js';
 import { initControls } from './controls/controls.js';
 import Raoi from 'raoi';
@@ -7,6 +7,7 @@ import AnimationExecutor from './animation/executor.js';
 import { AnimationStorage, Animations } from './animation/storage.js';
 import { generateCssDynamic, generateCssStatic } from './css/css.js';
 import Scale from './scale.js';
+import Position from './position.js';
 
 interface SurfaceElements {
   container: HTMLElement,
@@ -45,6 +46,9 @@ export default class Surface {
 
   private _styles: SurfaceStyles;
 
+  private _position: Position;
+  public get position() : Position {return this._position;}
+
   private _scale: Scale;
   public get scale() : Scale {return this._scale;}
 
@@ -54,10 +58,6 @@ export default class Surface {
   public get animationStorage() : AnimationStorage {return this._animationStorage;}
 
   private _viewport = {x: 0, y: 0};
-  private _coords = {x: 0, y: 0};
-  public get coords() : {x: number, y: number} {
-    return {x: this._coords.x, y: this._coords.y};
-  }
 
   private _rotate = {x: 0, y: 0};
   public get rotate() : {x: number, y: number} {
@@ -89,8 +89,10 @@ export default class Surface {
     initControls(this);
 
     this._updateViewport();
-    new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._enforceLimits();}).observe(this.elements.container);
-    new ResizeObserver(() => {this._updateCssDynamic();this._enforceLimits();}).observe(this.elements.surface);
+    new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._position.enforceLimits();}).observe(this.elements.container);
+    new ResizeObserver(() => {this._updateCssDynamic();this._position.enforceLimits();}).observe(this.elements.surface);
+
+    this._position = new Position(this);
 
     this._scale = new Scale(this, this.CONFIG.SCALE_DEFAULT.VALUE);
   }
@@ -164,25 +166,6 @@ export default class Surface {
   public get surfaceHeight() : number {
     return this.elements.surface.offsetHeight;
   }
-
-  private get _limit() : {x: number, y: number} {
-    return {
-      x: Math.round(this.surfaceWidth / 2 - this.containerWidth * 0.25),
-      y: Math.round(this.surfaceHeight / 2 - this.containerHeight * 0.25)
-    };
-  }
-  public get min() : {x: number, y: number} {
-    return {
-      x: this._limit.x * -1,
-      y: this._limit.y * -1
-    };
-  }
-  public get max() : {x: number, y: number} {
-    return {
-      x: this._limit.x,
-      y: this._limit.y
-    };
-  }
   
   public setTransformValues(values: {name: string, value: string}[], immediately: boolean = false) : void {
     for (let {name, value} of values) {
@@ -208,146 +191,6 @@ export default class Surface {
     `perspective(${this._transformProperty.values.perspective}) ` +
     `rotateX(${this._transformProperty.values.rotateX}) ` +
     `translate3d(${this._transformProperty.values.translate3d})`;
-  }
-
-  public move(vector: {x: number, y: number}, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Round vector
-    if (interimRounding >= 0) {
-      vector.x = roundFloat(vector.x, interimRounding);
-      vector.y = roundFloat(vector.y, interimRounding);
-    }
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Calculate move result with limits and final rounding
-    let result;
-    if (finalRounding >= 0) {
-      result = {
-        x: roundFloat(this._coords.x + vector.x, finalRounding),
-        y: roundFloat(this._coords.y + vector.y, finalRounding)
-      };
-    } else {
-      result = {
-        x: this._coords.x + vector.x,
-        y: this._coords.y + vector.y
-      };
-    }
-    result = {
-      x: clamp(result.x, this.min.x, this.max.x),
-      y: clamp(result.y, this.min.y, this.max.y)
-    };
-    // Check if coords will change
-    if (result.x === this._coords.x && result.y === this._coords.y) {
-      return false;
-    }
-    // Change surface coords to new ones
-    this._coords = result;
-    this.setTransformValues([{
-      name: 'translate3d',
-      value: (this._coords.x * -1) + 'px, ' + (this._coords.y * -1) + 'px, 0'
-    }]);
-    // Indicate that there is change of coords
-    return true;
-  }
-
-  public moveTo(coords: {x: number, y: number}, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    if (finalRounding >= 0) {
-      coords = {
-        x: roundFloat(coords.x, finalRounding),
-        y: roundFloat(coords.y, finalRounding)
-      }
-    }
-    if (this._coords.x === coords.x && this._coords.y === coords.y) {
-      return false;
-    }
-    this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'moveTo coords.x', from: this._coords.x, to: coords.x},
-      {desc: 'moveTo coords.y', from: this._coords.y, to: coords.y}
-    ]);
-    return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
-  }
-
-  public glide(vector: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Round vector
-    if (interimRounding >= 0) {
-      vector = {
-        x: roundFloat(vector.x, interimRounding),
-        y: roundFloat(vector.y, interimRounding)
-      }
-    }
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Calculate glide result with final rounding
-    let result;
-    if (finalRounding >= 0) {
-      result = {
-        x: roundFloat(this._coords.x + vector.x, finalRounding),
-        y: roundFloat(this._coords.y + vector.y, finalRounding)
-      }
-    } else {
-      result = {
-        x: this._coords.x + vector.x,
-        y: this._coords.y + vector.y
-      }
-    }
-    // Set vector = result - current, enforsing limits and final rounding
-    vector = {
-      x: clamp(result.x, this.min.x, this.max.x) - this._coords.x,
-      y: clamp(result.y, this.min.y, this.max.y) - this._coords.y
-    }
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Round vector
-    if (interimRounding >= 0) {
-      vector = {
-        x: roundFloat(vector.x, interimRounding),
-        y: roundFloat(vector.y, interimRounding)
-      }
-    }
-    // Check if vector is zero
-    if (vector.x === 0 && vector.y === 0) {
-      return false;
-    }
-    // Log
-    this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'glide coords.x', to: vector.x},
-      {desc: 'glide coords.y', to: vector.y}
-    ]);
-    // Perform animation
-    this._animationStorage.create(Animations.SurfaceGlide, [{x: vector.x, y: vector.y}, time, easingFormula]);
-    this._animationExecutor.initiate();
-    // Indicate that there is change of coords
-    return true;
-  }
-
-  public glideTo(coords: {x: number, y: number}, time: number = this.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, finalRounding: number = this.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
-    if (finalRounding >= 0) {
-      coords = {
-        x: roundFloat(coords.x, finalRounding),
-        y: roundFloat(coords.y, finalRounding)
-      }
-    }
-    if (this._coords.x === coords.x && this._coords.y === coords.y) {
-      return false;
-    }
-    this.CONFIG.DEBUG_MODE.VALUE && this.log([
-      {desc: 'glideTo coords.x', from: this._coords.x, to: coords.x},
-      {desc: 'glideTo coords.y', from: this._coords.y, to: coords.y}
-    ]);
-    return this.glide({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, time, easingFormula, -1, finalRounding);
   }
 
   private _updateViewport() : void {
@@ -385,19 +228,15 @@ export default class Surface {
 
     console.log(
       changesString +
-      `x: ${this._coords.x}\n` +
-      `y: ${this._coords.y}\n` +
-      `limit.x: ${this._limit.x}\n` +
-      `limit.y: ${this._limit.y}\n` +
+      `x: ${this._position.coords.x}\n` +
+      `y: ${this._position.coords.y}\n` +
+      `limit.x: ${this._position.limit.x}\n` +
+      `limit.y: ${this._position.limit.y}\n` +
       `scale: ${this.scale.value}`
     );
   }
 
   public cancelOngoingMoves() : void {
     this._animationStorage.destroy(Animations.SurfaceGlide);
-  }
-
-  private _enforceLimits() : void {
-    this.moveTo({x: clamp(this._coords.x, this.min.x, this.max.x), y: clamp(this._coords.y, this.min.y, this.max.y)});
   }
 }

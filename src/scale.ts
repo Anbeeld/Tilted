@@ -150,7 +150,7 @@ export default class Scale {
       vector.x *= factor;
       vector.y *= factor;
 
-      this._surface.glide(vector, zoom.time);
+      this._surface.position.glide(vector, zoom.time);
     }
   }
 

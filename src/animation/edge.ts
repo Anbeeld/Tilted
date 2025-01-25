@@ -31,6 +31,6 @@ export default class AnimationSurfaceEdge extends Animation {
 
     this._timestampLast = timestampCurrent;
     
-    return this._surface.move({x, y});
+    return this._surface.position.move({x, y});
   }
 }

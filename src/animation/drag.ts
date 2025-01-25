@@ -21,7 +21,7 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   public step(mouse: MouseParams) : boolean {
-    let wasMoved = this._surface.move({x: (this._prev.x - mouse.x) / this._surface.scale.value, y: (this._prev.y - mouse.y) / this._surface.scale.value});
+    let wasMoved = this._surface.position.move({x: (this._prev.x - mouse.x) / this._surface.scale.value, y: (this._prev.y - mouse.y) / this._surface.scale.value});
     this._cumulated = {
       x: this._cumulated.x + this._prev.x - mouse.x,
       y: this._cumulated.y + this._prev.y - mouse.y
@@ -41,7 +41,7 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   private _throw() : void {
-    this._surface.glide(
+    this._surface.position.glide(
       {
         x: this._cumulated.x * this._surface.CONFIG.THROW_MULTIPLIER.VALUE,
         y: this._cumulated.y * this._surface.CONFIG.THROW_MULTIPLIER.VALUE

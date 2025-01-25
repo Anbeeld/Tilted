@@ -1,3 +1,5 @@
+export type Coords = {x: number, y: number};
+
 export interface MoveChain {
   uuid: string,
   direction: {

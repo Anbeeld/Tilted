@@ -4,7 +4,7 @@ import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
 import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
-import { EasingFunctions, roundFloat } from '../utils.js';
+import { EasingFunctions, roundFloat, Coords } from '../utils.js';
 
 export enum Animations {
   SurfaceGlide = 'surfaceGlide',
@@ -62,7 +62,7 @@ export class AnimationStorage {
     }
   }
   
-  private _createSurfaceGlide(vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) : void {
+  private _createSurfaceGlide(vector: Coords, animationTime: number, easingFormula: EasingFunctions) : void {
     if (this._existsSurfaceGlide()) {
       vector = {
         x: roundFloat(vector.x + this._surfaceGlide!.remaining.x, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE),
@@ -96,7 +96,7 @@ export class AnimationStorage {
     return this._surfaceZoom !== null;
   }
   
-  private _createSurfaceEdge(vector: {x: number, y: number}) : void {
+  private _createSurfaceEdge(vector: Coords) : void {
     this._destroySurfaceEdge();
     this._surfaceEdge = new AnimationSurfaceEdge(this._surface, vector);
   }

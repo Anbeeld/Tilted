@@ -1,11 +1,11 @@
-import { roundFloat, clamp, EasingFunctions } from './utils.js';
+import { roundFloat, clamp, EasingFunctions, Coords } from './utils.js';
 import { Animations } from './animation/storage.js';
 import Surface from './surface.js';
 
 export default class Position {
   private _surface: Surface;
   private _coords = {x: 0, y: 0};
-  public get coords() : {x: number, y: number} {
+  public get coords() : Coords {
     return {x: this._coords.x, y: this._coords.y};
   }
 
@@ -13,30 +13,30 @@ export default class Position {
     this._surface = surface;
   }
 
-  private get _limit() : {x: number, y: number} {
+  private get _limit() : Coords {
     return {
       x: Math.round(this._surface.surfaceWidth / 2 - this._surface.containerWidth * 0.25),
       y: Math.round(this._surface.surfaceHeight / 2 - this._surface.containerHeight * 0.25)
     };
   }
-  public get limit() : {x: number, y: number} {
+  public get limit() : Coords {
     return this._limit;
   }
-  
-  public get min() : {x: number, y: number} {
+
+  public get min() : Coords {
     return {
       x: this._limit.x * -1,
       y: this._limit.y * -1
     };
   }
-  public get max() : {x: number, y: number} {
+  public get max() : Coords {
     return {
       x: this._limit.x,
       y: this._limit.y
     };
   }
 
-  public move(vector: {x: number, y: number}, interimRounding: number = this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public move(vector: Coords, interimRounding: number = this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     // Check if vector is zero
     if (vector.x === 0 && vector.y === 0) {
       return false;
@@ -81,7 +81,7 @@ export default class Position {
     return true;
   }
 
-  public moveTo(coords: {x: number, y: number}, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public moveTo(coords: Coords, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     if (finalRounding >= 0) {
       coords = {
         x: roundFloat(coords.x, finalRounding),
@@ -98,7 +98,7 @@ export default class Position {
     return this.move({x: coords.x - this._coords.x, y: coords.y - this._coords.y}, -1, finalRounding);
   }
 
-  public glide(vector: {x: number, y: number}, time: number = this._surface.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public glide(vector: Coords, time: number = this._surface.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     // Check if vector is zero
     if (vector.x === 0 && vector.y === 0) {
       return false;
@@ -159,7 +159,7 @@ export default class Position {
     return true;
   }
 
-  public glideTo(coords: {x: number, y: number}, time: number = this._surface.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
+  public glideTo(coords: Coords, time: number = this._surface.CONFIG.ANIMATION_GLIDE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, finalRounding: number = this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) : boolean {
     if (finalRounding >= 0) {
       coords = {
         x: roundFloat(coords.x, finalRounding),

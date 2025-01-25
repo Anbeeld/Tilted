@@ -1,16 +1,17 @@
+import { Coords } from '../utils.js';
 import Surface from '../surface.js';
 import Animation from './animation.js';
 
 export default class AnimationSurfaceEdge extends Animation {
-  private _vector: {x: number, y: number};
+  private _vector: Coords;
 
-  constructor(surface: Surface, vector: {x: number, y: number}) {
+  constructor(surface: Surface, vector: Coords) {
     super(surface);
 
     this._vector = vector;
   }
 
-  public update(vector: {x: number, y: number}) : void {
+  public update(vector: Coords) : void {
     if (this._vector.x !== vector.x) {
       this._vector.x = vector.x;
     }

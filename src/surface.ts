@@ -1,4 +1,4 @@
-import { roundFloat } from './utils.js';
+import { roundFloat, Coords } from './utils.js';
 import { ConfigProperties, setupConfig } from './config.js';
 import { initControls } from './controls/controls.js';
 import Raoi from 'raoi';
@@ -60,7 +60,7 @@ export default class Surface {
   private _viewport = {x: 0, y: 0};
 
   private _rotate = {x: 0, y: 0};
-  public get rotate() : {x: number, y: number} {
+  public get rotate() : Coords {
     return {x: this._rotate.x, y: this._rotate.y};
   }
 

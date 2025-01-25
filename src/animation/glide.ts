@@ -1,15 +1,15 @@
-import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '../utils.js';
+import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction, Coords } from '../utils.js';
 import Animation from './animation.js';
 import Surface from '../surface.js';
 
 export default class AnimationSurfaceGlide extends Animation {
-  private _initial: {x: number, y: number};
+  private _initial: Coords;
   private _vector: {
     x: {value: number, sign: number},
     y: {value: number, sign: number}
   };
-  private _current: {x: number, y: number} = {x: 0, y: 0};
-  private get _target(): {x: number, y: number} {
+  private _current: Coords = {x: 0, y: 0};
+  private get _target(): Coords {
     return {
       x: this._initial.x + this._vector.x.value * this._vector.x.sign,
       y: this._initial.y + this._vector.y.value * this._vector.y.sign
@@ -18,14 +18,14 @@ export default class AnimationSurfaceGlide extends Animation {
   private _bezierEasing: EasingFunctions;
   private _animationTime: number;
 
-  public get remaining() : {x: number, y: number} {
+  public get remaining() : Coords {
     return {
       x: (this._vector.x.value - this._current.x) * this._vector.x.sign,
       y: (this._vector.y.value - this._current.y) * this._vector.y.sign
     };
   }
 
-  constructor(surface: Surface, vector: {x: number, y: number}, animationTime: number, easingFormula: EasingFunctions) {
+  constructor(surface: Surface, vector: Coords, animationTime: number, easingFormula: EasingFunctions) {
     super(surface);
 
     this._initial = {

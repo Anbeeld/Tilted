@@ -1,5 +1,5 @@
 import Surface from './surface.js';
-import { clamp, clampRatio, EasingFunctions, roundFloat, roundTo } from './utils.js';
+import { clamp, clampRatio, EasingFunctions, roundFloat, roundTo, Coords } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
 
@@ -165,7 +165,7 @@ export default class Scale {
     }
   }
 
-  public glidePerStep(mouse: MouseParams, positive: boolean) : {x: number, y: number} {
+  public glidePerStep(mouse: MouseParams, positive: boolean) : Coords {
     let positiveMultiplier = positive ? 1 : -1;
     let scaleValue = positive ? this._value + this._surface.scale.stepSize(true) : this._value;
     return {

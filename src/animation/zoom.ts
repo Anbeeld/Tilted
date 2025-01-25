@@ -49,12 +49,12 @@ export default class AnimationSurfaceZoom extends Animation {
       let step = 0;
       
       if (this._shift.value > 0 && this._shift.value > this._current) {
-        step = roundFloat(Math.max(0, this._shift.value * shiftRatio - this._current), this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE);
+        step = roundFloat(Math.max(0, this._shift.value * shiftRatio - this._current), this._surface.CONFIG.SCALE_ROUNDING.VALUE);
       }
 
       if (step > 0) {
         this._surface.scale.change(step * this._shift.sign);
-        this._current = roundFloat(this._current + step, this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE);
+        this._current = roundFloat(this._current + step, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
         this._timestampLast = timestampCurrent;
 
         // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);

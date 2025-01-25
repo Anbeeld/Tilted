@@ -22,7 +22,7 @@ export default class Scale {
   }
 
   private get _projection() : number {
-    return clamp(roundFloat(this._surface.scale.value + this._remaining, this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+    return clamp(roundFloat(this._surface.scale.value + this._remaining, this._surface.CONFIG.SCALE_ROUNDING.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
   }
 
   private _setTransformValues(immediately: boolean = false) : void {
@@ -42,14 +42,14 @@ export default class Scale {
     ], immediately);
   }
 
-  public change(shift: number, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : boolean {
+  public change(shift: number, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
     // Check if shift is zero
     if (shift === 0) {
       return false;
     }
     // Round shift
-    if (interimRounding >= 0) {
-      shift = roundFloat(shift, interimRounding);
+    if (rounding >= 0) {
+      shift = roundFloat(shift, rounding);
     }
     // Check if shift is zero
     if (shift === 0) {
@@ -57,8 +57,8 @@ export default class Scale {
     }
     // Calculate scale result with limits and final rounding
     let result;
-    if (finalRounding >= 0) {
-      result = roundFloat(this._value + shift, finalRounding);
+    if (rounding >= 0) {
+      result = roundFloat(this._value + shift, rounding);
     } else {
       result = this._value + shift;
     }
@@ -75,17 +75,17 @@ export default class Scale {
     return true;
   }
 
-  public changeTo(value: number, finalRounding: number = this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE) : boolean {
-    if (finalRounding >= 0) {
-      value = roundFloat(value, finalRounding);
+  public changeTo(value: number, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
+    if (rounding >= 0) {
+      value = roundFloat(value, rounding);
     }
     if (this._value === value) {
       return false;
     }
-    return this.change(value - this._value, -1, finalRounding);
+    return this.change(value - this._value, rounding);
   }
 
-  public zoom(shift: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, interimRounding: number = this._surface.CONFIG.SCALE_ROUNDING_INTERIM.VALUE) : false|{new: number, combined: number, time: number} {
+  public zoom(shift: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : false|{new: number, combined: number, time: number} {
     let initialShift = shift;
     // Check if shift is zero
     if (shift === 0) {
@@ -98,8 +98,8 @@ export default class Scale {
       return false;
     }
     // Round shift
-    if (interimRounding >= 0) {
-      shift = roundFloat(shift, interimRounding);
+    if (rounding >= 0) {
+      shift = roundFloat(shift, rounding);
     }
     // Check if shift is zero
     if (shift === 0) {

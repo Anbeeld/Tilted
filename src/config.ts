@@ -38,9 +38,6 @@ export interface ConfigProperties {
 
   COORD_ROUNDING_INTERIM: ConfigProperty, // Rounding of coordinates during animation
   COORD_ROUNDING_FINAL: ConfigProperty // Rounding of coordinates after animation
-
-  SCALE_ROUNDING_INTERIM: ConfigProperty, // Rounding of scale during animation
-  SCALE_ROUNDING_FINAL: ConfigProperty // Rounding of scale after animation
 }
 
 export function setupConfig(configCustom: {}) : ConfigProperties {
@@ -69,10 +66,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     animationThrowTime: 1000,
 
     coordRoundingInterim: 1,
-    coordRoundingFinal: 0,
-
-    scaleRoundingInterim: 4,
-    scaleRoundingFinal: 2
+    coordRoundingFinal: 0
   }
 
   for (const parameter in configCustom) {
@@ -168,15 +162,6 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     },
     COORD_ROUNDING_FINAL: {
       VALUE: config.coordRoundingFinal,
-      TYPE: ConfigPropertyType.Integer
-    },
-
-    SCALE_ROUNDING_INTERIM: {
-      VALUE: config.scaleRoundingInterim,
-      TYPE: ConfigPropertyType.Integer
-    },
-    SCALE_ROUNDING_FINAL: {
-      VALUE: config.scaleRoundingFinal,
       TYPE: ConfigPropertyType.Integer
     }
   };

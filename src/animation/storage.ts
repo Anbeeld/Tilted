@@ -102,6 +102,7 @@ export class AnimationStorage {
   }
   
   private _createSurfaceEdge(vector: Coords) : void {
+    this._destroySurfaceGlide();
     this._destroySurfaceEdge();
     this._surfaceEdge = new AnimationSurfaceEdge(this._surface.id, vector);
   }

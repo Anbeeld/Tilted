@@ -19,6 +19,10 @@ export default class Scale {
     return this._value;
   }
 
+  private get _projection() : number {
+    return clamp(roundFloat(this._surface.scale.value + this._remaining, this._surface.CONFIG.SCALE_ROUNDING_FINAL.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+  }
+
   private _setTransformValues(immediately: boolean = false) : void {
     this._surface.setTransformValues([
       {
@@ -138,13 +142,14 @@ export default class Scale {
 
     let shiftPerStep = this.stepSize(positive);
 
+    let initialProjection = this._projection;
     let initialShift = steps * shiftPerStep;
     let zoom = this.zoom(initialShift);
 
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
-    // "combined" shift because by default glide animation time is always the same.
+    // "combined" shift because glide animation time is always the same by default.
     if (zoom !== false && mouse !== null) {
-      let vector = this._surface.scale.glidePerStep(mouse, positive);
+      let vector = this._surface.scale.glidePerStep(mouse, positive, initialProjection);
 
       let factor = Math.abs(zoom.new / initialShift);
       vector.x *= factor;
@@ -156,7 +161,7 @@ export default class Scale {
 
   public stepSize(positive: boolean, value?: number) : number {
     if (value === undefined) {
-      value = this._value;
+      value = this._projection;
     }
     if ((positive && value < this._surface.CONFIG.SCALE_DEFAULT.VALUE) || (!positive && value <= this._surface.CONFIG.SCALE_DEFAULT.VALUE)) {
       return (this._surface.CONFIG.SCALE_DEFAULT.VALUE - this._surface.CONFIG.SCALE_MIN.VALUE) * this._surface.CONFIG.SCALE_STEP.VALUE;
@@ -165,9 +170,12 @@ export default class Scale {
     }
   }
 
-  public glidePerStep(mouse: MouseParams, positive: boolean) : Coords {
+  public glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
+    if (value === undefined) {
+      value = this._projection;
+    }
     let positiveMultiplier = positive ? 1 : -1;
-    let scaleValue = positive ? this._value + this._surface.scale.stepSize(true) : this._value;
+    let scaleValue = positive ? value + this._surface.scale.stepSize(true) : value;
     return {
       x: roundFloat((mouse.x - this._surface.containerWidth / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
       y: roundFloat((mouse.y - this._surface.containerHeight / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
@@ -186,11 +194,6 @@ export default class Scale {
       clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
       this._surface.scale.stepSize(shift > 0 ? true : false, this._surface.scale.value + shift)
     );
-
     return projection - this._surface.scale.value - this._remaining;
-  }
-
-  private get _projection() : number {
-    return clamp(roundFloat(this._surface.scale.value + this._remaining, 4), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
   }
 }

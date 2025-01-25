@@ -5,6 +5,7 @@ import AnimationSurfaceDrag from './drag.js';
 import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import { EasingFunctions, Coords } from '../utils.js';
+import { getSurface } from '../register.js';
 
 export enum Animations {
   SurfaceGlide = 'surfaceGlide',
@@ -14,7 +15,8 @@ export enum Animations {
 };
 
 export class AnimationStorage {
-  private _surface: Surface;
+  private _surfaceId: number;
+  private get _surface() : Surface { return getSurface(this._surfaceId); }
 
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
   public get surfaceGlide() : AnimationSurfaceGlide | null { return this._surfaceGlide; }
@@ -28,8 +30,8 @@ export class AnimationStorage {
   private _surfaceDrag: AnimationSurfaceDrag | null = null;
   public get surfaceDrag() : AnimationSurfaceDrag | null { return this._surfaceDrag; }
   
-  constructor(surface: Surface) {
-    this._surface = surface;
+  constructor(surfaceId: number) {
+    this._surfaceId = surfaceId;
   }
 
   // Uses "as any" cause it's already limited by type
@@ -64,7 +66,7 @@ export class AnimationStorage {
   
   private _createSurfaceGlide(vector: Coords, animationTime: number, easingFormula: EasingFunctions) : void {
     this._destroySurfaceGlide();
-    this._surfaceGlide = new AnimationSurfaceGlide(this._surface, vector, animationTime, easingFormula);
+    this._surfaceGlide = new AnimationSurfaceGlide(this._surface.id, vector, animationTime, easingFormula);
   }
   private _destroySurfaceGlide() : void {
     if (this._existsSurfaceGlide()) {
@@ -78,7 +80,7 @@ export class AnimationStorage {
   
   private _createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
     this._destroySurfaceZoom();
-    this._surfaceZoom = new AnimationSurfaceZoom(this._surface, shift, animationTime, easingFormula);
+    this._surfaceZoom = new AnimationSurfaceZoom(this._surface.id, shift, animationTime, easingFormula);
   }
   private _destroySurfaceZoom() : void {
     if (this._existsSurfaceZoom()) {
@@ -92,7 +94,7 @@ export class AnimationStorage {
   
   private _createSurfaceEdge(vector: Coords) : void {
     this._destroySurfaceEdge();
-    this._surfaceEdge = new AnimationSurfaceEdge(this._surface, vector);
+    this._surfaceEdge = new AnimationSurfaceEdge(this._surface.id, vector);
   }
   private _destroySurfaceEdge() : void {
     if (this._existsSurfaceEdge()) {
@@ -106,7 +108,7 @@ export class AnimationStorage {
 
   private _createSurfaceDrag(mouse: MouseParams) : void {
     this._destroySurfaceDrag();
-    this._surfaceDrag = new AnimationSurfaceDrag(this._surface, mouse);
+    this._surfaceDrag = new AnimationSurfaceDrag(this._surface.id, mouse);
   }
   private _destroySurfaceDrag() : void {
     if (this._existsSurfaceDrag()) {

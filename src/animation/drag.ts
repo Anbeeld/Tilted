@@ -1,4 +1,3 @@
-import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
 import Raoi from 'raoi';
@@ -9,8 +8,8 @@ export default class AnimationSurfaceDrag extends Animation {
   private _prev = {x: 0, y: 0};
   private _cumulated = {x: 0, y: 0};
 
-  constructor (surface: Surface, mouse: MouseParams) {
-    super(surface);
+  constructor (surfaceId: number, mouse: MouseParams) {
+    super(surfaceId);
 
     this._surface.cancelOngoingMoves();
 

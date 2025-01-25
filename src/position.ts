@@ -1,16 +1,18 @@
 import { roundFloat, clamp, EasingFunctions, Coords } from './utils.js';
 import { Animations } from './animation/storage.js';
-import Surface from './surface.js';
+import { getSurface } from './register.js';
 
 export default class Position {
-  private _surface: Surface;
+  private _surfaceId: number;
+  private get _surface() { return getSurface(this._surfaceId); }
+
   private _coords = {x: 0, y: 0};
   public get coords() : Coords {
     return {x: this._coords.x, y: this._coords.y};
   }
 
-  constructor(surface: Surface) {
-    this._surface = surface;
+  constructor(surfaceId: number) {
+    this._surfaceId = surfaceId;
   }
 
   private get _limit() : Coords {

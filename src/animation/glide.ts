@@ -1,6 +1,5 @@
 import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction, Coords } from '../utils.js';
 import Animation from './animation.js';
-import Surface from '../surface.js';
 
 export default class AnimationSurfaceGlide extends Animation {
   private _initial: Coords;
@@ -25,12 +24,12 @@ export default class AnimationSurfaceGlide extends Animation {
     };
   }
 
-  constructor(surface: Surface, vector: Coords, animationTime: number, easingFormula: EasingFunctions) {
-    super(surface);
+  constructor(surfaceId: number, vector: Coords, animationTime: number, easingFormula: EasingFunctions) {
+    super(surfaceId);
 
     this._initial = {
-      x: surface.position.coords.x,
-      y: surface.position.coords.y
+      x: this._surface.position.coords.x,
+      y: this._surface.position.coords.y
     };
 
     this._vector = {

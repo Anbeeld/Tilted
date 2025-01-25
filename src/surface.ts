@@ -83,8 +83,8 @@ export default class Surface {
       }
     };
 
-    this._animationStorage = new AnimationStorage(this);
-    this._animationExecutor = new AnimationExecutor(this);
+    this._animationStorage = new AnimationStorage(this.id);
+    this._animationExecutor = new AnimationExecutor(this.id);
 
     initControls(this);
 
@@ -92,9 +92,9 @@ export default class Surface {
     new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._position.enforceLimits();}).observe(this.elements.container);
     new ResizeObserver(() => {this._updateCssDynamic();this._position.enforceLimits();}).observe(this.elements.surface);
 
-    this._position = new Position(this);
+    this._position = new Position(this.id);
 
-    this._scale = new Scale(this, this.CONFIG.SCALE_DEFAULT.VALUE);
+    this._scale = new Scale(this.id, this.CONFIG.SCALE_DEFAULT.VALUE);
   }
 
   private _setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {

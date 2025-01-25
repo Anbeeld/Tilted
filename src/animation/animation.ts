@@ -1,15 +1,15 @@
-import Surface from '../surface.js';
-
+import { getSurface } from '../register.js';
 export default class Animation {
-  protected _surface: Surface; 
+  private _surfaceId: number;
+  protected get _surface() { return getSurface(this._surfaceId); }
 
   protected _timestampStart: number = 0;
   protected _timestampLast: number = 0;
 
   public destroyed: boolean = false;
 
-  constructor(surface: Surface) {
-    this._surface = surface;
+  constructor(surfaceId: number) {
+    this._surfaceId = surfaceId;
     this._timestampStart = this._timestampLast = performance.now();
   }
 

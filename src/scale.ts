@@ -1,14 +1,16 @@
-import Surface from './surface.js';
 import { clamp, clampRatio, EasingFunctions, roundFloat, roundTo, Coords } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
+import { getSurface } from './register.js';
 
 export default class Scale {
-  protected _surface: Surface;
+  private _surfaceId: number;
+  private get _surface() { return getSurface(this._surfaceId); }
+
   public _value: number;
 
-  constructor(surface: Surface, value: number) {
-    this._surface = surface;
+  constructor(surfaceId: number, value: number) {
+    this._surfaceId = surfaceId;
     this._value = value;
 
     this._surface.updateRotate(this._value);

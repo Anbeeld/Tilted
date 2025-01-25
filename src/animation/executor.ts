@@ -1,13 +1,14 @@
-import Surface from '../surface.js';
+import { getSurface } from '../register.js';
 import { Animations } from './storage.js';
 
 export default class AnimationExecutor {
-  protected _surface: Surface; 
+  private _surfaceId: number;
+  private get _surface() { return getSurface(this._surfaceId); }
 
   private _isExecuting: boolean = false;
   
-  constructor(surface: Surface) {
-    this._surface = surface;
+  constructor(surfaceId: number) {
+    this._surfaceId = surfaceId;
   }
 
   public initiate() : void {

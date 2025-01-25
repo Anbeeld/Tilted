@@ -1,6 +1,5 @@
 import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '../utils.js';
 import Animation from './animation.js';
-import Surface from '../surface.js';
 
 export default class AnimationSurfaceZoom extends Animation {
   private _initial: number;
@@ -16,10 +15,10 @@ export default class AnimationSurfaceZoom extends Animation {
     return (this._shift.value - this._current) * this._shift.sign;
   }
 
-  constructor(surface: Surface, shift: number, animationTime: number, easingFormula: EasingFunctions) {
-    super(surface);
+  constructor(surfaceId: number, shift: number, animationTime: number, easingFormula: EasingFunctions) {
+    super(surfaceId);
 
-    this._initial = surface.scale.value;
+    this._initial = this._surface.scale.value;
 
     this._shift = {
       value: Math.abs(shift),

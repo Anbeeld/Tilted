@@ -76,7 +76,6 @@ export function moveSurfaceByEdge(surface: Surface, mouse: MouseParams) : boolea
 
   if (!surface.animationStorage.exists(Animations.SurfaceEdge)) {
     surface.animationStorage.create(Animations.SurfaceEdge, [{x, y}]);
-    surface.animationExecutor.initiate();
   } else {
     surface.animationStorage.surfaceEdge!.update({x, y});
   }

@@ -114,7 +114,6 @@ export default class Scale {
     time = time * ratio;
     // Perform animation
     this._surface.animationStorage.create(Animations.SurfaceZoom, [shift, time, easingFormula]);
-    this._surface.animationExecutor.initiate();
     // Indicate that there is change of scale
     return {
       new: newShift,

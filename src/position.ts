@@ -161,7 +161,6 @@ export default class Position {
     }
     // Perform animation
     this._surface.animationStorage.create(Animations.SurfaceGlide, [{x: vector.x, y: vector.y}, time, easingFormula]);
-    this._surface.animationExecutor.initiate();
     // Indicate that there is change of coords
     return true;
   }

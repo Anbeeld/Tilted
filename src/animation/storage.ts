@@ -37,15 +37,24 @@ export class AnimationStorage {
   // Uses "as any" cause it's already limited by type
   public create(animation: Animations, args: any) : void {
     switch (animation) {
-      // @ts-ignore
-      case Animations.SurfaceGlide: return this._createSurfaceGlide(...args);
-      // @ts-ignore
-      case Animations.SurfaceZoom: return this._createSurfaceZoom(...args);
-      // @ts-ignore
-      case Animations.SurfaceEdge: return this._createSurfaceEdge(...args);
-      // @ts-ignore
-      case Animations.SurfaceDrag: return this._createSurfaceDrag(...args);
+      case Animations.SurfaceGlide:
+        // @ts-ignore
+        this._createSurfaceGlide(...args);
+        break;
+      case Animations.SurfaceZoom:
+        // @ts-ignore
+        this._createSurfaceZoom(...args);
+        break;
+      case Animations.SurfaceEdge:
+        // @ts-ignore
+        this._createSurfaceEdge(...args);
+        break;
+      case Animations.SurfaceDrag:
+        // @ts-ignore
+        this._createSurfaceDrag(...args);
+        break;
     }
+    this._surface.animationExecutor.initiate();
   }
   public destroy(animation: Animations) : void {
     switch (animation) {

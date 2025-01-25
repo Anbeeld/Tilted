@@ -149,7 +149,7 @@ export default class Scale {
 
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
     // "combined" shift because glide animation time is always the same by default.
-    if (zoom !== false && mouse !== null) {
+    if (zoom !== false && mouse !== null && !this._surface.animationStorage.exists(Animations.SurfaceEdge)) {
       let vector = this._surface.scale.glidePerStep(mouse, positive, initialProjection);
 
       let factor = Math.abs(zoom.new / initialShift);

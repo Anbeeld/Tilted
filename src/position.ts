@@ -152,6 +152,11 @@ export default class Position {
       {desc: 'glide coords.x', to: vector.x},
       {desc: 'glide coords.y', to: vector.y}
     ]);
+    // Add remaining vector of current animation as it will get overwritten
+    vector = {
+      x: roundFloat(vector.x + this._remaining.x, interimRounding),
+      y: roundFloat(vector.y + this._remaining.y, interimRounding)
+    }
     // Perform animation
     this._surface.animationStorage.create(Animations.SurfaceGlide, [{x: vector.x, y: vector.y}, time, easingFormula]);
     this._surface.animationExecutor.initiate();
@@ -178,5 +183,12 @@ export default class Position {
 
   public enforceLimits() : void {
     this.moveTo({x: clamp(this._coords.x, this.min.x, this.max.x), y: clamp(this._coords.y, this.min.y, this.max.y)});
+  }
+
+  private get _remaining() : Coords {
+    if (this._surface.animationStorage.exists(Animations.SurfaceGlide)) {
+      return this._surface.animationStorage.surfaceGlide!.remaining;
+    }
+    return {x: 0, y: 0};
   }
 }

@@ -23,7 +23,9 @@ export interface ConfigProperties {
   SCALE_GLIDE: ConfigProperty,
 
   PERSPECTIVE_DISTANCE: ConfigProperty,
+
   ROTATE_X_MAX: ConfigProperty,
+  ROTATE_ROUNDING: ConfigProperty,
 
   EDGE_MOVE_ENABLED: ConfigProperty,
   EDGE_MOVE_AREA: ConfigProperty,
@@ -52,7 +54,9 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     scaleGlide: 0.10,
 
     perspectiveDistance: 600,
+
     rotateXMax: 35,
+    rotateRounding: 2,
 
     edgeMoveEnabled: 0,
     edgeMoveArea: 20,
@@ -116,9 +120,14 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       VALUE: Math.round(config.perspectiveDistance),
       TYPE: ConfigPropertyType.Length
     },
+
     ROTATE_X_MAX: {
       VALUE: Math.round(config.rotateXMax),
       TYPE: ConfigPropertyType.Angle
+    },
+    ROTATE_ROUNDING: {
+      VALUE: config.rotateRounding,
+      TYPE: ConfigPropertyType.Integer
     },
 
     EDGE_MOVE_ENABLED: {

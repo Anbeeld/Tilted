@@ -17,10 +17,10 @@ interface ConfigProperty {
 export interface ConfigProperties {
   DEBUG_MODE: ConfigProperty,
 
-  SCALE_STEP: ConfigProperty,
   SCALE_MIN: ConfigProperty,
-  SCALE_DEFAULT: ConfigProperty,
   SCALE_MAX: ConfigProperty,
+  SCALE_NUM_STEPS: ConfigProperty,
+  SCALE_DEFAULT_STEP: ConfigProperty,
   SCALE_ROUNDING: ConfigProperty,
   SCALE_GLIDE: ConfigProperty,
 
@@ -48,10 +48,10 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
   let config = {
     debugMode: 0,
 
-    scaleStep: 15, // Percent of 1/2 total scale, e.g. 0.20 means 5 steps from 0.25 to 0.50 and 5 steps from 0.50 to 1
     scaleMin: 0.25,
-    scaleDefault: 8,
     scaleMax: 1.00,
+    scaleNumSteps: 15,
+    scaleDefaultStep: 8,
     scaleRounding: 3,
     scaleGlide: 1,
 
@@ -87,7 +87,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     }
   }
 
-  let scaleSteps = calculateSteps(config.scaleMin, config.scaleMax, config.scaleStep, config.scaleRounding);
+  let scaleSteps = calculateSteps(config.scaleMin, config.scaleMax, config.scaleNumSteps, config.scaleRounding);
   /*config.debugMode && */console.log('Scale steps: ', scaleSteps);
 
   const CONFIG = {
@@ -96,20 +96,20 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       TYPE: ConfigPropertyType.Integer
     },
 
-    SCALE_STEP: {
-      VALUE: config.scaleStep,
-      TYPE: ConfigPropertyType.Number
-    },
     SCALE_MIN: {
       VALUE: config.scaleMin,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_DEFAULT: {
-      VALUE: config.scaleDefault,
-      TYPE: ConfigPropertyType.Number
-    },
     SCALE_MAX: {
       VALUE: config.scaleMax,
+      TYPE: ConfigPropertyType.Number
+    },
+    SCALE_NUM_STEPS: {
+      VALUE: config.scaleNumSteps,
+      TYPE: ConfigPropertyType.Number
+    },
+    SCALE_DEFAULT_STEP: {
+      VALUE: config.scaleDefaultStep,
       TYPE: ConfigPropertyType.Number
     },
     SCALE_ROUNDING: {

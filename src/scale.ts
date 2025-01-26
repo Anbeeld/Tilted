@@ -12,9 +12,9 @@ export default class Scale {
 
   constructor(surfaceId: number) {
     this._surfaceId = surfaceId;
-    this._steps = calculateSteps(this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE, this._surface.CONFIG.SCALE_STEP.VALUE, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this._steps = calculateSteps(this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE, this._surface.CONFIG.SCALE_NUM_STEPS.VALUE, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
     this._stepSizes = calculateStepSizes(this._steps, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
-    this._value = this._steps[this._surface.CONFIG.SCALE_DEFAULT.VALUE - 1]!;
+    this._value = this._steps[this._surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1]!;
 
     this._surface.updateRotate(this._value);
     this._setTransformValues(true);
@@ -189,7 +189,7 @@ export default class Scale {
     const scaleToVector = 0.105; // Hand picked constant that looks good
     const defaultNumSteps = 15; // The num of steps that said constant was tested against
     let scaleValue = positive ? value + this._surface.scale.stepSize(true) : value;
-    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_STEP.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
+    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
     return {
       x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
       y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier

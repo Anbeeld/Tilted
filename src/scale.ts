@@ -39,6 +39,38 @@ export default class Scale {
     return this._steps.indexOf(findClosestInArray(this._steps, value ?? this._value));
   }
 
+  private _shiftToStep(positive: boolean, value?: number) : number {
+    if (value === undefined) {
+      value = this._projection;
+    }
+    return positive ? this._shiftsToStep[this._stepNumByValue(value)]!.up : this._shiftsToStep[this._stepNumByValue(value)]!.down;
+  }
+
+  private _glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
+    if (value === undefined) {
+      value = this._projection;
+    }
+    let positiveMultiplier = positive ? 1 : -1;
+    // Hand picked constant that roughly correlates with the same spot staying under cursor when scaling
+    const scaleToVector = 0.105;
+    // The default num of steps that said constant was tested against, more steps = smaller shifts = smaller glides
+    const defaultNumSteps = 15;
+    let scaleValue = positive ? value + this._surface.scale._shiftToStep(true) : value;
+    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
+    return {
+      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
+      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
+    }
+  }
+
+  private _roundToStep(shift: number) : number {
+    let projection = findClosestInArray(
+      this._steps,
+      clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
+    );
+    return projection - this._surface.scale.value - this._remaining;
+  }
+
   private _setTransformValues(immediately: boolean = false) : void {
     this._surface.setTransformValues([
       {
@@ -145,7 +177,7 @@ export default class Scale {
 
   public step(steps: number) : boolean {
     let positive = steps > 0 ? true : false;
-    return this._surface.scale.zoom(steps * this._surface.scale.shiftToStep(positive)) !== false;
+    return this._surface.scale.zoom(steps * this._surface.scale._shiftToStep(positive)) !== false;
   }
   
   public stepAndGlide(steps: number, mouse: MouseParams|null = null) : void {
@@ -155,7 +187,7 @@ export default class Scale {
       return;
     }
 
-    let shiftPerStep = this.shiftToStep(positive);
+    let shiftPerStep = this._shiftToStep(positive);
 
     let initialProjection = this._projection;
     let initialShift = steps * shiftPerStep;
@@ -164,7 +196,7 @@ export default class Scale {
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
     // "combined" shift because glide animation time is always the same by default.
     if (zoom !== false && mouse !== null && !this._surface.animationStorage.exists(Animations.SurfaceEdge)) {
-      let vector = this._surface.scale.glidePerStep(mouse, positive, initialProjection);
+      let vector = this._surface.scale._glidePerStep(mouse, positive, initialProjection);
 
       let factor = Math.abs(zoom.new / initialShift);
       vector.x *= factor;
@@ -172,37 +204,5 @@ export default class Scale {
 
       this._surface.position.glide(vector, zoom.time);
     }
-  }
-
-  public shiftToStep(positive: boolean, value?: number) : number {
-    if (value === undefined) {
-      value = this._projection;
-    }
-    return positive ? this._shiftsToStep[this._stepNumByValue(value)]!.up : this._shiftsToStep[this._stepNumByValue(value)]!.down;
-  }
-
-  public glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
-    if (value === undefined) {
-      value = this._projection;
-    }
-    let positiveMultiplier = positive ? 1 : -1;
-    // Hand picked constant that roughly correlates with the same spot staying under cursor when scaling
-    const scaleToVector = 0.105;
-    // The default num of steps that said constant was tested against, more steps = smaller shifts = smaller glides
-    const defaultNumSteps = 15;
-    let scaleValue = positive ? value + this._surface.scale.shiftToStep(true) : value;
-    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
-    return {
-      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
-      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
-    }
-  }
-
-  private _roundToStep(shift: number) : number {
-    let projection = findClosestInArray(
-      this._steps,
-      clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
-    );
-    return projection - this._surface.scale.value - this._remaining;
   }
 }

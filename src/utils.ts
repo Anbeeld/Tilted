@@ -80,15 +80,15 @@ export function calculateSteps(min: number, max: number, numSteps: number, round
   return steps.reverse();
 }
 
-export function calculateStepSizes(steps: number[], rounding: number) : {up: number, down: number}[] {
-  let stepSizes : {up: number, down: number}[] = [];
+export function calculateStepShifts(steps: number[], rounding: number) : {up: number, down: number}[] {
+  let stepShifts : {up: number, down: number}[] = [];
   for (let i = 0; i < steps.length; i++) {
-    stepSizes.push({
+    stepShifts.push({
       up: i === steps.length - 1 ? 0 : roundFloat(steps[i + 1]! - steps[i]!, rounding),
       down: i === 0 ? 0 : roundFloat(steps[i]! - steps[i - 1]!, rounding)
     });
   }
-  return stepSizes;
+  return stepShifts;
 }
 
 export function findClosestInArray(array: number[], value: number) : number {

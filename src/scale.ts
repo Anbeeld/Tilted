@@ -1,4 +1,4 @@
-import { clamp, clampRatio, EasingFunctions, roundFloat, Coords, calculateSteps, findClosestInArray, calculateStepSizes } from './utils.js';
+import { clamp, clampRatio, EasingFunctions, roundFloat, Coords, calculateSteps, findClosestInArray, calculateStepShifts } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
 import { getSurface } from './register.js';
@@ -7,13 +7,13 @@ export default class Scale {
   private _surfaceId: number;
   private get _surface() { return getSurface(this._surfaceId); }
   private _steps: number[] = [];
-  private _stepSizes: {up: number, down: number}[] = [];
+  private _stepShifts: {up: number, down: number}[] = [];
   public _value: number;
 
   constructor(surfaceId: number) {
     this._surfaceId = surfaceId;
     this._steps = calculateSteps(this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE, this._surface.CONFIG.SCALE_NUM_STEPS.VALUE, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
-    this._stepSizes = calculateStepSizes(this._steps, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this._stepShifts = calculateStepShifts(this._steps, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
     this._value = this._steps[this._surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1]!;
 
     this._surface.updateRotate(this._value);
@@ -145,7 +145,7 @@ export default class Scale {
 
   public step(steps: number) : boolean {
     let positive = steps > 0 ? true : false;
-    return this._surface.scale.zoom(steps * this._surface.scale.stepSize(positive)) !== false;
+    return this._surface.scale.zoom(steps * this._surface.scale.stepShift(positive)) !== false;
   }
   
   public stepAndGlide(steps: number, mouse: MouseParams|null = null) : void {
@@ -155,7 +155,7 @@ export default class Scale {
       return;
     }
 
-    let shiftPerStep = this.stepSize(positive);
+    let shiftPerStep = this.stepShift(positive);
 
     let initialProjection = this._projection;
     let initialShift = steps * shiftPerStep;
@@ -174,11 +174,11 @@ export default class Scale {
     }
   }
 
-  public stepSize(positive: boolean, value?: number) : number {
+  public stepShift(positive: boolean, value?: number) : number {
     if (value === undefined) {
       value = this._projection;
     }
-    return positive ? this._stepSizes[this._stepNumByValue(value)]!.up : this._stepSizes[this._stepNumByValue(value)]!.down;
+    return positive ? this._stepShifts[this._stepNumByValue(value)]!.up : this._stepShifts[this._stepNumByValue(value)]!.down;
   }
 
   public glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
@@ -188,7 +188,7 @@ export default class Scale {
     let positiveMultiplier = positive ? 1 : -1;
     const scaleToVector = 0.105; // Hand picked constant that looks good
     const defaultNumSteps = 15; // The num of steps that said constant was tested against
-    let scaleValue = positive ? value + this._surface.scale.stepSize(true) : value;
+    let scaleValue = positive ? value + this._surface.scale.stepShift(true) : value;
     let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
     return {
       x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,

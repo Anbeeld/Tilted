@@ -186,8 +186,10 @@ export default class Scale {
       value = this._projection;
     }
     let positiveMultiplier = positive ? 1 : -1;
-    const scaleToVector = 0.105; // Hand picked constant that looks good
-    const defaultNumSteps = 15; // The num of steps that said constant was tested against
+    // Hand picked constant that roughly correlates with the same spot staying under cursor when scaling
+    const scaleToVector = 0.105;
+    // The default num of steps that said constant was tested against, more steps = smaller shifts = smaller glides
+    const defaultNumSteps = 15;
     let scaleValue = positive ? value + this._surface.scale.stepShift(true) : value;
     let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
     return {

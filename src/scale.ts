@@ -1,4 +1,4 @@
-import { clamp, clampRatio, EasingFunctions, roundFloat, roundTo, Coords } from './utils.js';
+import { clamp, clampRatio, EasingFunctions, roundFloat, Coords, calculateSteps, findClosestInArray, calculateStepSizes } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
 import { getSurface } from './register.js';
@@ -6,12 +6,15 @@ import { getSurface } from './register.js';
 export default class Scale {
   private _surfaceId: number;
   private get _surface() { return getSurface(this._surfaceId); }
-
+  private _steps: number[] = [];
+  private _stepSizes: {up: number, down: number}[] = [];
   public _value: number;
 
-  constructor(surfaceId: number, value: number) {
+  constructor(surfaceId: number) {
     this._surfaceId = surfaceId;
-    this._value = value;
+    this._steps = calculateSteps(this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE, this._surface.CONFIG.SCALE_STEP.VALUE, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this._stepSizes = calculateStepSizes(this._steps, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this._value = this._steps[this._surface.CONFIG.SCALE_DEFAULT.VALUE - 1]!;
 
     this._surface.updateRotate(this._value);
     this._setTransformValues(true);
@@ -21,8 +24,19 @@ export default class Scale {
     return this._value;
   }
 
+  private get _remaining() : number {
+    if (this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
+      return this._surface.animationStorage.surfaceZoom!.remaining;
+    }
+    return 0;
+  }
+
   private get _projection() : number {
     return clamp(roundFloat(this._surface.scale.value + this._remaining, this._surface.CONFIG.SCALE_ROUNDING.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+  }
+  
+  private _stepNumByValue(value?: number): number {
+    return this._steps.indexOf(findClosestInArray(this._steps, value ?? this._value));
   }
 
   private _setTransformValues(immediately: boolean = false) : void {
@@ -164,11 +178,7 @@ export default class Scale {
     if (value === undefined) {
       value = this._projection;
     }
-    if ((positive && value < this._surface.CONFIG.SCALE_DEFAULT.VALUE) || (!positive && value <= this._surface.CONFIG.SCALE_DEFAULT.VALUE)) {
-      return (this._surface.CONFIG.SCALE_DEFAULT.VALUE - this._surface.CONFIG.SCALE_MIN.VALUE) * this._surface.CONFIG.SCALE_STEP.VALUE;
-    } else {
-      return (this._surface.CONFIG.SCALE_MAX.VALUE - this._surface.CONFIG.SCALE_DEFAULT.VALUE) * this._surface.CONFIG.SCALE_STEP.VALUE;
-    }
+    return positive ? this._stepSizes[this._stepNumByValue(value)]!.up : this._stepSizes[this._stepNumByValue(value)]!.down;
   }
 
   public glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
@@ -176,24 +186,20 @@ export default class Scale {
       value = this._projection;
     }
     let positiveMultiplier = positive ? 1 : -1;
+    const scaleToVector = 0.105; // Hand picked constant that looks good
+    const defaultNumSteps = 15; // The num of steps that said constant was tested against
     let scaleValue = positive ? value + this._surface.scale.stepSize(true) : value;
+    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_STEP.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
     return {
-      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
-      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
+      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
+      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
     }
-  }
-
-  private get _remaining() : number {
-    if (this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
-      return this._surface.animationStorage.surfaceZoom!.remaining;
-    }
-    return 0;
   }
 
   private _roundToStep(shift: number) : number {
-    let projection = roundTo(
+    let projection = findClosestInArray(
+      this._steps,
       clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
-      this._surface.scale.stepSize(shift > 0 ? true : false, this._surface.scale.value + shift)
     );
     return projection - this._surface.scale.value - this._remaining;
   }

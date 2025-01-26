@@ -1,3 +1,5 @@
+import { calculateSteps } from "./utils.js";
+
 enum ConfigPropertyType {
   Angle = 'angle',
   Color = 'color',
@@ -46,12 +48,12 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
   let config = {
     debugMode: 0,
 
-    scaleStep: 0.20, // Percent of 1/2 total scale, e.g. 0.20 means 5 steps from 0.25 to 0.50 and 5 steps from 0.50 to 1
+    scaleStep: 15, // Percent of 1/2 total scale, e.g. 0.20 means 5 steps from 0.25 to 0.50 and 5 steps from 0.50 to 1
     scaleMin: 0.25,
-    scaleDefault: 0.50,
+    scaleDefault: 8,
     scaleMax: 1.00,
     scaleRounding: 3,
-    scaleGlide: 0.10,
+    scaleGlide: 1,
 
     perspectiveDistance: 600,
 
@@ -84,6 +86,9 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       (config as any)[parameter] = value;
     }
   }
+
+  let scaleSteps = calculateSteps(config.scaleMin, config.scaleMax, config.scaleStep, config.scaleRounding);
+  /*config.debugMode && */console.log('Scale steps: ', scaleSteps);
 
   const CONFIG = {
     DEBUG_MODE: {

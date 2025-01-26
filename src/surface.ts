@@ -103,7 +103,7 @@ export default class Surface {
 
     this._position = new Position(this.id);
 
-    this._scale = new Scale(this.id, this.CONFIG.SCALE_DEFAULT.VALUE);
+    this._scale = new Scale(this.id);
   }
 
   private _setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {

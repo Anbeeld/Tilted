@@ -126,10 +126,11 @@ export function generateCssStatic(surface: Surface) {
     `will-change:top,left;` +
   `}` +
 
-  `.tilted-transform-` + surface.id + `{   ` +
+  `.tilted-transform-` + surface.id + `{` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
     `will-change:transform;` +
+    `transform-style:preserve-3d;` +
   `}` +
 
   `.tilted-surface-` + surface.id + `{` +

@@ -9,6 +9,8 @@ import { generateCssDynamic, generateCssStatic } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
+import { Content, ContentProps } from './content.js';
+
 interface SurfaceElements {
   container: HTMLElement,
   controls: HTMLElement,
@@ -52,6 +54,8 @@ export default class Surface {
   private _scale: Scale;
   public get scale() : Scale {return this._scale;}
 
+  private _content: Content[];
+
   private _animationExecutor: AnimationExecutor;
   public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
   private _animationStorage: AnimationStorage;
@@ -66,9 +70,14 @@ export default class Surface {
 
   private _transformProperty: TransformProperty;
 
-  public constructor(elementContainer: HTMLElement, elementMap: HTMLElement, config: {} = {}) {
+  public constructor(elementContainer: HTMLElement, elementMap: HTMLElement, config: {} = {}, content: ContentProps[] = []) {
     this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
+
+    this._content = [];
+    for (let contentProps of content) {
+      this._content.push(new Content(this.id, contentProps));
+    }
 
     this._elements = this._setupElements(elementContainer, elementMap);
     this._styles = this._setupStyles();
@@ -117,7 +126,13 @@ export default class Surface {
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
+    let elementMapParentNode = elementMap.parentNode;
     elementTransform.appendChild(elementMap);
+    for (let content of this._content) {
+      if (content.element.parentNode === elementMapParentNode) {
+        elementTransform.appendChild(content.element);
+      }
+    }
     elementViewport.appendChild(elementTransform);
     elementContainer.appendChild(elementViewport);
     elementContainer.appendChild(elementControls);
@@ -191,6 +206,13 @@ export default class Surface {
     `perspective(${this._transformProperty.values.perspective}) ` +
     `rotateX(${this._transformProperty.values.rotateX}) ` +
     `translate3d(${this._transformProperty.values.translate3d})`;
+
+    for (let content of this._content) {
+      for (let child of content.element.children) {
+        (child as HTMLElement).style.transformOrigin = 'bottom';
+        (child as HTMLElement).style.transform = 'rotateX(-' + this._rotate.x + 'deg)';
+      }
+    }
   }
 
   private _updateViewport() : void {

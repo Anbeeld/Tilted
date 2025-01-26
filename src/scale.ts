@@ -24,7 +24,7 @@ export default class Scale {
     return this._value;
   }
 
-  private get _remaining() : number {
+  private get _ongoing() : number {
     if (this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
       return this._surface.animationStorage.surfaceZoom!.remaining;
     }
@@ -32,7 +32,7 @@ export default class Scale {
   }
 
   private get _projection() : number {
-    return clamp(roundFloat(this._surface.scale.value + this._remaining, this._surface.CONFIG.SCALE_ROUNDING.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+    return clamp(roundFloat(this._surface.scale.value + this._ongoing, this._surface.CONFIG.SCALE_ROUNDING.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
   }
   
   private _stepNumByValue(value?: number): number {
@@ -66,9 +66,9 @@ export default class Scale {
   private _roundToStep(shift: number) : number {
     let projection = findClosestInArray(
       this._steps,
-      clamp(this._surface.scale.value + this._remaining + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
+      clamp(this._surface.scale.value + this._ongoing + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
     );
-    return projection - this._surface.scale.value - this._remaining;
+    return projection - this._surface.scale.value - this._ongoing;
   }
 
   private _setTransformValues(immediately: boolean = false) : void {
@@ -154,7 +154,7 @@ export default class Scale {
     // Preserve "new" shift to return it later
     let newShift = shift;
     // Add remaining shift to get "combined" one
-    shift += this._remaining;
+    shift += this._ongoing;
     // Calculate ratio of initial vs combined shift, clamped because we only want shorter animations
     let ratio = clampRatio(Math.abs(shift / initialShift));
     time = time * ratio;

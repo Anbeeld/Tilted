@@ -68,7 +68,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     animationGlideTime: 400,
 
     durationForThrow: 150,
-    throwMultiplier: 4,
+    throwMultiplier: 1,
     animationThrowTime: 1000,
 
     coordRoundingInterim: 1,

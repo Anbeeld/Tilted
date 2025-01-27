@@ -70,7 +70,7 @@ export default class Surface {
 
   private _transformProperty: TransformProperty;
 
-  public constructor(elementContainer: HTMLElement, elementMap: HTMLElement, config: {} = {}, content: ContentProps[] = []) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, content: ContentProps[] = []) {
     this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
 
@@ -79,7 +79,7 @@ export default class Surface {
       this._content.push(new Content(this.id, contentProps));
     }
 
-    this._elements = this._setupElements(elementContainer, elementMap);
+    this._elements = this._setupElements(elementContainer, elementSurface);
     this._styles = this._setupStyles();
 
     this._transformProperty = {
@@ -106,7 +106,7 @@ export default class Surface {
     this._scale = new Scale(this.id);
   }
 
-  private _setupElements(elementContainer: HTMLElement, elementMap: HTMLElement) : SurfaceElements {
+  private _setupElements(elementContainer: HTMLElement, elementSurface: HTMLElement) : SurfaceElements {
     elementContainer.classList.add('tilted-container-' + this.id);
 
     let elementViewport = document.createElement('div');
@@ -115,7 +115,7 @@ export default class Surface {
     let elementTransform = document.createElement('div');
     elementTransform.classList.add('tilted-transform-' + this.id);
 
-    elementMap.classList.add('tilted-surface-' + this.id);
+    elementSurface.classList.add('tilted-surface-' + this.id);
 
     let elementControls = document.createElement('div');
     elementControls.classList.add('tilted-controls-' + this.id);
@@ -126,12 +126,12 @@ export default class Surface {
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
-    if (elementMap.parentNode) {
-      for (let child of elementMap.parentNode.children) {
+    if (elementSurface.parentNode) {
+      for (let child of elementSurface.parentNode.children) {
         elementTransform.appendChild(child);
       }
     } else {
-      elementTransform.appendChild(elementMap);
+      elementTransform.appendChild(elementSurface);
     }
     elementViewport.appendChild(elementTransform);
     elementContainer.appendChild(elementViewport);
@@ -144,7 +144,7 @@ export default class Surface {
       controlsZoomOut: elementControlsZoomOut,
       viewport: elementViewport,
       transform: elementTransform,
-      surface: elementMap
+      surface: elementSurface
     };
   }
 

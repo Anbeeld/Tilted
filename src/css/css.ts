@@ -142,6 +142,9 @@ export function generateCssStatic(surface: Surface) {
     `z-index:100 !important;` +
   `}` +
 
+  `.tilted-scene-` + surface.id + `>*:not(.tilted-figure-${surface.id}){` +
+    `transform-origin:bottom;` +
+  `}` +
   `.tilted-figure-` + surface.id + `{` +
     `transform-origin:bottom;` +
   `}`;

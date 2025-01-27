@@ -126,12 +126,12 @@ export default class Surface {
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
-    let elementMapParentNode = elementMap.parentNode;
-    elementTransform.appendChild(elementMap);
-    for (let content of this._content) {
-      if (content.element.parentNode === elementMapParentNode) {
-        elementTransform.appendChild(content.element);
+    if (elementMap.parentNode) {
+      for (let child of elementMap.parentNode.children) {
+        elementTransform.appendChild(child);
       }
+    } else {
+      elementTransform.appendChild(elementMap);
     }
     elementViewport.appendChild(elementTransform);
     elementContainer.appendChild(elementViewport);

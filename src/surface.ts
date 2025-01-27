@@ -126,11 +126,14 @@ export default class Surface {
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
-    if (elementSurface.parentNode) {
-      for (let child of elementSurface.parentNode.children) {
-        elementTransform.appendChild(child);
-      }
-    } else {
+    let children = new Array();
+    for (let child of elementContainer.children) {
+      children.push(child);
+    }
+    for (let child of children) {
+      elementTransform.appendChild(child);
+    }
+    if (elementSurface.parentElement !== elementTransform) {
       elementTransform.appendChild(elementSurface);
     }
     elementViewport.appendChild(elementTransform);
@@ -195,6 +198,7 @@ export default class Surface {
       this._animationExecutor.initiate();
     }
   }
+
   public applyTransformProperty(forced: boolean = false) : void {
     if (!this._transformProperty.changed && !forced) {
       return;
@@ -208,10 +212,7 @@ export default class Surface {
     `translate3d(${this._transformProperty.values.translate3d})`;
 
     for (let content of this._content) {
-      for (let child of content.element.children) {
-        (child as HTMLElement).style.transformOrigin = 'bottom';
-        (child as HTMLElement).style.transform = 'rotateX(-' + this._rotate.x + 'deg)';
-      }
+      content.applyTransformProperty(this._transformProperty.values.rotateX);
     }
   }
 

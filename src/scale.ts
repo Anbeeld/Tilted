@@ -56,7 +56,7 @@ export default class Scale {
     // The default num of steps that said constant was tested against, more steps = smaller shifts = smaller glides
     const defaultNumSteps = 15;
     let scaleValue = positive ? value + this._surface.scale._shiftToStep(true) : value;
-    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE.VALUE / scaleValue;
+    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE_FACTOR.VALUE / scaleValue;
     return {
       x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
       y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier

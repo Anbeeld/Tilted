@@ -22,7 +22,7 @@ export interface ConfigProperties {
   SCALE_NUM_STEPS: ConfigProperty,
   SCALE_DEFAULT_STEP: ConfigProperty,
   SCALE_ROUNDING: ConfigProperty,
-  SCALE_GLIDE: ConfigProperty,
+  SCALE_GLIDE_FACTOR: ConfigProperty,
 
   PERSPECTIVE_DISTANCE: ConfigProperty,
 
@@ -37,7 +37,7 @@ export interface ConfigProperties {
   ANIMATION_GLIDE_TIME: ConfigProperty,
 
   DURATION_FOR_THROW: ConfigProperty,
-  THROW_MULTIPLIER: ConfigProperty,
+  THROW_GLIDE_FACTOR: ConfigProperty,
   ANIMATION_THROW_TIME: ConfigProperty,
 
   COORD_ROUNDING_INTERIM: ConfigProperty, // Rounding of coordinates during animation
@@ -53,7 +53,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     scaleNumSteps: 15,
     scaleDefaultStep: 8,
     scaleRounding: 3,
-    scaleGlide: 1,
+    scaleGlideFactor: 1,
 
     perspectiveDistance: 600,
 
@@ -68,7 +68,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     animationGlideTime: 400,
 
     durationForThrow: 150,
-    throwMultiplier: 1,
+    throwGlideFactor: 1,
     animationThrowTime: 1000,
 
     coordRoundingInterim: 1,
@@ -116,8 +116,8 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       VALUE: config.scaleRounding,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_GLIDE: {
-      VALUE: config.scaleGlide,
+    SCALE_GLIDE_FACTOR: {
+      VALUE: config.scaleGlideFactor,
       TYPE: ConfigPropertyType.Number
     },
 
@@ -161,8 +161,8 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       VALUE: Math.round(config.durationForThrow),
       TYPE: ConfigPropertyType.Time
     },
-    THROW_MULTIPLIER: {
-      VALUE: config.throwMultiplier,
+    THROW_GLIDE_FACTOR: {
+      VALUE: config.throwGlideFactor,
       TYPE: ConfigPropertyType.Number
     },
     ANIMATION_THROW_TIME: {

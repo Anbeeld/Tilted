@@ -42,8 +42,8 @@ export default class AnimationSurfaceDrag extends Animation {
   private _throw() : void {
     this._surface.position.glide(
       {
-        x: this._cumulated.x * this._surface.CONFIG.THROW_MULTIPLIER.VALUE / this._surface.scale.value,
-        y: this._cumulated.y * this._surface.CONFIG.THROW_MULTIPLIER.VALUE / this._surface.scale.value
+        x: this._cumulated.x * this._surface.CONFIG.THROW_GLIDE_FACTOR.VALUE / this._surface.scale.value,
+        y: this._cumulated.y * this._surface.CONFIG.THROW_GLIDE_FACTOR.VALUE / this._surface.scale.value
       },
       this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, EasingFunctions.EaseOutCirc
     );

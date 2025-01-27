@@ -64,10 +64,6 @@ export function generateCssStatic(surface: Surface) {
     `cursor:-moz-grabbing;` +
     `cursor:-webkit-grabbing;` +
   `}` +
-
-  `.tilted-${surface.id}-container *{` +
-    `transform-style:preserve-3d;` +
-  `}` +
   
   `.tilted-${surface.id}-controls{` +
     `position:absolute;` +
@@ -142,11 +138,12 @@ export function generateCssStatic(surface: Surface) {
     `z-index:100 !important;` +
   `}` +
 
-  `.tilted-${surface.id}-scene>*:not(.tilted-${surface.id}-figure){` +
-    `transform-origin:bottom;` +
-  `}` +
+  `.tilted-${surface.id}-scene>*:not(.tilted-${surface.id}-figure),` +
   `.tilted-${surface.id}-figure{` +
     `transform-origin:bottom;` +
+  `}` +
+  `.tilted-${surface.id}-preserve-3d{` +
+    `transform-style:preserve-3d;` +
   `}`;
 
   return string;

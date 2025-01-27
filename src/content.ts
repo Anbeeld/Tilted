@@ -33,12 +33,31 @@ export class Content {
     this._factor = props.factor || 1;
     this._element = props.element;
 
+    if (!this._surface.elements.transform.contains(this._element)) {
+      throw new Error(`Tilted id ${this._surface.id} transform element doesn't contain content id ${this._id} element`);
+    }
+
     if (this._type === ContentType.Scene) {
       this._element.classList.add(`tilted-${this._surfaceId}-scene`);
       this._element.classList.add(`tilted-${this._surfaceId}-scene-${this._id}`);
     } else if (this._type === ContentType.Figure) {
       this._element.classList.add(`tilted-${this._surfaceId}-figure`);
       this._element.classList.add(`tilted-${this._surfaceId}-figure-${this._id}`);
+    }
+
+    // Add parent element into 3D rendering context until transform is reached, forming a single context all the way
+    let parentElement;
+    if (this._type === ContentType.Scene) {
+      parentElement = this._element;
+    } else if (this._type === ContentType.Figure) {
+      parentElement = this._element.parentElement;
+    }
+    while (parentElement !== this._surface.elements.transform) {
+      if (!parentElement) {
+        throw new Error(`Couldn't reach Tilted id ${this._surface.id} transform element from content id ${this._id}`);
+      }
+      parentElement.classList.add(`tilted-${this._surfaceId}-preserve-3d`);
+      parentElement = parentElement.parentElement;
     }
   }
 

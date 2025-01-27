@@ -74,11 +74,6 @@ export default class Surface {
     this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
 
-    this._content = [];
-    for (let contentProps of content) {
-      this._content.push(new Content(this.id, contentProps));
-    }
-
     this._elements = this._setupElements(elementContainer, elementSurface);
     this._styles = this._setupStyles();
 
@@ -101,6 +96,11 @@ export default class Surface {
     new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._position.enforceLimits();}).observe(this.elements.container);
     new ResizeObserver(() => {this._updateCssDynamic();this._position.enforceLimits();}).observe(this.elements.surface);
 
+    this._content = [];
+    for (let contentProps of content) {
+      this._content.push(new Content(this.id, contentProps));
+    }
+
     this._position = new Position(this.id);
 
     this._scale = new Scale(this.id);
@@ -114,6 +114,7 @@ export default class Surface {
 
     let elementTransform = document.createElement('div');
     elementTransform.classList.add(`tilted-${this.id}-transform`);
+    elementTransform.classList.add(`tilted-${this.id}-preserve-3d`);
 
     elementSurface.classList.add(`tilted-${this.id}-surface`);
 

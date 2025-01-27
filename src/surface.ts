@@ -107,22 +107,22 @@ export default class Surface {
   }
 
   private _setupElements(elementContainer: HTMLElement, elementSurface: HTMLElement) : SurfaceElements {
-    elementContainer.classList.add('tilted-container-' + this.id);
+    elementContainer.classList.add(`tilted-${this.id}-container`);
 
     let elementViewport = document.createElement('div');
-    elementViewport.classList.add('tilted-viewport-' + this.id);
+    elementViewport.classList.add(`tilted-${this.id}-viewport`);
 
     let elementTransform = document.createElement('div');
-    elementTransform.classList.add('tilted-transform-' + this.id);
+    elementTransform.classList.add(`tilted-${this.id}-transform`);
 
-    elementSurface.classList.add('tilted-surface-' + this.id);
+    elementSurface.classList.add(`tilted-${this.id}-surface`);
 
     let elementControls = document.createElement('div');
-    elementControls.classList.add('tilted-controls-' + this.id);
+    elementControls.classList.add(`tilted-${this.id}-controls`);
     let elementControlsZoomIn = document.createElement('div');
-    elementControlsZoomIn.classList.add('tilted-controls-zoom-in-' + this.id);
+    elementControlsZoomIn.classList.add(`tilted-${this.id}-controls-zoom-in`);
     let elementControlsZoomOut = document.createElement('div');
-    elementControlsZoomOut.classList.add('tilted-controls-zoom-out-' + this.id);
+    elementControlsZoomOut.classList.add(`tilted-${this.id}-controls-zoom-out`);
     elementControls.appendChild(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomOut);
 
@@ -153,12 +153,12 @@ export default class Surface {
 
   private _setupStyles() : SurfaceStyles {
     let elementStyleStatic = document.createElement('style');
-    elementStyleStatic.classList.add('tilted-css-static-' + this.id);
+    elementStyleStatic.classList.add(`tilted-${this.id}-css-static`);
     elementStyleStatic.innerHTML = generateCssStatic(this);
     document.head.appendChild(elementStyleStatic);
 
     let elementStyleDynamic = document.createElement('style');
-    elementStyleDynamic.classList.add('tilted-css-dynamic-' + this.id);
+    elementStyleDynamic.classList.add(`tilted-${this.id}-css-dynamic`);
     elementStyleDynamic.innerHTML = generateCssDynamic(this);
     document.head.appendChild(elementStyleDynamic);
 

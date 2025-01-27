@@ -96,3 +96,7 @@ export function findClosestInArray(array: number[], value: number) : number {
     return (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
   });
 }
+
+export function multiplyCssDegrees(value: string, multipler: number, rounding: number) : string {
+  return roundFloat(parseFloat(value.replace('deg', '')) * multipler, rounding) + 'deg';
+}

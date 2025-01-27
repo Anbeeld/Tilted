@@ -45,7 +45,7 @@ export function generateCssStatic(surface: Surface) {
   }
 
   string +=
-  `.tilted-container-` + surface.id + `{` +
+  `.tilted-${surface.id}-container{` +
     `position:relative !important;` +
     `cursor:move;` +
     `cursor:grab;` +
@@ -59,17 +59,17 @@ export function generateCssStatic(surface: Surface) {
     `user-select:none;` +
   `}` +
 
-  `.tilted-container-` + surface.id + `:active{` +
+  `.tilted-${surface.id}-container:active{` +
     `cursor:grabbing;` +
     `cursor:-moz-grabbing;` +
     `cursor:-webkit-grabbing;` +
   `}` +
 
-  `.tilted-container-` + surface.id + ` *{` +
+  `.tilted-${surface.id}-container *{` +
     `transform-style:preserve-3d;` +
   `}` +
   
-  `.tilted-controls-` + surface.id + `{` +
+  `.tilted-${surface.id}-controls{` +
     `position:absolute;` +
     `top:100px;` +
     `right:30px;` +
@@ -80,8 +80,8 @@ export function generateCssStatic(surface: Surface) {
     `overflow:hidden;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `,` +
-  `.tilted-controls-zoom-out-` + surface.id + `{` +
+  `.tilted-${surface.id}-controls-zoom-in,` +
+  `.tilted-${surface.id}-controls-zoom-out{` +
     `position:relative;` +
     `width:30px;` +
     `height:30px;` +
@@ -90,62 +90,62 @@ export function generateCssStatic(surface: Surface) {
     `box-sizing:content-box;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `{` +
+  `.tilted-${surface.id}-controls-zoom-in{` +
     `border-bottom:1px solid #444444;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `:active,` +
-  `.tilted-controls-zoom-out-` + surface.id + `:active{` +
+  `.tilted-${surface.id}-controls-zoom-in:active,` +
+  `.tilted-${surface.id}-controls-zoom-out:active{` +
     `background:#ffffff;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `:before,` +
-  `.tilted-controls-zoom-in-` + surface.id + `:after,` +
-  `.tilted-controls-zoom-out-` + surface.id + `:before{` +
+  `.tilted-${surface.id}-controls-zoom-in:before,` +
+  `.tilted-${surface.id}-controls-zoom-in:after,` +
+  `.tilted-${surface.id}-controls-zoom-out:before{` +
     `content:"";` +
     `display:block;` +
     `position:absolute;` +
     `background:#444444;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `:before,` +
-  `.tilted-controls-zoom-out-` + surface.id + `:before{` +
+  `.tilted-${surface.id}-controls-zoom-in:before,` +
+  `.tilted-${surface.id}-controls-zoom-out:before{` +
     `height:2px;` +
     `width:18px;` +
     `top:14px;` +
     `left:6px;` +
   `}` +
 
-  `.tilted-controls-zoom-in-` + surface.id + `:after{` +
+  `.tilted-${surface.id}-controls-zoom-in:after{` +
     `height:18px;` +
     `width:2px;` +
     `top:6px;` +
     `left:14px;` +
   `}` +
 
-  `.tilted-viewport-` + surface.id + `{` +
+  `.tilted-${surface.id}-viewport{` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
     `position:relative !important;` +
     `will-change:top,left;` +
   `}` +
 
-  `.tilted-transform-` + surface.id + `{` +
+  `.tilted-${surface.id}-transform{` +
     `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
     `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
     `will-change:transform;` +
   `}` +
 
-  `.tilted-surface-` + surface.id + `{` +
+  `.tilted-${surface.id}-surface{` +
     `position:relative !important;` +
     `overflow:visible !important;` +
     `z-index:100 !important;` +
   `}` +
 
-  `.tilted-scene-` + surface.id + `>*:not(.tilted-figure-${surface.id}){` +
+  `.tilted-${surface.id}-scene>*:not(.tilted-${surface.id}-figure){` +
     `transform-origin:bottom;` +
   `}` +
-  `.tilted-figure-` + surface.id + `{` +
+  `.tilted-${surface.id}-figure{` +
     `transform-origin:bottom;` +
   `}`;
 

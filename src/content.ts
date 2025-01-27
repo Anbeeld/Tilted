@@ -1,5 +1,6 @@
 import Raoi from "raoi";
 import { getSurface } from "./register.js";
+import { multiplyCssDegrees } from "./utils.js";
 
 export enum ContentType {
   Scene = 'scene',
@@ -33,17 +34,18 @@ export class Content {
     this._element = props.element;
 
     if (this._type === ContentType.Scene) {
-      this._element.classList.add(`tilted-scene-${this._surface.id}`);
-      this._element.classList.add(`tilted-scene-${this._id}`);
+      this._element.classList.add(`tilted-${this._surfaceId}-scene`);
+      this._element.classList.add(`tilted-${this._surfaceId}-scene-${this._id}`);
     } else if (this._type === ContentType.Figure) {
-      this._element.classList.add(`tilted-figure-${this._surface.id}`)
+      this._element.classList.add(`tilted-${this._surfaceId}-figure`);
+      this._element.classList.add(`tilted-${this._surfaceId}-figure-${this._id}`);
     }
   }
 
   private _initStyle() : void {
     if (!this._style) {
       this._style = document.createElement("style");
-      this._style.classList.add(`tilted-css-${this._type}-${this._surface.id}-${this._id}`);
+      this._style.classList.add(`tilted-${this._surface.id}-css-${this._type}-${this._id}`);
       document.head.appendChild(this._style);
     }
   }
@@ -51,17 +53,12 @@ export class Content {
   public applyTransformProperty(surfaceRotateX: string) : void {
     if (this._type === ContentType.Scene) {
       this._initStyle();
-      if (this._factor !== 1) {
-        this._style!.innerHTML = `.tilted-scene-${this._id}>*:not(.tilted-figure-${this._surface.id}){transform: rotateX(calc(-${surfaceRotateX} * ${this._factor}));}`;
-      } else {
-        this._style!.innerHTML = `.tilted-scene-${this._id}>*:not(.tilted-figure-${this._surface.id}){transform: rotateX(-${surfaceRotateX});}`;
-      }
+      this._style!.innerHTML = 
+      `.tilted-${this._surfaceId}-scene-${this._id}>*:not(.tilted-${this._surfaceId}-figure){` +
+        `transform: rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)});` +
+      `}`;
     } else if (this._type === ContentType.Figure) {
-      if (this._factor !== 1) {
-        this._element.style.transform = `rotateX(calc(-${surfaceRotateX} * ${this._factor}))`;
-      } else {
-        this._element.style.transform = `rotateX(-${surfaceRotateX})`;
-      }
+      this._element.style.transform = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)})`;
     }
   }
 }

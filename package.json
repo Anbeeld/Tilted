@@ -1,10 +1,15 @@
 {
   "name": "tilted",
   "version": "0.3.0",
-  "description": "Tilted is a lightweight TS library for displaying game maps and other content in a modern way.",
+  "description": "Tilted is a lightweight TS library for displaying maps and other similar content in a modern 2.5D way.",
   "keywords": [
     "map",
-    "game"
+    "game",
+    "graphics",
+    "2d",
+    "3d",
+    "javascript",
+    "typescript"
   ],
   "homepage": "https://anbeeld.com/tilted",
   "repository": "github:Anbeeld/Tilted",

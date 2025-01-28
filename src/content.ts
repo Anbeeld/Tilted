@@ -70,7 +70,7 @@ export class Content {
   }
 
   public applyTransformProperty(surfaceRotateX: string) : void {
-    let transformValue = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)})`;
+    let transformValue = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.TILT_ROUNDING.VALUE)})`;
     if (this._type === ContentType.Scene) {
       this._initStyle();
       let newInnerHTML = 

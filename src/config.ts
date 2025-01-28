@@ -26,8 +26,9 @@ export interface ConfigProperties {
 
   PERSPECTIVE_DISTANCE: ConfigProperty,
 
-  ROTATE_X_MAX: ConfigProperty,
-  ROTATE_ROUNDING: ConfigProperty,
+  TILT_MIN: ConfigProperty,
+  TILT_MAX: ConfigProperty,
+  TILT_ROUNDING: ConfigProperty,
 
   EDGE_MOVE_ENABLED: ConfigProperty,
   EDGE_MOVE_AREA: ConfigProperty,
@@ -57,8 +58,9 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
 
     perspectiveDistance: 600,
 
-    rotateXMax: 35,
-    rotateRounding: 2,
+    tiltMin: 0,
+    tiltMax: 35,
+    tiltRounding: 2,
 
     edgeMoveEnabled: 0,
     edgeMoveArea: 20,
@@ -126,12 +128,16 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       TYPE: ConfigPropertyType.Length
     },
 
-    ROTATE_X_MAX: {
-      VALUE: Math.round(config.rotateXMax),
+    TILT_MIN: {
+      VALUE: Math.round(config.tiltMin),
       TYPE: ConfigPropertyType.Angle
     },
-    ROTATE_ROUNDING: {
-      VALUE: config.rotateRounding,
+    TILT_MAX: {
+      VALUE: Math.round(config.tiltMax),
+      TYPE: ConfigPropertyType.Angle
+    },
+    TILT_ROUNDING: {
+      VALUE: config.tiltRounding,
       TYPE: ConfigPropertyType.Integer
     },
 

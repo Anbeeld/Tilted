@@ -233,7 +233,7 @@ export default class Surface {
     }
     let percentOfMaxScale = (scale - this.CONFIG.SCALE_MIN.VALUE) / (this.CONFIG.SCALE_MAX.VALUE - this.CONFIG.SCALE_MIN.VALUE);
     this._rotate = {
-      x: roundFloat(percentOfMaxScale * this.CONFIG.ROTATE_X_MAX.VALUE, this.CONFIG.ROTATE_ROUNDING.VALUE),
+      x: roundFloat(this.CONFIG.TILT_MIN.VALUE + percentOfMaxScale * (this.CONFIG.TILT_MAX.VALUE - this.CONFIG.TILT_MIN.VALUE), this.CONFIG.TILT_ROUNDING.VALUE),
       y: 0
     }
   }

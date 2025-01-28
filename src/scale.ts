@@ -78,10 +78,6 @@ export default class Scale {
         value: this._value.toString()
       },
       {
-        name: 'perspective',
-        value: this._surface.CONFIG.PERSPECTIVE_DISTANCE.VALUE + 'px'
-      },
-      {
         name: 'rotateX',
         value: this._surface.rotate.x + 'deg'
       }

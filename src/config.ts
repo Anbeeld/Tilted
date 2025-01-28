@@ -24,7 +24,8 @@ export interface ConfigProperties {
   SCALE_ROUNDING: ConfigProperty,
   SCALE_GLIDE_FACTOR: ConfigProperty,
 
-  PERSPECTIVE_DISTANCE: ConfigProperty,
+  PERSPECTIVE_VALUE: ConfigProperty,
+  PERSPECTIVE_FACTOR: ConfigProperty,
 
   TILT_MIN: ConfigProperty,
   TILT_MAX: ConfigProperty,
@@ -56,7 +57,8 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     scaleRounding: 3,
     scaleGlideFactor: 1,
 
-    perspectiveDistance: 600,
+    perspectiveValue: 750,
+    perspectiveFactor: 1,
 
     tiltMin: 0,
     tiltMax: 35,
@@ -123,8 +125,12 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       TYPE: ConfigPropertyType.Number
     },
 
-    PERSPECTIVE_DISTANCE: {
-      VALUE: Math.round(config.perspectiveDistance),
+    PERSPECTIVE_VALUE: {
+      VALUE: config.perspectiveValue,
+      TYPE: ConfigPropertyType.Integer
+    },
+    PERSPECTIVE_FACTOR: {
+      VALUE: Math.round(config.perspectiveFactor),
       TYPE: ConfigPropertyType.Length
     },
 

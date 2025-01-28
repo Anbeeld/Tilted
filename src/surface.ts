@@ -103,6 +103,8 @@ export default class Surface {
 
     this._position = new Position(this.id);
 
+    this._updatePerspective();
+
     this._scale = new Scale(this.id);
   }
 
@@ -225,6 +227,13 @@ export default class Surface {
 
     this.elements.viewport.style.top = this._viewport.y + 'px';
     this.elements.viewport.style.left = this._viewport.x + 'px';
+  }
+
+  private _updatePerspective() : void {
+    this.setTransformValues([{
+      name: 'perspective',
+      value: (Math.round(this.CONFIG.PERSPECTIVE_VALUE.VALUE * this.CONFIG.PERSPECTIVE_FACTOR.VALUE)).toString() + 'px'
+    }]);
   }
 
   public updateRotate(scale: number|null = null) : void {

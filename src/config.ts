@@ -71,12 +71,12 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     animationScaleTime: 400, // Default duration of scale animation in ms, can be shortened for small shifts 
     animationGlideTime: 400, // Default duration of glide animation in ms, note that scale glides use animationScaleTime
 
-    durationForToss: 150, // Dragging
-    tossGlideFactor: 1,
-    animationTossTime: 1000,
+    durationForToss: 150, // Dragging with duration fewer than this will result in toss
+    tossGlideFactor: 1, // Multiplier of toss glide vector, which itself is roughly equal to dragging distance
+    animationTossTime: 1000, // Default duration of toss animation in ms
 
-    coordRoundingInterim: 1,
-    coordRoundingFinal: 0
+    coordRoundingInterim: 1, // Surface coords during movement will be rounded to this number of decimals
+    coordRoundingFinal: 0 // Surface coords after movement ends will be rounded to this number of decimals
   }
 
   for (const parameter in configCustom) {

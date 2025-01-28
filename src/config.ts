@@ -88,7 +88,7 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
   }
 
   let scaleSteps = calculateSteps(config.scaleMin, config.scaleMax, config.scaleNumSteps, config.scaleRounding);
-  /*config.debugMode && */console.log('Scale steps: ', scaleSteps);
+  config.debugMode && console.log('Scale steps: ', scaleSteps);
 
   const CONFIG = {
     DEBUG_MODE: {

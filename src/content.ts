@@ -70,14 +70,18 @@ export class Content {
   }
 
   public applyTransformProperty(surfaceRotateX: string) : void {
+    let transformValue = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)})`;
     if (this._type === ContentType.Scene) {
       this._initStyle();
-      this._style!.innerHTML = 
+      let newInnerHTML = 
       `.tilted-${this._surfaceId}-scene-${this._id}>*:not(.tilted-${this._surfaceId}-figure){` +
-        `transform: rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)});` +
+        `transform:${transformValue}` +
       `}`;
+      if (this._style!.innerHTML !== newInnerHTML) {
+        this._style!.innerHTML = newInnerHTML;
+      }
     } else if (this._type === ContentType.Figure) {
-      this._element.style.transform = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.ROTATE_ROUNDING.VALUE)})`;
+      this._element.style.transform = transformValue;
     }
   }
 }

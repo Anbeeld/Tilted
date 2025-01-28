@@ -38,9 +38,9 @@ export interface ConfigProperties {
   ANIMATION_SCALE_TIME: ConfigProperty,
   ANIMATION_GLIDE_TIME: ConfigProperty,
 
-  DURATION_FOR_THROW: ConfigProperty,
-  THROW_GLIDE_FACTOR: ConfigProperty,
-  ANIMATION_THROW_TIME: ConfigProperty,
+  DURATION_FOR_TOSS: ConfigProperty,
+  TOSS_GLIDE_FACTOR: ConfigProperty,
+  ANIMATION_TOSS_TIME: ConfigProperty,
 
   COORD_ROUNDING_INTERIM: ConfigProperty, // Rounding of coordinates during animation
   COORD_ROUNDING_FINAL: ConfigProperty // Rounding of coordinates after animation
@@ -48,32 +48,32 @@ export interface ConfigProperties {
 
 export function setupConfig(configCustom: {}) : ConfigProperties {
   let config = {
-    debugMode: 0,
+    debugMode: 0, // Prints info about various changes being made to surface into console
 
-    scaleMin: 0.25,
-    scaleMax: 1.00,
-    scaleNumSteps: 15,
-    scaleDefaultStep: 8,
-    scaleRounding: 3,
-    scaleGlideFactor: 1,
+    scaleMin: 0.25, // The smallest surface can be scaled to, e.g. 25% of its actual size as per default
+    scaleMax: 1.00, // The largest surface can be scaled to, e.g. 100% of its actual size as per default
+    scaleNumSteps: 15, // Num scaling steps, more steps -> more granularity in scaling and longer to scale all the way
+    scaleDefaultStep: 8, // Scaling step that will be set by default - min is 1, max is scaleNumSteps
+    scaleRounding: 3, // Scale value and everything related will be rounded to this number of decimals
+    scaleGlideFactor: 1, // Multiplier of glide vector length when scaling towards mouse cursor
 
-    perspectiveValue: 750,
-    perspectiveFactor: 1,
+    perspectiveValue: 750, // Default perspective distance in pixels
+    perspectiveFactor: 1, // Multiplier of perspective distance, use whatever fits you between this and value
 
-    tiltMin: 0,
-    tiltMax: 35,
-    tiltRounding: 2,
+    tiltMin: 0, // Angle of surface tilt at scaleMin
+    tiltMax: 35, // Angle of surface tilt at scaleMax
+    tiltRounding: 2, // Tilt value and everything related will be rounded to this number of decimals
 
-    edgeMoveEnabled: 0,
-    edgeMoveArea: 20,
-    edgeMoveSpeed: 10,
+    edgeMoveEnabled: 0, // If surface moving by moving mouse cursor to the edge of viewport is enabled
+    edgeMoveArea: 20, // Edge move area width in pixels
+    edgeMoveSpeed: 10, // Max speed of surface edge moving, actual depends on cursor position inside edge etc.
     
-    animationScaleTime: 400,
-    animationGlideTime: 400,
+    animationScaleTime: 400, // Default duration of scale animation in ms, can be shortened for small shifts 
+    animationGlideTime: 400, // Default duration of glide animation in ms, note that scale glides use animationScaleTime
 
-    durationForThrow: 150,
-    throwGlideFactor: 1,
-    animationThrowTime: 1000,
+    durationForToss: 150, // Dragging
+    tossGlideFactor: 1,
+    animationTossTime: 1000,
 
     coordRoundingInterim: 1,
     coordRoundingFinal: 0
@@ -169,16 +169,16 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
       TYPE: ConfigPropertyType.Time
     },
     
-    DURATION_FOR_THROW: {
-      VALUE: Math.round(config.durationForThrow),
+    DURATION_FOR_TOSS: {
+      VALUE: Math.round(config.durationForToss),
       TYPE: ConfigPropertyType.Time
     },
-    THROW_GLIDE_FACTOR: {
-      VALUE: config.throwGlideFactor,
+    TOSS_GLIDE_FACTOR: {
+      VALUE: config.tossGlideFactor,
       TYPE: ConfigPropertyType.Number
     },
-    ANIMATION_THROW_TIME: {
-      VALUE: Math.round(config.animationThrowTime),
+    ANIMATION_TOSS_TIME: {
+      VALUE: Math.round(config.animationTossTime),
       TYPE: ConfigPropertyType.Time
     },
 

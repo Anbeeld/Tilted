@@ -33,19 +33,19 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   public override destroy() : void {
-    if (performance.now() - this._timestampStart < this._surface.CONFIG.DURATION_FOR_THROW.VALUE) {
-      this._throw();
+    if (performance.now() - this._timestampStart < this._surface.CONFIG.DURATION_FOR_TOSS.VALUE) {
+      this._toss();
     }
     this.destroyed = true;
   }
 
-  private _throw() : void {
+  private _toss() : void {
     this._surface.position.glide(
       {
-        x: this._cumulated.x * this._surface.CONFIG.THROW_GLIDE_FACTOR.VALUE / this._surface.scale.value,
-        y: this._cumulated.y * this._surface.CONFIG.THROW_GLIDE_FACTOR.VALUE / this._surface.scale.value
+        x: this._cumulated.x * this._surface.CONFIG.TOSS_GLIDE_FACTOR.VALUE / this._surface.scale.value,
+        y: this._cumulated.y * this._surface.CONFIG.TOSS_GLIDE_FACTOR.VALUE / this._surface.scale.value
       },
-      this._surface.CONFIG.ANIMATION_THROW_TIME.VALUE, EasingFunctions.EaseOutCirc
+      this._surface.CONFIG.ANIMATION_TOSS_TIME.VALUE, EasingFunctions.EaseOutCirc
     );
   }
 }

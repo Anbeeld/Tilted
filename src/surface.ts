@@ -9,7 +9,7 @@ import { generateCssDynamic, generateCssStatic } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
-import { Content, ContentProps } from './content.js';
+import { Entity, EntityProps } from './entity.js';
 
 interface SurfaceElements {
   container: HTMLElement,
@@ -54,7 +54,7 @@ export default class Surface {
   private _scale: Scale;
   public get scale() : Scale {return this._scale;}
 
-  private _content: Content[];
+  private _entities: Entity[];
 
   private _animationExecutor: AnimationExecutor;
   public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
@@ -70,7 +70,7 @@ export default class Surface {
 
   private _transformProperty: TransformProperty;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, content: ContentProps[] = []) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, entity: EntityProps[] = []) {
     this._id = Raoi.new(this);
     this.CONFIG = setupConfig(config);
 
@@ -96,9 +96,9 @@ export default class Surface {
     new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._position.enforceLimits();}).observe(this.elements.container);
     new ResizeObserver(() => {this._updateCssDynamic();this._position.enforceLimits();}).observe(this.elements.surface);
 
-    this._content = [];
-    for (let contentProps of content) {
-      this._content.push(new Content(this.id, contentProps));
+    this._entities = [];
+    for (let entityProps of entity) {
+      this._entities.push(new Entity(this.id, entityProps));
     }
 
     this._position = new Position(this.id);
@@ -214,8 +214,8 @@ export default class Surface {
     `rotateX(${this._transformProperty.values.rotateX}) ` +
     `translate3d(${this._transformProperty.values.translate3d})`;
 
-    for (let content of this._content) {
-      content.applyTransformProperty(this._transformProperty.values.rotateX);
+    for (let entity of this._entities) {
+      entity.applyTransformProperty(this._transformProperty.values.rotateX);
     }
   }
 

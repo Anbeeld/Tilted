@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tilted Examples - World Map</title>
+  <link href="/main.css" rel="stylesheet">
+  <script src="/js/tilted.js"></script>
+  <style>
+    #tilted-container {
+      background: #ffffff;
+    }
+
+    #tilted-surface {
+      width: 3360px;
+      height: 1705px;
+    }
+
+    #tilted-surface > img {
+      pointer-events: none;
+    }
+
+    #tilted-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    #tilted-content > * {
+      pointer-events: auto;
+    }
+
+    .tilted-figure {
+      position: absolute;
+      width: 300px;
+      height: 281px;
+    }
+
+    .tilted-figure > .staff {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 64px;
+      height: 281px;
+      background-image: url('/tilted/world-map/staff.png');
+    }
+
+    .tilted-figure > .flag {
+      position: absolute;
+      top: 36px;
+      left: 35px;
+      width: 180px;
+      height: 245px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body>
+  <div id="tilted-container">
+    <div id="tilted-surface">
+      <img width="3360" height="1705" src="/tilted/world-map/surface.jpg" loading="lazy">
+    </div>
+    <div id="tilted-content">
+      <div class="tilted-figure" style="top: 200px; left: 760px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/united-states.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 200px; left: 2500px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/china.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 50px; left: 1670px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/germany.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 165px; left: 2760px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/japan.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 330px; left: 2250px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/india.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 0px; left: 1490px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/united-kingdom.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 125px; left: 1560px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/france.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 190px; left: 1710px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/italy.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 75px; left: 975px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/canada.png)"></div>
+      </div>
+      <div class="tilted-figure" style="top: 725px; left: 1100px;">
+        <div class="staff"></div>
+        <div class="flag" style="background-image: url(/tilted/world-map/brazil.png)"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tilted = new Tilted(
+      document.getElementById("tilted-container"),
+      document.getElementById("tilted-surface"),
+      {debugMode: false, edgeMoveEnabled: false, scaleMin: 0.40, scaleMax: 1.25, scaleDefaultStep: 1},
+      [{type: 'scene', element: document.getElementById("tilted-content")}],
+    );
+  </script>
+</body>
+</html>

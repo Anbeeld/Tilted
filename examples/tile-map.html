@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tilted Examples - Tile Map</title>
+  <link href="/main.css" rel="stylesheet">
+  <script src="/js/tilted.js"></script>
+  <style>
+    #tilted-container {
+      background: #fbe697;
+    }
+
+    #tilted-surface {
+      width: 6008px;
+      height: 6008px;
+      border: 4px solid #000000;
+    }
+
+    #tilted-surface > div {
+      display: flex;
+      width: 6000px;
+      height: 300px;
+      background: #b2e090;
+    }
+
+    #tilted-surface > div > div {
+      width: 300px;
+      height: 300px;
+      border: 4px solid #000000;
+      background: #b2e090;
+    }
+
+    #tilted-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    #tilted-content > * {
+      pointer-events: auto;
+    }
+
+    .tilted-figure {
+      position: absolute;
+      width: 200px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div id="tilted-container">
+    <div id="tilted-surface">
+      <script>
+        for (let i = 0; i < 20; i++) {
+          let row = document.createElement("div");
+          document.getElementById("tilted-surface").appendChild(row);
+          for (let j = 0; j < 20; j++) {
+            let tile = document.createElement("div");
+            row.appendChild(tile);
+            if (i === 11 && j === 9) {
+              let figure = document.createElement("div");
+              figure.classList.add('tilted-figure');
+              figure.id = "tilted-figure-in-tile";
+              figure.style.background = 'white';
+              figure.style.height = '250px';
+              figure.style.top = '10px';
+              figure.style.left = '40px';
+              tile.appendChild(figure);
+            }
+          }
+        }
+      </script>
+    </div>
+    <div id="tilted-content">
+      <div class="tilted-figure" style="top: 2870px; left: 3050px;"><div class="tilted-figure" style="background: #3131ee; border-radius: 30px; transform: skewY(20deg) translateY(-36px)"></div></div>
+      <div class="tilted-figure" style="top: 3050px; left: 2950px; background: #eb1b1b; border-radius: 50%;"></div>
+      <div class="tilted-figure" id="tilted-figure-in-scene" style="top: 3250px; left: 3180px; background: #f3f325;"></div>
+    </div>
+  </div>
+  <script>
+    const tilted = new Tilted(
+      document.getElementById("tilted-container"),
+      document.getElementById("tilted-surface"),
+      {debugMode: false, edgeMoveEnabled: false},
+      [
+        {type: 'scene', element: document.getElementById("tilted-content")},
+        {type: 'figure', element: document.getElementById("tilted-figure-in-scene"), factor: 0.75},
+        {type: 'figure', element: document.getElementById("tilted-figure-in-tile"), factor: 1.25}
+      ]
+    );
+  </script>
+</body>
+</html>

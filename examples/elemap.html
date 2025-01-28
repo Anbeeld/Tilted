@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tilted Examples - Elemap</title>
+  <link href="/main.css" rel="stylesheet">
+  <script src="/js/elemap.js"></script>
+  <script src="/js/tilted.js"></script>
+</head>
+<body>
+  <div id="tilted-container">
+    <div id="elemap-container"></div>
+  </div>
+  <script>
+    var config = {
+      type: 'hexagon',
+      grid: {
+        orientation: 'pointy',
+        offset: 'odd'
+      }
+    }
+    var style = {
+      grid: {
+        outer: {
+          regular: {
+            width: '200px',
+            spacing: '8px',
+            borderRadius: '12px'
+          }
+        },
+        inner: {
+          regular: {
+            borderRadius: '12px'
+          }
+        }
+      },
+      tile: {
+        contour: {
+          hover: {
+            width: '4px'
+          },
+        }
+      }
+    }
+  </script>
+  <script src="/js/elemap-init.js"></script>
+  <script>
+    let tilted = new Tilted(document.getElementById('tilted-container'), elemap.elements.container, {EDGE_MOVE_ENABLED: true});
+  </script>
+</body>
+</html>

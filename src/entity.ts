@@ -1,5 +1,4 @@
-import Raoi from "raoi";
-import { getSurface } from "./register.js";
+import { Register } from "./register.js";
 import { multiplyCssDegrees } from "./utils.js";
 
 export enum EntityType {
@@ -17,7 +16,7 @@ export class Entity {
   private _id: number;
 
   private _surfaceId: number;
-  private get _surface() { return getSurface(this._surfaceId); }
+  private get _surface() { return Register.surface(this._surfaceId)!; }
 
   private _type: EntityType;
   private _factor: number;
@@ -27,7 +26,7 @@ export class Entity {
   private _style: HTMLElement|undefined;
 
   constructor(surfaceId: number, props: EntityProps) {
-    this._id = Raoi.new(this);
+    this._id = Register.id();
     this._surfaceId = surfaceId;
     this._type = props.type;
     this._factor = props.factor || 1;

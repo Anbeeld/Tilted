@@ -1,10 +1,10 @@
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
-import Raoi from 'raoi';
 import { EasingFunctions } from '../utils.js';
+import { Register } from '../register.js';
 
 export default class AnimationSurfaceDrag extends Animation {
-  public id: number = Raoi.new(this);
+  public id: number = Register.id();
   private _prev = {x: 0, y: 0};
   private _cumulated = {x: 0, y: 0};
 

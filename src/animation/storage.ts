@@ -2,10 +2,9 @@ import AnimationSurfaceGlide from './glide.js';
 import AnimationSurfaceZoom from './zoom.js';
 import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
-import Surface from '../surface.js';
 import { MouseParams } from '../controls/mouse.js';
 import { EasingFunctions, Coords } from '../utils.js';
-import { getSurface } from '../register.js';
+import { Register } from '../register.js';
 
 export enum Animations {
   SurfaceGlide = 'surfaceGlide',
@@ -16,7 +15,7 @@ export enum Animations {
 
 export class AnimationStorage {
   private _surfaceId: number;
-  private get _surface() : Surface { return getSurface(this._surfaceId); }
+  private get _surface() { return Register.surface(this._surfaceId)!; }
 
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
   public get surfaceGlide() : AnimationSurfaceGlide | null { return this._surfaceGlide; }

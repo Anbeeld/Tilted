@@ -1,7 +1,6 @@
 import { roundFloat, Coords } from './utils.js';
 import { ConfigProperties, setupConfig } from './config.js';
 import { initControls } from './controls/controls.js';
-import Raoi from 'raoi';
 
 import AnimationExecutor from './animation/executor.js';
 import { AnimationStorage, Animations } from './animation/storage.js';
@@ -10,6 +9,7 @@ import Scale from './scale.js';
 import Position from './position.js';
 
 import { Entity, EntityProps } from './entity.js';
+import { Register } from './register.js';
 
 interface SurfaceElements {
   container: HTMLElement,
@@ -71,7 +71,8 @@ export default class Surface {
   private _transformProperty: TransformProperty;
 
   public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, entity: EntityProps[] = []) {
-    this._id = Raoi.new(this);
+    this._id = Register.id();
+    Register.add(this);
     this.CONFIG = setupConfig(config);
 
     this._elements = this._setupElements(elementContainer, elementSurface);

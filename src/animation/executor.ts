@@ -1,9 +1,9 @@
-import { getSurface } from '../register.js';
+import { Register } from '../register.js';
 import { Animations } from './storage.js';
 
 export default class AnimationExecutor {
   private _surfaceId: number;
-  private get _surface() { return getSurface(this._surfaceId); }
+  private get _surface() { return Register.surface(this._surfaceId)!; }
 
   private _isExecuting: boolean = false;
   

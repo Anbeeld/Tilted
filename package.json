@@ -1,7 +1,7 @@
 {
   "name": "tilted",
   "version": "0.4.0",
-  "description": "Tilted is a lightweight TS library for displaying maps and other similar content in a modern 2.5D way.",
+  "description": "Tilted is a lightweight no-dependency TS library for displaying maps and other similar content in a modern 2.5D way.",
   "keywords": [
     "map",
     "game",
@@ -28,14 +28,11 @@
     "examples": "npm run build && node examples/app.js"
   },
   "devDependencies": {
-    "@types/node": "^22.10.10",
-    "terser-webpack-plugin": "^5.3.11",
+    "@types/node": "^22.14.0",
+    "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
-    "typescript": "^5.7.3",
-    "webpack": "^5.97.1",
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.2",
     "webpack-cli": "^6.0.1"
-  },
-  "dependencies": {
-    "raoi": "^0.2.3"
   }
 }

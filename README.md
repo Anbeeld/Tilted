@@ -2,7 +2,7 @@
 
 # Tilted
 
-Tilted is a lightweight TS library for displaying maps and other similar content in a modern 2.5D way. Easily create multi-dimensional visuals out of your existing 2D assets by placing the surface and its entities at an angle to each other.
+Tilted is a lightweight no-dependency TS library for displaying maps and other similar content in a modern 2.5D way. Its key feature is the creation of multi-dimensional visuals out of 2D assets by placing them at an angle to each other.
 
 Live demo is available [on my website](https://anbeeld.com/tilted).
 

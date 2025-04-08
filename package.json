@@ -1,6 +1,6 @@
 {
   "name": "tilted",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Tilted is a lightweight no-dependency TS library for displaying maps and other similar content in a modern 2.5D way.",
   "keywords": [
     "map",

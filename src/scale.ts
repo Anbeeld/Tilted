@@ -46,23 +46,6 @@ export default class Scale {
     return positive ? this._shiftsToStep[this._stepNumByValue(value)]!.up : this._shiftsToStep[this._stepNumByValue(value)]!.down;
   }
 
-  private _glidePerStep(mouse: MouseParams, positive: boolean, value?: number) : Coords {
-    if (value === undefined) {
-      value = this._projection;
-    }
-    let positiveMultiplier = positive ? 1 : -1;
-    // Hand picked constant that roughly correlates with the same spot staying under cursor when scaling
-    const scaleToVector = 0.105;
-    // The default num of steps that said constant was tested against, more steps = smaller shifts = smaller glides
-    const defaultNumSteps = 15;
-    let scaleValue = positive ? value + this._surface.scale._shiftToStep(true) : value;
-    let vectorMultiplier = scaleToVector * (defaultNumSteps / this._surface.CONFIG.SCALE_NUM_STEPS.VALUE) * this._surface.CONFIG.SCALE_GLIDE_FACTOR.VALUE / scaleValue;
-    return {
-      x: roundFloat((mouse.x - this._surface.containerWidth / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier,
-      y: roundFloat((mouse.y - this._surface.containerHeight / 2) * vectorMultiplier, this._surface.CONFIG.COORD_ROUNDING_FINAL.VALUE) * positiveMultiplier
-    }
-  }
-
   private _roundToStep(shift: number) : number {
     let projection = findClosestInArray(
       this._steps,
@@ -187,18 +170,72 @@ export default class Scale {
 
     let initialProjection = this._projection;
     let initialShift = steps * shiftPerStep;
-    let zoom = this.zoom(initialShift);
+    let zoom = this.zoom(initialShift, this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, EasingFunctions.Linear);
 
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
     // "combined" shift because glide animation time is always the same by default.
     if (zoom !== false && mouse !== null && !this._surface.animationStorage.exists(Animations.SurfaceEdge)) {
-      let vector = this._surface.scale._glidePerStep(mouse, positive, initialProjection);
+      let vector = this.glideToMouse(mouse, initialProjection, zoom.new);
 
       let factor = Math.abs(zoom.new / initialShift);
       vector.x *= factor;
       vector.y *= factor;
 
-      this._surface.position.glide(vector, zoom.time);
+      this._surface.position.glide(vector, zoom.time, EasingFunctions.Linear);
+    }
+  }
+
+  private getDisplayedSurface(scale?: number, position?: Coords) {
+    if (!scale) {
+      scale = this._surface.scale.value;
+    }
+
+    if (!position) {
+      position = this._surface.position.coords;
+    }
+
+    return {
+      top: {
+        left: {
+          x: position.x - this._surface.containerWidth / 2 / scale,
+          y: position.y + this._surface.containerHeight / 2 / scale
+        },
+        right: {
+          x: position.x + this._surface.containerWidth / 2 / scale,
+          y: position.y + this._surface.containerHeight / 2 / scale
+        }
+      },
+      bottom: {
+        left: {
+          x: position.x - this._surface.containerWidth / 2 / scale,
+          y: position.y - this._surface.containerHeight / 2 / scale
+        },
+        right: {
+          x: position.x + this._surface.containerWidth / 2 / scale,
+          y: position.y - this._surface.containerHeight / 2 / scale
+        }
+      }
+    };
+  }
+
+  private glideToMouse(mouse: MouseParams, initialScale: number, zoomScale: number) {
+    let displayedSurfaceInitial = this.getDisplayedSurface(initialScale);
+    let pointedSurfaceInitial = {
+      x: displayedSurfaceInitial.top.left.x + mouse.x / initialScale,
+      y: displayedSurfaceInitial.top.left.y - mouse.y / initialScale
+    };
+
+    let newScale = initialScale + zoomScale;
+
+    let displayedSurfaceZoomed = this.getDisplayedSurface(newScale);
+    let pointedSurfaceZoomed = {
+      x: displayedSurfaceZoomed.top.left.x + mouse.x / newScale,
+      y: displayedSurfaceZoomed.top.left.y - mouse.y / newScale
+    };
+
+    return {
+      x: (pointedSurfaceInitial.x - pointedSurfaceZoomed.x),
+      y: (pointedSurfaceZoomed.y - pointedSurfaceInitial.y)
     }
   }
 }

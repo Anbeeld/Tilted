@@ -1,3 +1,8 @@
+## 0.4.2
+
+- Replaced approximate glide distance when zooming with actual calculations of the surface coordinates that the cursor points to now and will point after zooming. Perspective changes due to surface rotating are not taken into the account yet, but this may be added in the future updates.
+- Fixed the map gliding back and forth on a hyperbola when zooming, caused by the movement being linear in absolute terms and thus having varying distance traveled per time relative to the viewport, by adjusting the glide step move based on the current map scale.
+
 ## 0.4.1
 
 - Removed Raoi dependency, replacing it with a simpler object register baked into the lib itself.

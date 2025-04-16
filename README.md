@@ -1,3 +1,5 @@
+![Tilted cover image](https://anbeeld.com/images/tilted-cover.jpg)
+
 [![NPM](https://img.shields.io/npm/v/tilted?label=NPM)](https://www.npmjs.com/package/tilted)
 
 # Tilted
@@ -49,3 +51,5 @@ Note that you can still add a direct child of a scene as a separate figure. In t
 - Ensure best possible performance.
 - Improve overall code quality.
 - ...more to come
+
+[![Support my work!](https://anbeeld.com/images/support.jpg)](https://anbeeld.com/support)

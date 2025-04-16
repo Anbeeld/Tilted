@@ -170,7 +170,7 @@ export default class Scale {
 
     let initialProjection = this._projection;
     let initialShift = steps * shiftPerStep;
-    let zoom = this.zoom(initialShift, this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, EasingFunctions.Linear);
+    let zoom = this.zoom(initialShift, this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE);
 
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
     // "combined" shift because glide animation time is always the same by default.
@@ -181,7 +181,12 @@ export default class Scale {
       vector.x *= factor;
       vector.y *= factor;
 
-      this._surface.position.glide(vector, zoom.time, EasingFunctions.Linear);
+      this._surface.position.glide(vector, zoom.time);
+
+      if (this._surface.animationStorage.exists(Animations.SurfaceZoom)
+          && this._surface.animationStorage.exists(Animations.SurfaceGlide)) {
+        this._surface.animationStorage.surfaceGlide!.tieWithZoomAnimation(this._surface.animationStorage.surfaceZoom!);
+      }
     }
   }
 

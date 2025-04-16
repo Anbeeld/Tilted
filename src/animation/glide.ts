@@ -1,5 +1,6 @@
 import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction, Coords } from '../utils.js';
 import Animation from './animation.js';
+import AnimationSurfaceZoom from './zoom.js';
 
 export default class AnimationSurfaceGlide extends Animation {
   private _initial: Coords;
@@ -23,6 +24,8 @@ export default class AnimationSurfaceGlide extends Animation {
       y: (this._vector.y.value - this._current.y) * this._vector.y.sign
     };
   }
+
+  private _zoom?: AnimationSurfaceZoom;
 
   constructor(surfaceId: number, vector: Coords, animationTime: number, easingFormula: EasingFunctions) {
     super(surfaceId);
@@ -50,13 +53,28 @@ export default class AnimationSurfaceGlide extends Animation {
     this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this._vector.x.value * this._vector.x.sign + ', y ' + this._vector.y.value * this._vector.y.sign + ', initial.x ' + this._initial.x + ', initial.y ' + this._initial.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
   }
 
+  public tieWithZoomAnimation(zoomAnimation: AnimationSurfaceZoom) : void {
+    this._zoom = zoomAnimation;
+  }
+
+  private adjustMoveByZoom(x: number): number {
+    if (!this._zoom) {
+      return x;
+    }
+    if (this._zoom.initial === this._zoom.target) {
+      return x;
+    }
+    const scaleRatio = this._zoom.initial / this._zoom.target;
+    return x / (scaleRatio + x * (1 - scaleRatio));
+  }
+
   public step(timestampCurrent: number) : boolean {
     if (this.destroyed) {
       return false;
     }
 
     let timeRatio = clampRatio((timestampCurrent - this._timestampStart) / this._animationTime);
-    let moveRatio = clampRatio(applyEasingFunction(timeRatio, this._bezierEasing));
+    let moveRatio = clampRatio(this.adjustMoveByZoom(applyEasingFunction(timeRatio, this._bezierEasing)));
 
     if (moveRatio >= 1) {
 

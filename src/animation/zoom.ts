@@ -11,6 +11,9 @@ export default class AnimationSurfaceZoom extends Animation {
   private _bezierEasing: EasingFunctions;
   private _animationTime: number;
 
+  public get initial() { return this._initial; }
+  public get target() { return this._target; }
+
   public get remaining() : number {
     return (this._shift.value - this._current) * this._shift.sign;
   }

@@ -44,7 +44,7 @@ export function clamp(value: number, min: number, max: number) : number {
 }
 
 export function clampRatio(value: number) : number {
-  return clamp(value, -1, 1);
+  return clamp(value, 0, 1);
 }
 
 // https://easings.net

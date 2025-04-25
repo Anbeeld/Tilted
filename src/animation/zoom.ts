@@ -2,37 +2,38 @@ import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '..
 import Animation from './animation.js';
 
 export default class AnimationSurfaceZoom extends Animation {
+  // @ts-ignore Doesn't understand setters and getters
   private _initial: number;
-  private _shift: {value: number, sign: number};
-  private _current: number = 0;
-  private get _target(): number {
-    return this._initial + this._shift.value * this._shift.sign;
-  }
-  private _bezierEasing: EasingFunctions;
-  private _animationTime: number;
-
+  private set initial(value: number) { this._initial = value; }
   public get initial() { return this._initial; }
-  public get target() { return this._target; }
+
+  private shift: {value: number, sign: number};
+  private current: number = 0;
+
+  public get target(): number { return this.initial + this.shift.value * this.shift.sign; }
+
+  private bezierEasing: EasingFunctions;
+  private animationTime: number;
 
   public get remaining() : number {
-    return (this._shift.value - this._current) * this._shift.sign;
+    return (this.shift.value - this.current) * this.shift.sign;
   }
 
   constructor(surfaceId: number, shift: number, animationTime: number, easingFormula: EasingFunctions) {
     super(surfaceId);
 
-    this._initial = this._surface.scale.value;
+    this.initial = this.surface.scale.value;
 
-    this._shift = {
+    this.shift = {
       value: Math.abs(shift),
       sign: shift > 0 ? 1 : -1
     };
 
-    this._animationTime = animationTime;
+    this.animationTime = animationTime;
 
-    this._bezierEasing = easingFormula;
+    this.bezierEasing = easingFormula;
 
-    this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom created: shift ' + this._shift.value + ', initial ' + this._initial + ', target ' + this._target);
+    this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom created: shift ' + this.shift.value + ', initial ' + this.initial + ', target ' + this.target);
   }
 
   public step(timestampCurrent: number) : boolean {
@@ -40,27 +41,27 @@ export default class AnimationSurfaceZoom extends Animation {
       return false;
     }
 
-    let timeRatio = clampRatio((timestampCurrent - this._timestampStart) / this._animationTime);
-    let shiftRatio = clampRatio(applyEasingFunction(timeRatio, this._bezierEasing));
+    let timeRatio = clampRatio((timestampCurrent - this.timestampStart) / this.animationTime);
+    let shiftRatio = clampRatio(applyEasingFunction(timeRatio, this.bezierEasing));
 
     if (shiftRatio >= 1) {
-      this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.scale.value ' + this._surface.scale.value + ', target ' + this._target);
+      this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.scale.value ' + this.surface.scale.value + ', target ' + this.target);
 
-      this._surface.scale.changeTo(this._target);
+      this.surface.scale.changeTo(this.target);
       return false;
     } else { 
       let step = 0;
       
-      if (this._shift.value > 0 && this._shift.value > this._current) {
-        step = roundFloat(Math.max(0, this._shift.value * shiftRatio - this._current), this._surface.CONFIG.SCALE_ROUNDING.VALUE);
+      if (this.shift.value > 0 && this.shift.value > this.current) {
+        step = roundFloat(Math.max(0, this.shift.value * shiftRatio - this.current), this.surface.CONFIG.SCALE_ROUNDING.VALUE);
       }
 
       if (step > 0) {
-        this._surface.scale.change(step * this._shift.sign);
-        this._current = roundFloat(this._current + step, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
-        this._timestampLast = timestampCurrent;
+        this.surface.scale.change(step * this.shift.sign);
+        this.current = roundFloat(this.current + step, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
+        this.timestampLast = timestampCurrent;
 
-        // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
+        // this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
       }
       return true;
     }

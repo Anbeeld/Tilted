@@ -14,23 +14,31 @@ export enum Animations {
 };
 
 export class AnimationStorage {
-  private _surfaceId: number;
-  private get _surface() { return Register.surface(this._surfaceId)!; }
+  private surfaceId: number;
+  private get surface() { return Register.surface(this.surfaceId)!; }
 
+  // @ts-ignore Doesn't understand setters and getters
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
-  public get surfaceGlide() : AnimationSurfaceGlide | null { return this._surfaceGlide; }
+  private set surfaceGlide(value: AnimationSurfaceGlide | null) { this._surfaceGlide = value; }
+  public get surfaceGlide() : AnimationSurfaceGlide | null { return this.surfaceGlide; }
 
+  // @ts-ignore Doesn't understand setters and getters
   private _surfaceZoom: AnimationSurfaceZoom | null = null;
-  public get surfaceZoom() : AnimationSurfaceZoom | null { return this._surfaceZoom; }
+  private set surfaceZoom(value: AnimationSurfaceZoom | null) { this._surfaceZoom = value; }
+  public get surfaceZoom() : AnimationSurfaceZoom | null { return this.surfaceZoom; }
 
+  // @ts-ignore Doesn't understand setters and getters
   private _surfaceEdge: AnimationSurfaceEdge | null = null;
-  public get surfaceEdge() : AnimationSurfaceEdge | null { return this._surfaceEdge; }
+  private set surfaceEdge(value: AnimationSurfaceEdge | null) { this._surfaceEdge = value; }
+  public get surfaceEdge() : AnimationSurfaceEdge | null { return this.surfaceEdge; }
 
+  // @ts-ignore Doesn't understand setters and getters
   private _surfaceDrag: AnimationSurfaceDrag | null = null;
-  public get surfaceDrag() : AnimationSurfaceDrag | null { return this._surfaceDrag; }
+  private set surfaceDrag(value: AnimationSurfaceDrag | null) { this._surfaceDrag = value; }
+  public get surfaceDrag() : AnimationSurfaceDrag | null { return this.surfaceDrag; }
   
   constructor(surfaceId: number) {
-    this._surfaceId = surfaceId;
+    this.surfaceId = surfaceId;
   }
 
   // Uses "as any" cause it's already limited by type
@@ -38,94 +46,94 @@ export class AnimationStorage {
     switch (animation) {
       case Animations.SurfaceGlide:
         // @ts-ignore
-        this._createSurfaceGlide(...args);
+        this.createSurfaceGlide(...args);
         break;
       case Animations.SurfaceZoom:
         // @ts-ignore
-        this._createSurfaceZoom(...args);
+        this.createSurfaceZoom(...args);
         break;
       case Animations.SurfaceEdge:
         // @ts-ignore
-        this._createSurfaceEdge(...args);
+        this.createSurfaceEdge(...args);
         break;
       case Animations.SurfaceDrag:
         // @ts-ignore
-        this._createSurfaceDrag(...args);
+        this.createSurfaceDrag(...args);
         break;
     }
-    this._surface.animationExecutor.initiate();
+    this.surface.animationExecutor.initiate();
   }
   public destroy(animation: Animations) : void {
     switch (animation) {
-      case Animations.SurfaceGlide: return this._destroySurfaceGlide();
-      case Animations.SurfaceZoom: return this._destroySurfaceZoom();
-      case Animations.SurfaceEdge: return this._destroySurfaceEdge();
-      case Animations.SurfaceDrag: return this._destroySurfaceDrag();
+      case Animations.SurfaceGlide: return this.destroySurfaceGlide();
+      case Animations.SurfaceZoom: return this.destroySurfaceZoom();
+      case Animations.SurfaceEdge: return this.destroySurfaceEdge();
+      case Animations.SurfaceDrag: return this.destroySurfaceDrag();
     }
   }
   public exists(animation: Animations) : boolean {
     switch (animation) {
-      case Animations.SurfaceGlide: return this._existsSurfaceGlide();
-      case Animations.SurfaceZoom: return this._existsSurfaceZoom();
-      case Animations.SurfaceEdge: return this._existsSurfaceEdge();
-      case Animations.SurfaceDrag: return this._existsSurfaceDrag();
+      case Animations.SurfaceGlide: return this.existsSurfaceGlide();
+      case Animations.SurfaceZoom: return this.existsSurfaceZoom();
+      case Animations.SurfaceEdge: return this.existsSurfaceEdge();
+      case Animations.SurfaceDrag: return this.existsSurfaceDrag();
     }
   }
   
-  private _createSurfaceGlide(vector: Coords, animationTime: number, easingFormula: EasingFunctions) : void {
-    this._destroySurfaceGlide();
-    this._surfaceGlide = new AnimationSurfaceGlide(this._surface.id, vector, animationTime, easingFormula);
+  private createSurfaceGlide(vector: Coords, animationTime: number, easingFormula: EasingFunctions) : void {
+    this.destroySurfaceGlide();
+    this.surfaceGlide = new AnimationSurfaceGlide(this.surface.id, vector, animationTime, easingFormula);
   }
-  private _destroySurfaceGlide() : void {
-    if (this._existsSurfaceGlide()) {
-      this._surfaceGlide!.destroy();
-      this._surfaceGlide = null;
+  private destroySurfaceGlide() : void {
+    if (this.existsSurfaceGlide()) {
+      this.surfaceGlide!.destroy();
+      this.surfaceGlide = null;
     }
   }
-  private _existsSurfaceGlide() : boolean {
-    return this._surfaceGlide !== null;
+  private existsSurfaceGlide() : boolean {
+    return this.surfaceGlide !== null;
   }
   
-  private _createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
-    this._destroySurfaceZoom();
-    this._surfaceZoom = new AnimationSurfaceZoom(this._surface.id, shift, animationTime, easingFormula);
+  private createSurfaceZoom(shift: number, animationTime: number, easingFormula: EasingFunctions) : void {
+    this.destroySurfaceZoom();
+    this.surfaceZoom = new AnimationSurfaceZoom(this.surface.id, shift, animationTime, easingFormula);
   }
-  private _destroySurfaceZoom() : void {
-    if (this._existsSurfaceZoom()) {
-      this._surfaceZoom!.destroy();
-      this._surfaceZoom = null;
+  private destroySurfaceZoom() : void {
+    if (this.existsSurfaceZoom()) {
+      this.surfaceZoom!.destroy();
+      this.surfaceZoom = null;
     }
   }
-  private _existsSurfaceZoom() : boolean {
-    return this._surfaceZoom !== null;
+  private existsSurfaceZoom() : boolean {
+    return this.surfaceZoom !== null;
   }
   
-  private _createSurfaceEdge(vector: Coords) : void {
-    this._destroySurfaceGlide();
-    this._destroySurfaceEdge();
-    this._surfaceEdge = new AnimationSurfaceEdge(this._surface.id, vector);
+  private createSurfaceEdge(vector: Coords) : void {
+    this.destroySurfaceGlide();
+    this.destroySurfaceEdge();
+    this.surfaceEdge = new AnimationSurfaceEdge(this.surface.id, vector);
   }
-  private _destroySurfaceEdge() : void {
-    if (this._existsSurfaceEdge()) {
-      this._surfaceEdge!.destroy();
-      this._surfaceEdge = null;
+  private destroySurfaceEdge() : void {
+    if (this.existsSurfaceEdge()) {
+      this.surfaceEdge!.destroy();
+      this.surfaceEdge = null;
     }
   }
-  private _existsSurfaceEdge() : boolean {
-    return this._surfaceEdge !== null;
+  private existsSurfaceEdge() : boolean {
+    return this.surfaceEdge !== null;
   }
 
-  private _createSurfaceDrag(mouse: MouseParams) : void {
-    this._destroySurfaceDrag();
-    this._surfaceDrag = new AnimationSurfaceDrag(this._surface.id, mouse);
+  private createSurfaceDrag(mouse: MouseParams) : void {
+    this.destroySurfaceDrag();
+    this.surfaceDrag = new AnimationSurfaceDrag(this.surface.id, mouse);
   }
-  private _destroySurfaceDrag() : void {
-    if (this._existsSurfaceDrag()) {
-      this._surfaceDrag!.destroy();
-      this._surfaceDrag = null;
+  private destroySurfaceDrag() : void {
+    if (this.existsSurfaceDrag()) {
+      this.surfaceDrag!.destroy();
+      this.surfaceDrag = null;
     }
   }
-  private _existsSurfaceDrag() : boolean {
-    return this._surfaceDrag !== null;
+  private existsSurfaceDrag() : boolean {
+    return this.surfaceDrag !== null;
   }
 }

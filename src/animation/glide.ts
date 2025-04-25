@@ -3,39 +3,39 @@ import Animation from './animation.js';
 import AnimationSurfaceZoom from './zoom.js';
 
 export default class AnimationSurfaceGlide extends Animation {
-  private _initial: Coords;
-  private _vector: {
+  private initial: Coords;
+  private vector: {
     x: {value: number, sign: number},
     y: {value: number, sign: number}
   };
-  private _current: Coords = {x: 0, y: 0};
-  private get _target(): Coords {
+  private current: Coords = {x: 0, y: 0};
+  private get target(): Coords {
     return {
-      x: this._initial.x + this._vector.x.value * this._vector.x.sign,
-      y: this._initial.y + this._vector.y.value * this._vector.y.sign
+      x: this.initial.x + this.vector.x.value * this.vector.x.sign,
+      y: this.initial.y + this.vector.y.value * this.vector.y.sign
     };
   }
-  private _bezierEasing: EasingFunctions;
-  private _animationTime: number;
+  private bezierEasing: EasingFunctions;
+  private animationTime: number;
 
   public get remaining() : Coords {
     return {
-      x: (this._vector.x.value - this._current.x) * this._vector.x.sign,
-      y: (this._vector.y.value - this._current.y) * this._vector.y.sign
+      x: (this.vector.x.value - this.current.x) * this.vector.x.sign,
+      y: (this.vector.y.value - this.current.y) * this.vector.y.sign
     };
   }
 
-  private _zoom?: AnimationSurfaceZoom;
+  private zoom?: AnimationSurfaceZoom;
 
   constructor(surfaceId: number, vector: Coords, animationTime: number, easingFormula: EasingFunctions) {
     super(surfaceId);
 
-    this._initial = {
-      x: this._surface.position.coords.x,
-      y: this._surface.position.coords.y
+    this.initial = {
+      x: this.surface.position.coords.x,
+      y: this.surface.position.coords.y
     };
 
-    this._vector = {
+    this.vector = {
       x: {
         value: Math.abs(vector.x),
         sign: vector.x > 0 ? 1 : -1
@@ -46,25 +46,25 @@ export default class AnimationSurfaceGlide extends Animation {
       }
     };
 
-    this._animationTime = animationTime;
+    this.animationTime = animationTime;
 
-    this._bezierEasing = easingFormula;
+    this.bezierEasing = easingFormula;
 
-    this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this._vector.x.value * this._vector.x.sign + ', y ' + this._vector.y.value * this._vector.y.sign + ', initial.x ' + this._initial.x + ', initial.y ' + this._initial.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
+    this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this.vector.x.value * this.vector.x.sign + ', y ' + this.vector.y.value * this.vector.y.sign + ', initial.x ' + this.initial.x + ', initial.y ' + this.initial.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
   }
 
   public tieWithZoomAnimation(zoomAnimation: AnimationSurfaceZoom) : void {
-    this._zoom = zoomAnimation;
+    this.zoom = zoomAnimation;
   }
 
   private adjustMoveByZoom(x: number): number {
-    if (!this._zoom) {
+    if (!this.zoom) {
       return x;
     }
-    if (this._zoom.initial === this._zoom.target) {
+    if (this.zoom.initial === this.zoom.target) {
       return x;
     }
-    const scaleRatio = this._zoom.initial / this._zoom.target;
+    const scaleRatio = this.zoom.initial / this.zoom.target;
     return x / (scaleRatio + x * (1 - scaleRatio));
   }
 
@@ -73,14 +73,14 @@ export default class AnimationSurfaceGlide extends Animation {
       return false;
     }
 
-    let timeRatio = clampRatio((timestampCurrent - this._timestampStart) / this._animationTime);
-    let moveRatio = clampRatio(this.adjustMoveByZoom(applyEasingFunction(timeRatio, this._bezierEasing)));
+    let timeRatio = clampRatio((timestampCurrent - this.timestampStart) / this.animationTime);
+    let moveRatio = clampRatio(this.adjustMoveByZoom(applyEasingFunction(timeRatio, this.bezierEasing)));
 
     if (moveRatio >= 1) {
 
-      this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide finished: ' + (timestampCurrent - this._timestampStart) + 'ms, surface.coords.x ' + this._surface.position.coords.x + ', surface.coords.y ' + this._surface.position.coords.y + ', target.x ' + this._target.x + ', target.y ' + this._target.y);
+      this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.coords.x ' + this.surface.position.coords.x + ', surface.coords.y ' + this.surface.position.coords.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
 
-      this._surface.position.moveTo({x: this._target.x, y: this._target.y});
+      this.surface.position.moveTo({x: this.target.x, y: this.target.y});
 
 
       return false;
@@ -91,21 +91,21 @@ export default class AnimationSurfaceGlide extends Animation {
         y: 0
       };
       
-      if (this._vector.x.value > 0 && this._vector.x.value > this._current.x) {
-        step.x = roundFloat(Math.max(0, this._vector.x.value * moveRatio - this._current.x), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+      if (this.vector.x.value > 0 && this.vector.x.value > this.current.x) {
+        step.x = roundFloat(Math.max(0, this.vector.x.value * moveRatio - this.current.x), this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
       }
 
-      if (this._vector.y.value > 0 && this._vector.y.value > this._current.y) {
-        step.y = roundFloat(Math.max(0, this._vector.y.value * moveRatio - this._current.y), this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+      if (this.vector.y.value > 0 && this.vector.y.value > this.current.y) {
+        step.y = roundFloat(Math.max(0, this.vector.y.value * moveRatio - this.current.y), this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
       }
 
       if (step.x > 0 || step.y > 0) {
-        this._surface.position.move({x: step.x * this._vector.x.sign, y: step.y * this._vector.y.sign}, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
-        this._current.x = roundFloat(this._current.x + step.x, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
-        this._current.y = roundFloat(this._current.y + step.y, this._surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
-        this._timestampLast = timestampCurrent;
+        this.surface.position.move({x: step.x * this.vector.x.sign, y: step.y * this.vector.y.sign}, this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE, this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this.current.x = roundFloat(this.current.x + step.x, this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this.current.y = roundFloat(this.current.y + step.y, this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
+        this.timestampLast = timestampCurrent;
 
-        // this._surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this._timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
+        // this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
       }
       return true;
     }

@@ -38,47 +38,62 @@ type TransformProperty = {
 }
 
 export default class Surface {
+  // @ts-ignore Doesn't understand setters and getters
   private _id: number;
-  public get id() : number {return this._id;}
+  private set id(value: number) { this._id = value; }
+  public get id() : number {return this.id;}
 
   public readonly CONFIG: ConfigProperties;
 
+  // @ts-ignore Doesn't understand setters and getters
   private _elements: SurfaceElements;
-  public get elements() : SurfaceElements {return this._elements;}
+  private set elements(value: SurfaceElements) { this._elements = value; }
+  public get elements() : SurfaceElements {return this.elements;}
 
-  private _styles: SurfaceStyles;
+  private styles: SurfaceStyles;
 
+  // @ts-ignore Doesn't understand setters and getters
   private _position: Position;
-  public get position() : Position {return this._position;}
+  private set position(value: Position) { this._position = value; }
+  public get position() : Position {return this.position;}
 
+  // @ts-ignore Doesn't understand setters and getters
   private _scale: Scale;
-  public get scale() : Scale {return this._scale;}
+  private set scale(value: Scale) { this._scale = value; }
+  public get scale() : Scale {return this.scale;}
 
-  private _entities: Entity[];
+  private entities: Entity[];
 
+  // @ts-ignore Doesn't understand setters and getters
   private _animationExecutor: AnimationExecutor;
-  public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
+  private set animationExecutor(value: AnimationExecutor) { this._animationExecutor = value; }
+  public get animationExecutor() : AnimationExecutor {return this.animationExecutor;}
+
+  // @ts-ignore Doesn't understand setters and getters
   private _animationStorage: AnimationStorage;
-  public get animationStorage() : AnimationStorage {return this._animationStorage;}
+  private set animationStorage(value: AnimationStorage) { this._animationStorage = value; }
+  public get animationStorage() : AnimationStorage {return this.animationStorage;}
 
-  private _viewport = {x: 0, y: 0};
+  private viewport: Coords = {x: 0, y: 0};
 
-  private _rotate = {x: 0, y: 0};
+  // @ts-ignore Doesn't understand setters and getters
+  private _rotate: Coords = {x: 0, y: 0};
+  public set rotate(value: Coords) { this._rotate = value; }
   public get rotate() : Coords {
-    return {x: this._rotate.x, y: this._rotate.y};
+    return {x: this.rotate.x, y: this.rotate.y};
   }
 
-  private _transformProperty: TransformProperty;
+  private transformProperty: TransformProperty;
 
   public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, entity: EntityProps[] = []) {
-    this._id = Register.id();
+    this.id = Register.id();
     Register.add(this);
     this.CONFIG = setupConfig(config);
 
-    this._elements = this._setupElements(elementContainer, elementSurface);
-    this._styles = this._setupStyles();
+    this.elements = this.setupElements(elementContainer, elementSurface);
+    this.styles = this.setupStyles();
 
-    this._transformProperty = {
+    this.transformProperty = {
       changed: false,
       values: {
         scale: '',
@@ -88,28 +103,28 @@ export default class Surface {
       }
     };
 
-    this._animationStorage = new AnimationStorage(this.id);
-    this._animationExecutor = new AnimationExecutor(this.id);
+    this.animationStorage = new AnimationStorage(this.id);
+    this.animationExecutor = new AnimationExecutor(this.id);
 
     initControls(this);
 
-    this._updateViewport();
-    new ResizeObserver(() => {this._updateCssDynamic();this._updateViewport();this._position.enforceLimits();}).observe(this.elements.container);
-    new ResizeObserver(() => {this._updateCssDynamic();this._position.enforceLimits();}).observe(this.elements.surface);
+    this.updateViewport();
+    new ResizeObserver(() => {this.updateCssDynamic();this.updateViewport();this.position.enforceLimits();}).observe(this.elements.container);
+    new ResizeObserver(() => {this.updateCssDynamic();this.position.enforceLimits();}).observe(this.elements.surface);
 
-    this._entities = [];
+    this.entities = [];
     for (let entityProps of entity) {
-      this._entities.push(new Entity(this.id, entityProps));
+      this.entities.push(new Entity(this.id, entityProps));
     }
 
-    this._position = new Position(this.id);
+    this.position = new Position(this.id);
 
-    this._updatePerspective();
+    this.updatePerspective();
 
-    this._scale = new Scale(this.id);
+    this.scale = new Scale(this.id);
   }
 
-  private _setupElements(elementContainer: HTMLElement, elementSurface: HTMLElement) : SurfaceElements {
+  private setupElements(elementContainer: HTMLElement, elementSurface: HTMLElement) : SurfaceElements {
     elementContainer.classList.add(`tilted-${this.id}-container`);
 
     let elementViewport = document.createElement('div');
@@ -155,7 +170,7 @@ export default class Surface {
     };
   }
 
-  private _setupStyles() : SurfaceStyles {
+  private setupStyles() : SurfaceStyles {
     let elementStyleStatic = document.createElement('style');
     elementStyleStatic.classList.add(`tilted-${this.id}-css-static`);
     elementStyleStatic.innerHTML = generateCssStatic(this);
@@ -172,8 +187,8 @@ export default class Surface {
     };
   }
 
-  private _updateCssDynamic() : void {
-    this._styles.dynamic.innerHTML = generateCssDynamic(this);
+  private updateCssDynamic() : void {
+    this.styles.dynamic.innerHTML = generateCssDynamic(this);
   }
 
   public get containerWidth() : number {
@@ -191,46 +206,46 @@ export default class Surface {
   
   public setTransformValues(values: {name: string, value: string}[], immediately: boolean = false) : void {
     for (let {name, value} of values) {
-      if (this._transformProperty.values.hasOwnProperty(name as keyof TransformValues)) {
-        this._transformProperty.values[name as keyof TransformValues] = value;
+      if (this.transformProperty.values.hasOwnProperty(name as keyof TransformValues)) {
+        this.transformProperty.values[name as keyof TransformValues] = value;
       }
     }
     if (immediately) {
       this.applyTransformProperty(true);
     } else {
-      this._transformProperty.changed = true;
-      this._animationExecutor.initiate();
+      this.transformProperty.changed = true;
+      this.animationExecutor.initiate();
     }
   }
 
   public applyTransformProperty(forced: boolean = false) : void {
-    if (!this._transformProperty.changed && !forced) {
+    if (!this.transformProperty.changed && !forced) {
       return;
     }
-    this._transformProperty.changed = false;
+    this.transformProperty.changed = false;
     
-    this._elements.transform.style.transform = 
-    `scale(${this._transformProperty.values.scale}) ` +
-    `perspective(${this._transformProperty.values.perspective}) ` +
-    `rotateX(${this._transformProperty.values.rotateX}) ` +
-    `translate3d(${this._transformProperty.values.translate3d})`;
+    this.elements.transform.style.transform = 
+    `scale(${this.transformProperty.values.scale}) ` +
+    `perspective(${this.transformProperty.values.perspective}) ` +
+    `rotateX(${this.transformProperty.values.rotateX}) ` +
+    `translate3d(${this.transformProperty.values.translate3d})`;
 
-    for (let entity of this._entities) {
-      entity.applyTransformProperty(this._transformProperty.values.rotateX);
+    for (let entity of this.entities) {
+      entity.applyTransformProperty(this.transformProperty.values.rotateX);
     }
   }
 
-  private _updateViewport() : void {
-    this._viewport = {
+  private updateViewport() : void {
+    this.viewport = {
       x: 0 - this.surfaceWidth / 2 + this.containerWidth / 2,
       y: 0 - this.surfaceHeight / 2 + this.containerHeight / 2
     }
 
-    this.elements.viewport.style.top = this._viewport.y + 'px';
-    this.elements.viewport.style.left = this._viewport.x + 'px';
+    this.elements.viewport.style.top = this.viewport.y + 'px';
+    this.elements.viewport.style.left = this.viewport.x + 'px';
   }
 
-  private _updatePerspective() : void {
+  private updatePerspective() : void {
     this.setTransformValues([{
       name: 'perspective',
       value: (Math.round(this.CONFIG.PERSPECTIVE_VALUE.VALUE * this.CONFIG.PERSPECTIVE_FACTOR.VALUE)).toString() + 'px'
@@ -242,7 +257,7 @@ export default class Surface {
       scale = this.scale.value;
     }
     let percentOfMaxScale = (scale - this.CONFIG.SCALE_MIN.VALUE) / (this.CONFIG.SCALE_MAX.VALUE - this.CONFIG.SCALE_MIN.VALUE);
-    this._rotate = {
+    this.rotate = {
       x: roundFloat(this.CONFIG.TILT_MIN.VALUE + percentOfMaxScale * (this.CONFIG.TILT_MAX.VALUE - this.CONFIG.TILT_MIN.VALUE), this.CONFIG.TILT_ROUNDING.VALUE),
       y: 0
     }
@@ -262,15 +277,15 @@ export default class Surface {
 
     console.log(
       changesString +
-      `x: ${this._position.coords.x}\n` +
-      `y: ${this._position.coords.y}\n` +
-      `limit.x: ${this._position.limit.x}\n` +
-      `limit.y: ${this._position.limit.y}\n` +
+      `x: ${this.position.coords.x}\n` +
+      `y: ${this.position.coords.y}\n` +
+      `limit.x: ${this.position.limit.x}\n` +
+      `limit.y: ${this.position.limit.y}\n` +
       `scale: ${this.scale.value}`
     );
   }
 
   public cancelOngoingMoves() : void {
-    this._animationStorage.destroy(Animations.SurfaceGlide);
+    this.animationStorage.destroy(Animations.SurfaceGlide);
   }
 }

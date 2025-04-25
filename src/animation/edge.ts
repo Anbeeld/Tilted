@@ -2,20 +2,20 @@ import { Coords } from '../utils.js';
 import Animation from './animation.js';
 
 export default class AnimationSurfaceEdge extends Animation {
-  private _vector: Coords;
+  private vector: Coords;
 
   constructor(surfaceId: number, vector: Coords) {
     super(surfaceId);
 
-    this._vector = vector;
+    this.vector = vector;
   }
 
   public update(vector: Coords) : void {
-    if (this._vector.x !== vector.x) {
-      this._vector.x = vector.x;
+    if (this.vector.x !== vector.x) {
+      this.vector.x = vector.x;
     }
-    if (this._vector.y !== vector.y) {
-      this._vector.y = vector.y;
+    if (this.vector.y !== vector.y) {
+      this.vector.y = vector.y;
     }
   }
 
@@ -24,13 +24,13 @@ export default class AnimationSurfaceEdge extends Animation {
       return false;
     }
 
-    let timeFactor = Math.max(1, (timestampCurrent - this._timestampLast)) / 10;
+    let timeFactor = Math.max(1, (timestampCurrent - this.timestampLast)) / 10;
 
-    let x = this._surface.CONFIG.EDGE_MOVE_SPEED.VALUE * this._vector.x / this._surface.scale.value * timeFactor;
-    let y = this._surface.CONFIG.EDGE_MOVE_SPEED.VALUE  * this._vector.y / this._surface.scale.value * timeFactor;
+    let x = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE * this.vector.x / this.surface.scale.value * timeFactor;
+    let y = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE  * this.vector.y / this.surface.scale.value * timeFactor;
 
-    this._timestampLast = timestampCurrent;
+    this.timestampLast = timestampCurrent;
     
-    return this._surface.position.move({x, y});
+    return this.surface.position.move({x, y});
   }
 }

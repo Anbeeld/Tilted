@@ -4,70 +4,70 @@ import { Animations } from './animation/storage.js';
 import { Register } from './register.js';
 
 export default class Scale {
-  private _surfaceId: number;
-  private get _surface() { return Register.surface(this._surfaceId)!; }
-  private _steps: number[] = [];
-  private _shiftsToStep: {up: number, down: number}[] = [];
-  public _value: number;
+  private surfaceId: number;
+  private get surface() { return Register.surface(this.surfaceId)!; }
+  private steps: number[] = [];
+  private shiftsToStep: {up: number, down: number}[] = [];
+
+  // @ts-ignore Doesn't understand setters and getters
+  private _value: number;
+  private set value(value: number) { this._value = value; }
+  public get value() { return this._value; }
 
   constructor(surfaceId: number) {
-    this._surfaceId = surfaceId;
-    this._steps = calculateSteps(this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE, this._surface.CONFIG.SCALE_NUM_STEPS.VALUE, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
-    this._shiftsToStep = calculateShiftsToStep(this._steps, this._surface.CONFIG.SCALE_ROUNDING.VALUE);
-    this._value = this._steps[this._surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1]!;
+    this.surfaceId = surfaceId;
+    this.steps = calculateSteps(this.surface.CONFIG.SCALE_MIN.VALUE, this.surface.CONFIG.SCALE_MAX.VALUE, this.surface.CONFIG.SCALE_NUM_STEPS.VALUE, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this.shiftsToStep = calculateShiftsToStep(this.steps, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
+    this.value = this.steps[this.surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1]!;
 
-    this._surface.updateRotate(this._value);
-    this._setTransformValues(true);
+    this.surface.updateRotate(this.value);
+    this.setTransformValues(true);
   }
 
-  public get value() : number {
-    return this._value;
-  }
-
-  private get _ongoing() : number {
-    if (this._surface.animationStorage.exists(Animations.SurfaceZoom)) {
-      return this._surface.animationStorage.surfaceZoom!.remaining;
+  private get ongoing() : number {
+    if (this.surface.animationStorage.exists(Animations.SurfaceZoom)) {
+      return this.surface.animationStorage.surfaceZoom!.remaining;
     }
     return 0;
   }
 
-  private get _projection() : number {
-    return clamp(roundFloat(this._surface.scale.value + this._ongoing, this._surface.CONFIG.SCALE_ROUNDING.VALUE), this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE);
+  private get projection() : number {
+    return clamp(roundFloat(this.surface.scale.value + this.ongoing, this.surface.CONFIG.SCALE_ROUNDING.VALUE), this.surface.CONFIG.SCALE_MIN.VALUE, this.surface.CONFIG.SCALE_MAX.VALUE);
   }
   
-  private _stepNumByValue(value?: number): number {
-    return this._steps.indexOf(findClosestInArray(this._steps, value ?? this._value));
+  private stepNumByValue(value?: number): number {
+    return this.steps.indexOf(findClosestInArray(this.steps, value ?? this.value));
   }
 
-  private _shiftToStep(positive: boolean, value?: number) : number {
+  private shiftToStep(positive: boolean, value?: number) : number {
     if (value === undefined) {
-      value = this._projection;
+      value = this.projection;
     }
-    return positive ? this._shiftsToStep[this._stepNumByValue(value)]!.up : this._shiftsToStep[this._stepNumByValue(value)]!.down;
+    return positive ? this.shiftsToStep[this.stepNumByValue(value)]!.up : this.shiftsToStep[this.stepNumByValue(value)]!.down;
   }
 
-  private _roundToStep(shift: number) : number {
+  private roundToStep(shift: number) : number {
     let projection = findClosestInArray(
-      this._steps,
-      clamp(this._surface.scale.value + this._ongoing + shift, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE),
+      this.steps,
+      clamp(this.surface.scale.value + this.ongoing + shift, this.surface.CONFIG.SCALE_MIN.VALUE, this.surface.CONFIG.SCALE_MAX.VALUE),
     );
-    return projection - this._surface.scale.value - this._ongoing;
+    return projection - this.surface.scale.value - this.ongoing;
   }
 
-  private _setTransformValues(immediately: boolean = false) : void {
-    this._surface.setTransformValues([
+  private setTransformValues(immediately: boolean = false) : void {
+    this.surface.setTransformValues([
       {
         name: 'scale',
-        value: this._value.toString()
+        value: this.value.toString()
       },
       {
         name: 'rotateX',
-        value: this._surface.rotate.x + 'deg'
+        value: this.surface.rotate.x + 'deg'
       }
     ], immediately);
   }
 
-  public change(shift: number, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
+  public change(shift: number, rounding: number = this.surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
     // Check if shift is zero
     if (shift === 0) {
       return false;
@@ -83,41 +83,41 @@ export default class Scale {
     // Calculate scale result with limits and final rounding
     let result;
     if (rounding >= 0) {
-      result = roundFloat(this._value + shift, rounding);
+      result = roundFloat(this.value + shift, rounding);
     } else {
-      result = this._value + shift;
+      result = this.value + shift;
     }
-    result = clamp(result, this._surface.CONFIG.SCALE_MIN.VALUE, this._surface.CONFIG.SCALE_MAX.VALUE)
+    result = clamp(result, this.surface.CONFIG.SCALE_MIN.VALUE, this.surface.CONFIG.SCALE_MAX.VALUE)
     // Check if scale will change
-    if (result === this._value) {
+    if (result === this.value) {
       return false;
     }
     // Set surface scale to a new value
-    this._value = result;
-    this._surface.updateRotate();
-    this._setTransformValues();
+    this.value = result;
+    this.surface.updateRotate();
+    this.setTransformValues();
     // Indicate that there was a change of scale
     return true;
   }
 
-  public changeTo(value: number, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
+  public changeTo(value: number, rounding: number = this.surface.CONFIG.SCALE_ROUNDING.VALUE) : boolean {
     if (rounding >= 0) {
       value = roundFloat(value, rounding);
     }
-    if (this._value === value) {
+    if (this.value === value) {
       return false;
     }
-    return this.change(value - this._value, rounding);
+    return this.change(value - this.value, rounding);
   }
 
-  public zoom(shift: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, rounding: number = this._surface.CONFIG.SCALE_ROUNDING.VALUE) : false|{new: number, combined: number, time: number} {
+  public zoom(shift: number, time: number = this.surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc, rounding: number = this.surface.CONFIG.SCALE_ROUNDING.VALUE) : false|{new: number, combined: number, time: number} {
     let initialShift = shift;
     // Check if shift is zero
     if (shift === 0) {
       return false;
     }
     // Change shift value so that current scale + remaining + shift would equal step value
-    shift = this._roundToStep(shift);
+    shift = this.roundToStep(shift);
     // Check if shift is zero
     if (shift === 0) {
       return false;
@@ -133,12 +133,12 @@ export default class Scale {
     // Preserve "new" shift to return it later
     let newShift = shift;
     // Add remaining shift to get "combined" one
-    shift += this._ongoing;
+    shift += this.ongoing;
     // Calculate ratio of initial vs combined shift, clamped because we only want shorter animations
     let ratio = clampRatio(Math.abs(shift / initialShift));
     time = time * ratio;
     // Perform animation
-    this._surface.animationStorage.create(Animations.SurfaceZoom, [shift, time, easingFormula]);
+    this.surface.animationStorage.create(Animations.SurfaceZoom, [shift, time, easingFormula]);
     // Indicate that there is change of scale
     return {
       new: newShift,
@@ -147,77 +147,77 @@ export default class Scale {
     };
   }
 
-  public zoomTo(value: number, time: number = this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc) : boolean {
-    if (this._value === value) {
+  public zoomTo(value: number, time: number = this.surface.CONFIG.ANIMATION_SCALE_TIME.VALUE, easingFormula: EasingFunctions = EasingFunctions.EaseOutCirc) : boolean {
+    if (this.value === value) {
       return false;
     }
-    return this.zoom(value - this._value, time, easingFormula, -1) !== false;
+    return this.zoom(value - this.value, time, easingFormula, -1) !== false;
   }
 
   public step(steps: number) : boolean {
     let positive = steps > 0 ? true : false;
-    return this._surface.scale.zoom(steps * this._surface.scale._shiftToStep(positive)) !== false;
+    return this.surface.scale.zoom(steps * this.surface.scale.shiftToStep(positive)) !== false;
   }
   
   public stepAndGlide(steps: number, mouse: MouseParams|null = null) : void {
     let positive = steps > 0 ? true : false;
 
-    if ((positive && this._projection === this._surface.CONFIG.SCALE_MAX.VALUE) || (!positive && this._projection === this._surface.CONFIG.SCALE_MIN.VALUE)) {
+    if ((positive && this.projection === this.surface.CONFIG.SCALE_MAX.VALUE) || (!positive && this.projection === this.surface.CONFIG.SCALE_MIN.VALUE)) {
       return;
     }
 
-    let shiftPerStep = this._shiftToStep(positive);
+    let shiftPerStep = this.shiftToStep(positive);
 
-    let initialProjection = this._projection;
+    let initialProjection = this.projection;
     let initialShift = steps * shiftPerStep;
-    let zoom = this.zoom(initialShift, this._surface.CONFIG.ANIMATION_SCALE_TIME.VALUE);
+    let zoom = this.zoom(initialShift, this.surface.CONFIG.ANIMATION_SCALE_TIME.VALUE);
 
     // Vector is based on "new" shift because glide has it's own calculations vs remaining vector, but time is based on
     // "combined" shift because glide animation time is always the same by default.
-    if (zoom !== false && mouse !== null && !this._surface.animationStorage.exists(Animations.SurfaceEdge)) {
+    if (zoom !== false && mouse !== null && !this.surface.animationStorage.exists(Animations.SurfaceEdge)) {
       let vector = this.glideToMouse(mouse, initialProjection, zoom.new);
 
       let factor = Math.abs(zoom.new / initialShift);
       vector.x *= factor;
       vector.y *= factor;
 
-      this._surface.position.glide(vector, zoom.time);
+      this.surface.position.glide(vector, zoom.time);
 
-      if (this._surface.animationStorage.exists(Animations.SurfaceZoom)
-          && this._surface.animationStorage.exists(Animations.SurfaceGlide)) {
-        this._surface.animationStorage.surfaceGlide!.tieWithZoomAnimation(this._surface.animationStorage.surfaceZoom!);
+      if (this.surface.animationStorage.exists(Animations.SurfaceZoom)
+          && this.surface.animationStorage.exists(Animations.SurfaceGlide)) {
+        this.surface.animationStorage.surfaceGlide!.tieWithZoomAnimation(this.surface.animationStorage.surfaceZoom!);
       }
     }
   }
 
   private getDisplayedSurface(scale?: number, position?: Coords) {
     if (!scale) {
-      scale = this._surface.scale.value;
+      scale = this.surface.scale.value;
     }
 
     if (!position) {
-      position = this._surface.position.coords;
+      position = this.surface.position.coords;
     }
 
     return {
       top: {
         left: {
-          x: position.x - this._surface.containerWidth / 2 / scale,
-          y: position.y + this._surface.containerHeight / 2 / scale
+          x: position.x - this.surface.containerWidth / 2 / scale,
+          y: position.y + this.surface.containerHeight / 2 / scale
         },
         right: {
-          x: position.x + this._surface.containerWidth / 2 / scale,
-          y: position.y + this._surface.containerHeight / 2 / scale
+          x: position.x + this.surface.containerWidth / 2 / scale,
+          y: position.y + this.surface.containerHeight / 2 / scale
         }
       },
       bottom: {
         left: {
-          x: position.x - this._surface.containerWidth / 2 / scale,
-          y: position.y - this._surface.containerHeight / 2 / scale
+          x: position.x - this.surface.containerWidth / 2 / scale,
+          y: position.y - this.surface.containerHeight / 2 / scale
         },
         right: {
-          x: position.x + this._surface.containerWidth / 2 / scale,
-          y: position.y - this._surface.containerHeight / 2 / scale
+          x: position.x + this.surface.containerWidth / 2 / scale,
+          y: position.y - this.surface.containerHeight / 2 / scale
         }
       }
     };

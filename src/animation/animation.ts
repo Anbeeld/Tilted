@@ -1,16 +1,16 @@
 import { Register } from '../register.js';
 export default class Animation {
-  private _surfaceId: number;
-  protected get _surface() { return Register.surface(this._surfaceId)!; }
+  private surfaceId: number;
+  protected get surface() { return Register.surface(this.surfaceId)!; }
 
-  protected _timestampStart: number = 0;
-  protected _timestampLast: number = 0;
+  protected timestampStart: number = 0;
+  protected timestampLast: number = 0;
 
   public destroyed: boolean = false;
 
   constructor(surfaceId: number) {
-    this._surfaceId = surfaceId;
-    this._timestampStart = this._timestampLast = performance.now();
+    this.surfaceId = surfaceId;
+    this.timestampStart = this.timestampLast = performance.now();
   }
 
   public destroy() {

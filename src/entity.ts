@@ -13,74 +13,74 @@ export type EntityProps = {
 }
 
 export class Entity {
-  private _id: number;
+  private id: number;
 
-  private _surfaceId: number;
-  private get _surface() { return Register.surface(this._surfaceId)!; }
+  private surfaceId: number;
+  private get surface() { return Register.surface(this.surfaceId)!; }
 
-  private _type: EntityType;
-  private _factor: number;
+  private type: EntityType;
+  private factor: number;
 
-  private _element: HTMLElement;
-  // public get element() { return this._element; }
-  private _style: HTMLElement|undefined;
+  private element: HTMLElement;
+  // public get element() { return this.element; }
+  private style: HTMLElement|undefined;
 
   constructor(surfaceId: number, props: EntityProps) {
-    this._id = Register.id();
-    this._surfaceId = surfaceId;
-    this._type = props.type;
-    this._factor = props.factor || 1;
-    this._element = props.element;
+    this.id = Register.id();
+    this.surfaceId = surfaceId;
+    this.type = props.type;
+    this.factor = props.factor || 1;
+    this.element = props.element;
 
-    if (!this._surface.elements.transform.contains(this._element)) {
-      throw new Error(`Tilted id ${this._surface.id} transform element doesn't contain entity id ${this._id} element`);
+    if (!this.surface.elements.transform.contains(this.element)) {
+      throw new Error(`Tilted id ${this.surface.id} transform element doesn't contain entity id ${this.id} element`);
     }
 
-    if (this._type === EntityType.Scene) {
-      this._element.classList.add(`tilted-${this._surfaceId}-scene`);
-      this._element.classList.add(`tilted-${this._surfaceId}-scene-${this._id}`);
-    } else if (this._type === EntityType.Figure) {
-      this._element.classList.add(`tilted-${this._surfaceId}-figure`);
-      this._element.classList.add(`tilted-${this._surfaceId}-figure-${this._id}`);
+    if (this.type === EntityType.Scene) {
+      this.element.classList.add(`tilted-${this.surfaceId}-scene`);
+      this.element.classList.add(`tilted-${this.surfaceId}-scene-${this.id}`);
+    } else if (this.type === EntityType.Figure) {
+      this.element.classList.add(`tilted-${this.surfaceId}-figure`);
+      this.element.classList.add(`tilted-${this.surfaceId}-figure-${this.id}`);
     }
 
     // Add parent element into 3D rendering context until transform is reached, forming a single context all the way
     let parentElement;
-    if (this._type === EntityType.Scene) {
-      parentElement = this._element;
-    } else if (this._type === EntityType.Figure) {
-      parentElement = this._element.parentElement;
+    if (this.type === EntityType.Scene) {
+      parentElement = this.element;
+    } else if (this.type === EntityType.Figure) {
+      parentElement = this.element.parentElement;
     }
-    while (parentElement !== this._surface.elements.transform) {
+    while (parentElement !== this.surface.elements.transform) {
       if (!parentElement) {
-        throw new Error(`Couldn't reach Tilted id ${this._surface.id} transform element from entity id ${this._id}`);
+        throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from entity id ${this.id}`);
       }
-      parentElement.classList.add(`tilted-${this._surfaceId}-preserve-3d`);
+      parentElement.classList.add(`tilted-${this.surfaceId}-preserve-3d`);
       parentElement = parentElement.parentElement;
     }
   }
 
-  private _initStyle() : void {
-    if (!this._style) {
-      this._style = document.createElement("style");
-      this._style.classList.add(`tilted-${this._surface.id}-css-${this._type}-${this._id}`);
-      document.head.appendChild(this._style);
+  private initStyle() : void {
+    if (!this.style) {
+      this.style = document.createElement("style");
+      this.style.classList.add(`tilted-${this.surface.id}-css-${this.type}-${this.id}`);
+      document.head.appendChild(this.style);
     }
   }
 
   public applyTransformProperty(surfaceRotateX: string) : void {
-    let transformValue = `rotateX(-${this._factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this._factor, this._surface.CONFIG.TILT_ROUNDING.VALUE)})`;
-    if (this._type === EntityType.Scene) {
-      this._initStyle();
+    let transformValue = `rotateX(-${this.factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this.factor, this.surface.CONFIG.TILT_ROUNDING.VALUE)})`;
+    if (this.type === EntityType.Scene) {
+      this.initStyle();
       let newInnerHTML = 
-      `.tilted-${this._surfaceId}-scene-${this._id}>*:not(.tilted-${this._surfaceId}-figure){` +
+      `.tilted-${this.surfaceId}-scene-${this.id}>*:not(.tilted-${this.surfaceId}-figure){` +
         `transform:${transformValue}` +
       `}`;
-      if (this._style!.innerHTML !== newInnerHTML) {
-        this._style!.innerHTML = newInnerHTML;
+      if (this.style!.innerHTML !== newInnerHTML) {
+        this.style!.innerHTML = newInnerHTML;
       }
-    } else if (this._type === EntityType.Figure) {
-      this._element.style.transform = transformValue;
+    } else if (this.type === EntityType.Figure) {
+      this.element.style.transform = transformValue;
     }
   }
 }

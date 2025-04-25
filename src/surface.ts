@@ -26,15 +26,14 @@ interface SurfaceStyles {
   dynamic: HTMLElement
 }
 
-type TransformValues = {
-  scale: string,
-  perspective: string,
-  rotateX: string,
-  translate3d: string
-}
-type TransformProperty = {
+type Transform = {
   changed: boolean,
-  values: TransformValues
+  properties: TransformProperties
+}
+type TransformProperties = TransformProperty[];
+type TransformProperty = {
+  name: string,
+  value: string
 }
 
 export default class Surface {
@@ -81,7 +80,7 @@ export default class Surface {
   public set rotate(value: Coords) { this._rotate = value; }
   public get rotate() : Coords { return this._rotate; }
 
-  private transformProperty: TransformProperty;
+  private transform: Transform;
 
   public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, entity: EntityProps[] = []) {
     this.id = Register.id();
@@ -91,14 +90,14 @@ export default class Surface {
     this.elements = this.setupElements(elementContainer, elementSurface);
     this.styles = this.setupStyles();
 
-    this.transformProperty = {
+    this.transform = {
       changed: false,
-      values: {
-        scale: '',
-        perspective: '',
-        rotateX: '',
-        translate3d: '0, 0, 0'
-      }
+      properties: [
+        { name: 'scale', value: '' },
+        { name: 'perspective', value: '' },
+        { name: 'rotateX', value: '' },
+        { name: 'translate3d', value: '0, 0, 0' }
+      ]
     };
 
     this.animationStorage = new AnimationStorage(this.id);
@@ -202,35 +201,39 @@ export default class Surface {
     return this.elements.surface.offsetHeight;
   }
   
-  public setTransformValues(values: {name: string, value: string}[], immediately: boolean = false) : void {
-    for (let {name, value} of values) {
-      if (this.transformProperty.values.hasOwnProperty(name as keyof TransformValues)) {
-        this.transformProperty.values[name as keyof TransformValues] = value;
+  public setTransformValues(properties: TransformProperties, immediately: boolean = false) : void {
+    for (let property of properties) {
+      for (let transformProperty of this.transform.properties) {
+        if (transformProperty.name === property.name) {
+          transformProperty.value = property.value;
+        }
       }
     }
     if (immediately) {
       this.applyTransformProperty(true);
     } else {
-      this.transformProperty.changed = true;
+      this.transform.changed = true;
       this.animationExecutor.initiate();
     }
   }
 
   public applyTransformProperty(forced: boolean = false) : void {
-    if (!this.transformProperty.changed && !forced) {
+    if (!this.transform.changed && !forced) {
       return;
     }
-    this.transformProperty.changed = false;
-    
-    this.elements.transform.style.transform = 
-    `scale(${this.transformProperty.values.scale}) ` +
-    `perspective(${this.transformProperty.values.perspective}) ` +
-    `rotateX(${this.transformProperty.values.rotateX}) ` +
-    `translate3d(${this.transformProperty.values.translate3d})`;
+    this.transform.changed = false;
 
-    for (let entity of this.entities) {
-      entity.applyTransformProperty(this.transformProperty.values.rotateX);
+    let style = '';
+    for (let transformProperty of this.transform.properties) {
+      style += `${transformProperty.name}(${transformProperty.value}) `;
+      if (transformProperty.name === 'rotateX') {
+        for (let entity of this.entities) {
+          entity.applyTransformProperty(transformProperty.value);
+        }
+      }
     }
+
+    this.elements.transform.style.transform = style;
   }
 
   private updateViewport() : void {

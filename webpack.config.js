@@ -35,11 +35,12 @@ const webConfig = {
       new TerserPlugin({
         terserOptions: {
           compress: {
+            ecma: 2015,
             passes: 2,
           },
           mangle: {
             properties: {
-              regex: /^_.*|^[A-Z].*$/
+              regex: /^[^\$].*/
             }
           }
         }

@@ -33,7 +33,7 @@ export default class AnimationSurfaceZoom extends Animation {
 
     this.bezierEasing = easingFormula;
 
-    this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom created: shift ' + this.shift.value + ', initial ' + this.initial + ', target ' + this.target);
+    false && console.log('Zoom created: shift ' + this.shift.value + ', initial ' + this.initial + ', target ' + this.target);
   }
 
   public step(timestampCurrent: number) : boolean {
@@ -45,7 +45,7 @@ export default class AnimationSurfaceZoom extends Animation {
     let shiftRatio = clampRatio(applyEasingFunction(timeRatio, this.bezierEasing));
 
     if (shiftRatio >= 1) {
-      this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Zoom finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.scale.value ' + this.surface.scale.value + ', target ' + this.target);
+      false && console.log('Zoom finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.scale.value ' + this.surface.scale.value + ', target ' + this.target);
 
       this.surface.scale.changeTo(this.target);
       return false;
@@ -61,7 +61,7 @@ export default class AnimationSurfaceZoom extends Animation {
         this.current = roundFloat(this.current + step, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
         this.timestampLast = timestampCurrent;
 
-        // this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
+        false && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', shiftRatio ' + shiftRatio + ', step ' + step);
       }
       return true;
     }

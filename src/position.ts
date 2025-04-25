@@ -99,10 +99,10 @@ export default class Position {
     if (this.coords.x === coords.x && this.coords.y === coords.y) {
       return false;
     }
-    // this.surface.CONFIG.DEBUG_MODE.VALUE && this.surface.log([
-    //   {desc: 'moveTo coords.x', from: this.coords.x, to: coords.x},
-    //   {desc: 'moveTo coords.y', from: this.coords.y, to: coords.y}
-    // ]);
+    false && this.surface.log([
+      {desc: 'moveTo coords.x', from: this.coords.x, to: coords.x},
+      {desc: 'moveTo coords.y', from: this.coords.y, to: coords.y}
+    ]);
     return this.move({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, -1, finalRounding);
   }
 
@@ -156,7 +156,7 @@ export default class Position {
       return false;
     }
     // Log
-    this.surface.CONFIG.DEBUG_MODE.VALUE && this.surface.log([
+    false && this.surface.log([
       {desc: 'glide coords.x', to: vector.x},
       {desc: 'glide coords.y', to: vector.y}
     ]);
@@ -181,10 +181,10 @@ export default class Position {
     if (this.coords.x === coords.x && this.coords.y === coords.y) {
       return false;
     }
-    // this.surface.CONFIG.DEBUG_MODE.VALUE && this.surface.log([
-    //   {desc: 'glideTo coords.x', from: this.coords.x, to: coords.x},
-    //   {desc: 'glideTo coords.y', from: this.coords.y, to: coords.y}
-    // ]);
+    false && this.surface.log([
+      {desc: 'glideTo coords.x', from: this.coords.x, to: coords.x},
+      {desc: 'glideTo coords.y', from: this.coords.y, to: coords.y}
+    ]);
     return this.glide({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, time, easingFormula, -1, finalRounding);
   }
 

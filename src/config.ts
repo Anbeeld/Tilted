@@ -15,8 +15,6 @@ interface ConfigProperty {
 }
 
 export interface ConfigProperties {
-  DEBUG_MODE: ConfigProperty,
-
   SCALE_MIN: ConfigProperty,
   SCALE_MAX: ConfigProperty,
   SCALE_NUM_STEPS: ConfigProperty,
@@ -48,8 +46,6 @@ export interface ConfigProperties {
 
 export function setupConfig(configCustom: {}) : ConfigProperties {
   let config = {
-    $debugMode: 0, // Prints info about various changes being made to surface into console
-
     $scaleMin: 0.25, // The smallest surface can be scaled to, e.g. 25% of its actual size as per default
     $scaleMax: 1.00, // The largest surface can be scaled to, e.g. 100% of its actual size as per default
     $scaleNumSteps: 15, // Num scaling steps, more steps -> more granularity in scaling and longer to scale all the way
@@ -91,15 +87,9 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
     }
   }
 
-  let scaleSteps = calculateSteps(config.$scaleMin, config.$scaleMax, config.$scaleNumSteps, config.$scaleRounding);
-  config.$debugMode && console.log('Scale steps: ', scaleSteps);
+  false && console.log('Scale steps: ', calculateSteps(config.$scaleMin, config.$scaleMax, config.$scaleNumSteps, config.$scaleRounding));
 
   const CONFIG = {
-    DEBUG_MODE: {
-      VALUE: config.$debugMode,
-      TYPE: ConfigPropertyType.Integer
-    },
-
     SCALE_MIN: {
       VALUE: config.$scaleMin,
       TYPE: ConfigPropertyType.Number

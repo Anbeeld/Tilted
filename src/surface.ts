@@ -264,10 +264,6 @@ export default class Surface {
   }
 
   public log(changes: {desc: string, from?: number, to?: number}[]|false = false) : void {
-    if (this.CONFIG.DEBUG_MODE.VALUE === 0) {
-      return;
-    }
-
     let changesString = '';
     if (changes) {
       for (let change of changes) {

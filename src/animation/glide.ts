@@ -50,7 +50,7 @@ export default class AnimationSurfaceGlide extends Animation {
 
     this.bezierEasing = easingFormula;
 
-    this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide created: x ' + this.vector.x.value * this.vector.x.sign + ', y ' + this.vector.y.value * this.vector.y.sign + ', initial.x ' + this.initial.x + ', initial.y ' + this.initial.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
+    false && console.log('Glide created: x ' + this.vector.x.value * this.vector.x.sign + ', y ' + this.vector.y.value * this.vector.y.sign + ', initial.x ' + this.initial.x + ', initial.y ' + this.initial.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
   }
 
   public tieWithZoomAnimation(zoomAnimation: AnimationSurfaceZoom) : void {
@@ -78,7 +78,7 @@ export default class AnimationSurfaceGlide extends Animation {
 
     if (moveRatio >= 1) {
 
-      this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('Glide finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.coords.x ' + this.surface.position.coords.x + ', surface.coords.y ' + this.surface.position.coords.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
+      false && console.log('Glide finished: ' + (timestampCurrent - this.timestampStart) + 'ms, surface.coords.x ' + this.surface.position.coords.x + ', surface.coords.y ' + this.surface.position.coords.y + ', target.x ' + this.target.x + ', target.y ' + this.target.y);
 
       this.surface.position.moveTo({x: this.target.x, y: this.target.y});
 
@@ -105,7 +105,7 @@ export default class AnimationSurfaceGlide extends Animation {
         this.current.y = roundFloat(this.current.y + step.y, this.surface.CONFIG.COORD_ROUNDING_INTERIM.VALUE);
         this.timestampLast = timestampCurrent;
 
-        // this.surface.CONFIG.DEBUG_MODE.VALUE && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
+        false && console.log('time ' + (timestampCurrent - this.timestampStart) + 'ms, timeRatio ' + timeRatio + ', moveRatio ' + moveRatio + ', x ' + step.x + ', y ' + step.y);
       }
       return true;
     }

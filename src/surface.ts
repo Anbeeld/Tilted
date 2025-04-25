@@ -41,47 +41,45 @@ export default class Surface {
   // @ts-ignore Doesn't understand setters and getters
   private _id: number;
   private set id(value: number) { this._id = value; }
-  public get id() : number {return this.id;}
+  public get id() : number {return this._id;}
 
   public readonly CONFIG: ConfigProperties;
 
   // @ts-ignore Doesn't understand setters and getters
   private _elements: SurfaceElements;
   private set elements(value: SurfaceElements) { this._elements = value; }
-  public get elements() : SurfaceElements {return this.elements;}
+  public get elements() : SurfaceElements {return this._elements;}
 
   private styles: SurfaceStyles;
 
   // @ts-ignore Doesn't understand setters and getters
   private _position: Position;
   private set position(value: Position) { this._position = value; }
-  public get position() : Position {return this.position;}
+  public get position() : Position {return this._position;}
 
   // @ts-ignore Doesn't understand setters and getters
   private _scale: Scale;
   private set scale(value: Scale) { this._scale = value; }
-  public get scale() : Scale {return this.scale;}
+  public get scale() : Scale {return this._scale;}
 
   private entities: Entity[];
 
   // @ts-ignore Doesn't understand setters and getters
   private _animationExecutor: AnimationExecutor;
   private set animationExecutor(value: AnimationExecutor) { this._animationExecutor = value; }
-  public get animationExecutor() : AnimationExecutor {return this.animationExecutor;}
+  public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
 
   // @ts-ignore Doesn't understand setters and getters
   private _animationStorage: AnimationStorage;
   private set animationStorage(value: AnimationStorage) { this._animationStorage = value; }
-  public get animationStorage() : AnimationStorage {return this.animationStorage;}
+  public get animationStorage() : AnimationStorage {return this._animationStorage;}
 
   private viewport: Coords = {x: 0, y: 0};
 
   // @ts-ignore Doesn't understand setters and getters
   private _rotate: Coords = {x: 0, y: 0};
   public set rotate(value: Coords) { this._rotate = value; }
-  public get rotate() : Coords {
-    return {x: this.rotate.x, y: this.rotate.y};
-  }
+  public get rotate() : Coords { return this._rotate; }
 
   private transformProperty: TransformProperty;
 

@@ -20,22 +20,22 @@ export class AnimationStorage {
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
   private set surfaceGlide(value: AnimationSurfaceGlide | null) { this._surfaceGlide = value; }
-  public get surfaceGlide() : AnimationSurfaceGlide | null { return this.surfaceGlide; }
+  public get surfaceGlide() : AnimationSurfaceGlide | null { return this._surfaceGlide; }
 
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceZoom: AnimationSurfaceZoom | null = null;
   private set surfaceZoom(value: AnimationSurfaceZoom | null) { this._surfaceZoom = value; }
-  public get surfaceZoom() : AnimationSurfaceZoom | null { return this.surfaceZoom; }
+  public get surfaceZoom() : AnimationSurfaceZoom | null { return this._surfaceZoom; }
 
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceEdge: AnimationSurfaceEdge | null = null;
   private set surfaceEdge(value: AnimationSurfaceEdge | null) { this._surfaceEdge = value; }
-  public get surfaceEdge() : AnimationSurfaceEdge | null { return this.surfaceEdge; }
+  public get surfaceEdge() : AnimationSurfaceEdge | null { return this._surfaceEdge; }
 
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceDrag: AnimationSurfaceDrag | null = null;
   private set surfaceDrag(value: AnimationSurfaceDrag | null) { this._surfaceDrag = value; }
-  public get surfaceDrag() : AnimationSurfaceDrag | null { return this.surfaceDrag; }
+  public get surfaceDrag() : AnimationSurfaceDrag | null { return this._surfaceDrag; }
   
   constructor(surfaceId: number) {
     this.surfaceId = surfaceId;

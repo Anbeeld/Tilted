@@ -6,7 +6,7 @@ export default class Animation {
   protected timestampStart: number = 0;
   protected timestampLast: number = 0;
 
-  public destroyed: boolean = false;
+  protected destroyed: boolean = false;
 
   constructor(surfaceId: number) {
     this.surfaceId = surfaceId;

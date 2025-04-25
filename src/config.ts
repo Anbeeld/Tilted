@@ -76,14 +76,14 @@ export function setupConfig(configCustom: {}) : ConfigProperties {
   }
 
   for (const parameter in configCustom) {
-    if ((config as any).hasOwnProperty(parameter)) {
+    if ((config as any).hasOwnProperty('$' + parameter)) {
       let value = (configCustom as any)[parameter];
       if (value === true) {
         value = 1;
       } else if (value === false) {
         value = 0;
       }
-      (config as any)[parameter] = value;
+      (config as any)['$' + parameter] = value;
     }
   }
 

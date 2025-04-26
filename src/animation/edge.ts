@@ -23,6 +23,8 @@ export default class AnimationSurfaceEdge extends Animation {
     if (this.destroyed) {
       return false;
     }
+    
+    this.initTimestamps(timestampCurrent);
 
     let timeFactor = Math.max(1, (timestampCurrent - this.timestampLast)) / 10;
 

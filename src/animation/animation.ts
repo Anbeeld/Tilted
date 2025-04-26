@@ -3,14 +3,23 @@ export default class Animation {
   private surfaceId: number;
   protected get surface() { return Register.surface(this.surfaceId)!; }
 
-  protected timestampStart: number = 0;
-  protected timestampLast: number = 0;
+  protected timestampStart: number = -1;
+  protected timestampLast: number = -1;
 
   protected destroyed: boolean = false;
 
   constructor(surfaceId: number) {
     this.surfaceId = surfaceId;
-    this.timestampStart = this.timestampLast = performance.now();
+  }
+
+  protected initTimestamps(timestampCurrent?: number) {
+    if (this.timestampStart < 0 || this.timestampLast < 0) {
+      if (!timestampCurrent) {
+        timestampCurrent = performance.now();
+      }
+      this.timestampStart = timestampCurrent;
+      this.timestampLast = timestampCurrent;
+    }
   }
 
   public destroy() {

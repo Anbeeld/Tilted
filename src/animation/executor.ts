@@ -19,8 +19,7 @@ export default class AnimationExecutor {
   }
 
   private step() : void {
-    let timestampCurrent = performance.now();
-    requestAnimationFrame(() => {
+    requestAnimationFrame((timestampCurrent) => {
       let continueSurfaceGlide = this.stepSurfaceGlide(timestampCurrent);
       let continueSurfaceZoom = this.stepSurfaceZoom(timestampCurrent);
       let continueSurfaceEdge = this.stepSurfaceEdge(timestampCurrent);

@@ -72,6 +72,8 @@ export default class AnimationSurfaceGlide extends Animation {
     if (this.destroyed) {
       return false;
     }
+    
+    this.initTimestamps(timestampCurrent);
 
     let timeRatio = clampRatio((timestampCurrent - this.timestampStart) / this.animationTime);
     let moveRatio = clampRatio(this.adjustMoveByZoom(applyEasingFunction(timeRatio, this.bezierEasing)));

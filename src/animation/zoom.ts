@@ -41,6 +41,8 @@ export default class AnimationSurfaceZoom extends Animation {
       return false;
     }
 
+    this.initTimestamps(timestampCurrent);
+
     let timeRatio = clampRatio((timestampCurrent - this.timestampStart) / this.animationTime);
     let shiftRatio = clampRatio(applyEasingFunction(timeRatio, this.bezierEasing));
 

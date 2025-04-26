@@ -77,7 +77,7 @@ export default class Surface {
 
   // @ts-ignore Doesn't understand setters and getters
   private _rotate: Coords = {x: 0, y: 0};
-  public set rotate(value: Coords) { this._rotate = value; }
+  private set rotate(value: Coords) { this._rotate = value; }
   public get rotate() : Coords { return this._rotate; }
 
   private transform: Transform;

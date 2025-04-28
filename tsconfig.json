@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {},
-    "rootDir": "src",
+    "rootDirs": ["src", "tests/unit"],
     "outDir": "lib",
 
     "target": "es2015",

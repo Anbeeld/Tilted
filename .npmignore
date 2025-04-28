@@ -2,5 +2,6 @@
 examples/
 dist/
 src/
+tests/
 webpack.config.js
 *.tgz

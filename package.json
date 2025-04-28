@@ -25,13 +25,18 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "npx webpack",
-    "examples": "npm run build && node examples/app.js"
+    "examples": "npm run build && node examples/app.js",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@vitest/coverage-v8": "^3.1.2",
+    "jsdom": "^26.1.0",
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
+    "vitest": "^3.1.2",
     "webpack": "^5.99.2",
     "webpack-cli": "^6.0.1"
   }

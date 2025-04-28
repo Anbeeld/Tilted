@@ -82,7 +82,7 @@ export default class Surface {
 
   private transform: Transform;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, entity: EntityProps[] = []) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, entity: EntityProps[]) {
     this.id = Register.id();
     Register.add(this);
     this.CONFIG = setupConfig(config);

@@ -40,7 +40,7 @@ const webConfig = {
           },
           mangle: {
             properties: {
-              regex: /^[^\$].*/
+              regex: /^[^\$].*$/
             }
           }
         }

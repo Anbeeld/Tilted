@@ -1,3 +1,15 @@
+## 0.4.3
+
+- Animations now use the timestamp of requestAnimationFrame() instead of performance.now(), which seems to improve performance.
+- Added Vitest to start the process of covering the library with unit tests.
+- Exported index class is now separate from the Surface class, allowing to specifically define methods available to the users without interfering with public ones that are meant to be used inside the library only.
+- Added setters where getters were already defined.
+- Removed underscore prefixes from private property and method names, except for properties behind setters and getters.
+- Changed type structure of CSS transform properties in the Surface class.
+- Webpack minimizing config now affects all property names, except the ones starting with $, which can be used as a form of shielding.
+- Removed debug mode.
+- Various small fixes.
+
 ## 0.4.2
 
 - Replaced approximate glide distance when zooming with actual calculations of the surface coordinates that the cursor points to now and will point after zooming. Perspective changes due to surface rotating are not taken into the account yet, but this may be added in the future updates.
@@ -52,7 +64,7 @@
 - Fixed positive and negative scale step having different glide distance, leading to surface not returning to the same spot after scaling it up and down without changing mouse position.
 - Fixed many small issues with move and scale functions.
 - Updated naming to non-public being underscored.
-- New cross-library webpack minimizing config, resulting in a much smaller dist file.
+- New cross-library Webpack minimizing config, resulting in a much smaller dist file.
 
 ## 0.1.3
 

@@ -1,28 +1,19 @@
 import Surface from '../surface.js';
 
 export function generateCssDynamic(surface: Surface) {
-  return `` +
-  `@property --tilted-container-width-` + surface.id + ` {` +
-    `syntax:"<length>";` +
-    `inherits:true;` +
-    `initial-value:` + surface.containerWidth + `px;` +
-  `}` +
-  `@property --tilted-container-height-` + surface.id + ` {` +
-    `syntax:"<length>";` +
-    `inherits:true;` +
-    `initial-value:` + surface.containerHeight + `px;` +
-  `}` +
+  let template = (name: string, value: number) => {
+    return `` +
+    `@property --tilted-${surface.id}-${name}{` +
+      `syntax:"<length>";` +
+      `inherits:true;` +
+      `initial-value:${value}px;` +
+    `}`;
+  }
 
-  `@property --tilted-surface-width-` + surface.id + ` {` +
-    `syntax:"<length>";` +
-    `inherits:true;` +
-    `initial-value:` + surface.surfaceWidth + `px;` +
-  `}` +
-  `@property --tilted-surface-height-` + surface.id + ` {` +
-    `syntax:"<length>";` +
-    `inherits:true;` +
-    `initial-value:` + surface.surfaceHeight + `px;` +
-  `}`;
+  return template('container-width', surface.containerWidth) +
+  template('container-height', surface.containerHeight) +
+  template('surface-width', surface.surfaceWidth) +
+  template('surface-height', surface.surfaceHeight);
 }
 
 export function generateCssStatic(surface: Surface) {
@@ -120,15 +111,15 @@ export function generateCssStatic(surface: Surface) {
   `}` +
 
   `.tilted-${surface.id}-viewport{` +
-    `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
-    `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
+    `width:var(--tilted-` + surface.id + `-surface-width) !important;` +
+    `height:var(--tilted-` + surface.id + `-surface-height) !important;` +
     `position:relative !important;` +
     `will-change:top,left;` +
   `}` +
 
   `.tilted-${surface.id}-transform{` +
-    `width:var(--tilted-surface-width-` + surface.id + `) !important;` +
-    `height:var(--tilted-surface-height-` + surface.id + `) !important;` +
+    `width:var(--tilted-` + surface.id + `-surface-width) !important;` +
+    `height:var(--tilted-` + surface.id + `-surface-height) !important;` +
     `will-change:transform;` +
   `}` +
 

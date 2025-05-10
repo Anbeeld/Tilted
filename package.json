@@ -24,7 +24,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "npx webpack",
+    "build": "rimraf lib && npx tsc && npx webpack",
     "examples": "npm run build && node examples/app.js",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -33,6 +33,7 @@
     "@types/node": "^22.14.0",
     "@vitest/coverage-v8": "^3.1.2",
     "jsdom": "^26.1.0",
+    "rimraf": "^6.0.1",
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",

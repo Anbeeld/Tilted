@@ -4,7 +4,7 @@ import { initControls } from './controls/controls.js';
 
 import AnimationExecutor from './animation/executor.js';
 import { AnimationStorage, Animations } from './animation/storage.js';
-import { generateCssDynamic, generateCssCore } from './css/css.js';
+import { generateCssGenerated, cssCore } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
@@ -23,7 +23,7 @@ interface SurfaceElements {
 
 interface SurfaceStyles {
   core: HTMLElement,
-  dynamic: HTMLElement
+  generated: HTMLElement
 }
 
 type Transform = {
@@ -106,8 +106,8 @@ export default class Surface {
     initControls(this);
 
     this.updateViewport();
-    new ResizeObserver(() => {this.updateCssDynamic();this.updateViewport();this.position.enforceLimits();}).observe(this.elements.container);
-    new ResizeObserver(() => {this.updateCssDynamic();this.position.enforceLimits();}).observe(this.elements.surface);
+    new ResizeObserver(() => {this.updateCssGenerated();this.updateViewport();this.position.enforceLimits();}).observe(this.elements.container);
+    new ResizeObserver(() => {this.updateCssGenerated();this.position.enforceLimits();}).observe(this.elements.surface);
 
     this.entities = [];
     for (let entityProps of entity) {
@@ -170,22 +170,22 @@ export default class Surface {
   private setupStyles() : SurfaceStyles {
     let elementStyleCore = document.createElement('style');
     elementStyleCore.classList.add(`tilted-${this.id}-css-core`);
-    elementStyleCore.innerHTML = generateCssCore(this);
+    elementStyleCore.innerHTML = cssCore(this);
     document.head.appendChild(elementStyleCore);
 
-    let elementStyleDynamic = document.createElement('style');
-    elementStyleDynamic.classList.add(`tilted-${this.id}-css-dynamic`);
-    elementStyleDynamic.innerHTML = generateCssDynamic(this);
-    document.head.appendChild(elementStyleDynamic);
+    let elementStyleGenerated = document.createElement('style');
+    elementStyleGenerated.classList.add(`tilted-${this.id}-css-generated`);
+    elementStyleGenerated.innerHTML = generateCssGenerated(this);
+    document.head.appendChild(elementStyleGenerated);
 
     return {
       core: elementStyleCore,
-      dynamic: elementStyleDynamic
+      generated: elementStyleGenerated
     };
   }
 
-  private updateCssDynamic() : void {
-    this.styles.dynamic.innerHTML = generateCssDynamic(this);
+  private updateCssGenerated() : void {
+    this.styles.generated.innerHTML = generateCssGenerated(this);
   }
 
   public get containerWidth() : number {

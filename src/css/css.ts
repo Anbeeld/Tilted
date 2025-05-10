@@ -1,6 +1,6 @@
 import Surface from '../surface.js';
 
-export function generateCssDynamic(surface: Surface) {
+export function generateCssGenerated(surface: Surface) {
   let template = (name: string, value: number) => {
     return `` +
     `@property --tilted-${surface.id}-${name}{` +
@@ -16,7 +16,7 @@ export function generateCssDynamic(surface: Surface) {
   template('surface-height', surface.surfaceHeight);
 }
 
-export function generateCssCore(surface: Surface) {
+export function cssCore(surface: Surface) {
   let string = '';
 
   for (const parameter in (surface.CONFIG as any)) {

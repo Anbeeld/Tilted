@@ -1,3 +1,9 @@
+## 0.4.4
+
+- Renamed Entity into Content to avoid confusion with various other systems using this word.
+- Renamed CSS element classes.
+- Fixed various issues with build and test configuration.
+
 ## 0.4.3
 
 - Animations now use the timestamp of requestAnimationFrame() instead of performance.now(), which seems to improve performance.

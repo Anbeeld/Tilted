@@ -4,7 +4,7 @@
 
 # Tilted
 
-Tilted is a lightweight no-dependency TS library for displaying maps and other similar content in a modern 2.5D way. Its key feature is the creation of multi-dimensional visuals out of 2D assets by placing them at an angle to each other.
+Tilted is a lightweight zero-dependency TS library for displaying maps or other similar content in a modern 2.5D way. Its key feature is the creation of multi-dimensional visuals out of 2D assets by placing them at an angle to each other.
 
 Live demo is available [on my website](https://anbeeld.com/tilted).
 
@@ -29,15 +29,15 @@ It goes well with my other library, [Elemap](https://github.com/Anbeeld/Elemap),
 
 `import Tilted from 'tilted'` if using npm
 
-`new Tilted(container, surface, config?, entities?)`
+`new Tilted(container, surface, config?, contents?)`
 
 `surface` is HTML element with content, and `container` is HTML element used to determine viewport size that has `surface` as a child. Fixed width and height are preferred for both.
 
 `config?` is an optional object that allows to change various constants related to scaling, animations, controls etc., check `let config` in `config.ts` file for available values and explanation what each of them affects.
 
-`entities?` is an optional array of objects describing HTML objects that you want to create 2.5D visuals with, placing them at an angle to the surface when it's tilted.
+`contents?` is an optional array of objects describing HTML objects that you want to create 2.5D visuals with, placing them at an angle to the surface when it's tilted.
 
-The `entity` object looks like: `{type: 'scene'|'figure', element: HTMLElement, factor?: number}`. Figure is a single entity so the HTML element itself will be angled, while scene is a container of figures, meaning all direct children of it will be angled. Factor is optional and serves as a multiplier of the angle this entity will have, default is 1.
+The `content` object looks like: `{type: 'scene'|'figure', element: HTMLElement, factor?: number}`. Figure is a single content unit so the HTML element itself will be angled, while scene is a container of figures, meaning all direct children of it will be angled. Factor is optional and serves as a multiplier of the angle this content will have, default is 1.
 
 Note that you can still add a direct child of a scene as a separate figure. In this case it won't be affected by scene properties, but only by its own instead.
 

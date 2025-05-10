@@ -1,6 +1,6 @@
 import Surface from '../surface.js';
 
-export function generateCssGenerated(surface: Surface) {
+export function cssGenerated(surface: Surface) {
   let template = (name: string, value: number) => {
     return `` +
     `@property --tilted-${surface.id}-${name}{` +

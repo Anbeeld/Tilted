@@ -4,7 +4,7 @@ import { initControls } from './controls/controls.js';
 
 import AnimationExecutor from './animation/executor.js';
 import { AnimationStorage, Animations } from './animation/storage.js';
-import { generateCssGenerated, cssCore } from './css/css.js';
+import { cssGenerated, cssCore } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
@@ -175,7 +175,7 @@ export default class Surface {
 
     let elementStyleGenerated = document.createElement('style');
     elementStyleGenerated.classList.add(`tilted-${this.id}-css-generated`);
-    elementStyleGenerated.innerHTML = generateCssGenerated(this);
+    elementStyleGenerated.innerHTML = cssGenerated(this);
     document.head.appendChild(elementStyleGenerated);
 
     return {
@@ -185,7 +185,7 @@ export default class Surface {
   }
 
   private updateCssGenerated() : void {
-    this.styles.generated.innerHTML = generateCssGenerated(this);
+    this.styles.generated.innerHTML = cssGenerated(this);
   }
 
   public get containerWidth() : number {

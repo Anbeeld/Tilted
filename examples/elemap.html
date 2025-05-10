@@ -22,31 +22,16 @@
     }
     var style = {
       grid: {
-        outer: {
-          regular: {
-            spacing: '8px',
-            borderRadius: '12px'
-          }
-        },
-        inner: {
-          regular: {
-            width: '200px',
-            borderRadius: '12px'
-          }
-        }
+        contour: 'border-width: 4px;'
       },
       tile: {
-        contour: {
-          hover: {
-            width: '4px'
-          },
-        }
+        inner: 'width: 200px; border-radius: 12px; margin: 4px;'
       }
     }
   </script>
   <script src="/js/elemap-init.js"></script>
   <script>
-    let tilted = new Tilted(document.getElementById('tilted-container'), elemap.elements.container, {edgeMoveEnabled: true});
+    let tilted = new Tilted(document.getElementById('tilted-container'), document.getElementById('elemap-container'), {edgeMoveEnabled: true});
   </script>
 </body>
 </html>

@@ -16,7 +16,7 @@ export function generateCssDynamic(surface: Surface) {
   template('surface-height', surface.surfaceHeight);
 }
 
-export function generateCssStatic(surface: Surface) {
+export function generateCssCore(surface: Surface) {
   let string = '';
 
   for (const parameter in (surface.CONFIG as any)) {

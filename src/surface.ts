@@ -4,7 +4,7 @@ import { initControls } from './controls/controls.js';
 
 import AnimationExecutor from './animation/executor.js';
 import { AnimationStorage, Animations } from './animation/storage.js';
-import { generateCssDynamic, generateCssStatic } from './css/css.js';
+import { generateCssDynamic, generateCssCore } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
@@ -22,7 +22,7 @@ interface SurfaceElements {
 }
 
 interface SurfaceStyles {
-  static: HTMLElement,
+  core: HTMLElement,
   dynamic: HTMLElement
 }
 
@@ -168,10 +168,10 @@ export default class Surface {
   }
 
   private setupStyles() : SurfaceStyles {
-    let elementStyleStatic = document.createElement('style');
-    elementStyleStatic.classList.add(`tilted-${this.id}-css-static`);
-    elementStyleStatic.innerHTML = generateCssStatic(this);
-    document.head.appendChild(elementStyleStatic);
+    let elementStyleCore = document.createElement('style');
+    elementStyleCore.classList.add(`tilted-${this.id}-css-core`);
+    elementStyleCore.innerHTML = generateCssCore(this);
+    document.head.appendChild(elementStyleCore);
 
     let elementStyleDynamic = document.createElement('style');
     elementStyleDynamic.classList.add(`tilted-${this.id}-css-dynamic`);
@@ -179,7 +179,7 @@ export default class Surface {
     document.head.appendChild(elementStyleDynamic);
 
     return {
-      static: elementStyleStatic,
+      core: elementStyleCore,
       dynamic: elementStyleDynamic
     };
   }

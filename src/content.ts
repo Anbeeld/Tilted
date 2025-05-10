@@ -1,31 +1,31 @@
 import { Register } from "./register.js";
 import { multiplyCssDegrees } from "./utils.js";
 
-export enum EntityType {
+export enum ContentType {
   Scene = 'scene',
   Figure = 'figure'
 }
 
-export type EntityProps = {
-  type: EntityType
+export type ContentProps = {
+  type: ContentType
   element: HTMLElement
   factor?: number
 }
 
-export class Entity {
+export class Content {
   private id: number;
 
   private surfaceId: number;
   private get surface() { return Register.surface(this.surfaceId)!; }
 
-  private type: EntityType;
+  private type: ContentType;
   private factor: number;
 
   private element: HTMLElement;
   // public get element() { return this.element; }
   private style: HTMLElement|undefined;
 
-  constructor(surfaceId: number, props: EntityProps) {
+  constructor(surfaceId: number, props: ContentProps) {
     this.id = Register.id();
     this.surfaceId = surfaceId;
     this.type = props.type;
@@ -33,27 +33,27 @@ export class Entity {
     this.element = props.element;
 
     if (!this.surface.elements.transform.contains(this.element)) {
-      throw new Error(`Tilted id ${this.surface.id} transform element doesn't contain entity id ${this.id} element`);
+      throw new Error(`Tilted id ${this.surface.id} transform element doesn't contain content id ${this.id} element`);
     }
 
-    if (this.type === EntityType.Scene) {
+    if (this.type === ContentType.Scene) {
       this.element.classList.add(`tilted-${this.surfaceId}-scene`);
       this.element.classList.add(`tilted-${this.surfaceId}-scene-${this.id}`);
-    } else if (this.type === EntityType.Figure) {
+    } else if (this.type === ContentType.Figure) {
       this.element.classList.add(`tilted-${this.surfaceId}-figure`);
       this.element.classList.add(`tilted-${this.surfaceId}-figure-${this.id}`);
     }
 
     // Add parent element into 3D rendering context until transform is reached, forming a single context all the way
     let parentElement;
-    if (this.type === EntityType.Scene) {
+    if (this.type === ContentType.Scene) {
       parentElement = this.element;
-    } else if (this.type === EntityType.Figure) {
+    } else if (this.type === ContentType.Figure) {
       parentElement = this.element.parentElement;
     }
     while (parentElement !== this.surface.elements.transform) {
       if (!parentElement) {
-        throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from entity id ${this.id}`);
+        throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from content id ${this.id}`);
       }
       parentElement.classList.add(`tilted-${this.surfaceId}-preserve-3d`);
       parentElement = parentElement.parentElement;
@@ -70,7 +70,7 @@ export class Entity {
 
   public applyTransformProperty(surfaceRotateX: string) : void {
     let transformValue = `rotateX(-${this.factor === 1 ? surfaceRotateX : multiplyCssDegrees(surfaceRotateX, this.factor, this.surface.CONFIG.TILT_ROUNDING.VALUE)})`;
-    if (this.type === EntityType.Scene) {
+    if (this.type === ContentType.Scene) {
       this.initStyle();
       let newInnerHTML = 
       `.tilted-${this.surfaceId}-scene-${this.id}>*:not(.tilted-${this.surfaceId}-figure){` +
@@ -79,7 +79,7 @@ export class Entity {
       if (this.style!.innerHTML !== newInnerHTML) {
         this.style!.innerHTML = newInnerHTML;
       }
-    } else if (this.type === EntityType.Figure) {
+    } else if (this.type === ContentType.Figure) {
       this.element.style.transform = transformValue;
     }
   }

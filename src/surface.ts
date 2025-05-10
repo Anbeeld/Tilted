@@ -8,7 +8,7 @@ import { cssGenerated, cssCore } from './css/css.js';
 import Scale from './scale.js';
 import Position from './position.js';
 
-import { Entity, EntityProps } from './entity.js';
+import { Content, ContentProps } from './content.js';
 import { Register } from './register.js';
 
 interface SurfaceElements {
@@ -61,7 +61,7 @@ export default class Surface {
   private set scale(value: Scale) { this._scale = value; }
   public get scale() : Scale {return this._scale;}
 
-  private entities: Entity[];
+  private entities: Content[];
 
   // @ts-ignore Doesn't understand setters and getters
   private _animationExecutor: AnimationExecutor;
@@ -82,7 +82,7 @@ export default class Surface {
 
   private transform: Transform;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, entity: EntityProps[]) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, content: ContentProps[]) {
     this.id = Register.id();
     Register.add(this);
     this.CONFIG = setupConfig(config);
@@ -110,8 +110,8 @@ export default class Surface {
     new ResizeObserver(() => {this.updateCssGenerated();this.position.enforceLimits();}).observe(this.elements.surface);
 
     this.entities = [];
-    for (let entityProps of entity) {
-      this.entities.push(new Entity(this.id, entityProps));
+    for (let contentProps of content) {
+      this.entities.push(new Content(this.id, contentProps));
     }
 
     this.position = new Position(this.id);
@@ -227,8 +227,8 @@ export default class Surface {
     for (let transformProperty of this.transform.properties) {
       style += `${transformProperty.name}(${transformProperty.value}) `;
       if (transformProperty.name === 'rotateX') {
-        for (let entity of this.entities) {
-          entity.applyTransformProperty(transformProperty.value);
+        for (let content of this.entities) {
+          content.applyTransformProperty(transformProperty.value);
         }
       }
     }

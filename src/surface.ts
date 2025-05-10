@@ -61,7 +61,7 @@ export default class Surface {
   private set scale(value: Scale) { this._scale = value; }
   public get scale() : Scale {return this._scale;}
 
-  private entities: Content[];
+  private contents: Content[];
 
   // @ts-ignore Doesn't understand setters and getters
   private _animationExecutor: AnimationExecutor;
@@ -82,7 +82,7 @@ export default class Surface {
 
   private transform: Transform;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, content: ContentProps[]) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, contents: ContentProps[]) {
     this.id = Register.id();
     Register.add(this);
     this.CONFIG = setupConfig(config);
@@ -109,9 +109,9 @@ export default class Surface {
     new ResizeObserver(() => {this.updateCssGenerated();this.updateViewport();this.position.enforceLimits();}).observe(this.elements.container);
     new ResizeObserver(() => {this.updateCssGenerated();this.position.enforceLimits();}).observe(this.elements.surface);
 
-    this.entities = [];
-    for (let contentProps of content) {
-      this.entities.push(new Content(this.id, contentProps));
+    this.contents = [];
+    for (let contentProps of contents) {
+      this.contents.push(new Content(this.id, contentProps));
     }
 
     this.position = new Position(this.id);
@@ -227,7 +227,7 @@ export default class Surface {
     for (let transformProperty of this.transform.properties) {
       style += `${transformProperty.name}(${transformProperty.value}) `;
       if (transformProperty.name === 'rotateX') {
-        for (let content of this.entities) {
+        for (let content of this.contents) {
           content.applyTransformProperty(transformProperty.value);
         }
       }

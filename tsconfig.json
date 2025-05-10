@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {},
-    "rootDirs": ["src", "tests/unit"],
+    "rootDir": "src",
     "outDir": "lib",
 
     "target": "es2015",
@@ -38,5 +38,5 @@
     "suppressImplicitAnyIndexErrors": false,
     "noStrictGenericChecks": false
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*.ts"],
 }

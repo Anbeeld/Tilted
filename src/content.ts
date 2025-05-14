@@ -1,5 +1,5 @@
 import { Register } from "./register.js";
-import { multiplyCssDegrees } from "./utils.js";
+import { getProperty, multiplyCssDegrees } from "./utils.js";
 
 export enum ContentType {
   Scene = 'scene',
@@ -28,9 +28,9 @@ export class Content {
   constructor(surfaceId: number, props: ContentProps) {
     this.id = Register.id();
     this.surfaceId = surfaceId;
-    this.type = props.type;
-    this.factor = props.factor || 1;
-    this.element = props.element;
+    this.type = getProperty(props, 'type');
+    this.factor = getProperty(props, 'factor') || 1;
+    this.element = getProperty(props, 'element');
 
     if (!this.surface.elements.transform.contains(this.element)) {
       throw new Error(`Tilted id ${this.surface.id} transform element doesn't contain content id ${this.id} element`);

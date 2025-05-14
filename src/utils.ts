@@ -107,3 +107,10 @@ export function getProperty(object: any, name: string) : any {
   }
   return object[name];
 }
+
+export function setProperty(object: any, name: string, value: any) : void {
+  if (!object) {
+    return;
+  }
+  object[name] = value;
+}

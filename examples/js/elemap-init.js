@@ -1,6 +1,6 @@
 const elemap = new Elemap(
   typeof config !== 'undefined' ? config : {},
-  typeof style !== 'undefined' ? style : {}
+  typeof schema !== 'undefined' ? schema : {}
 );
 
 elemap.tileByIndex(1, 1).updateStyle({outer: 'background-color: red;'});

@@ -1,4 +1,7 @@
-import { calculateSteps } from "./utils.js";
+type ConfigProperty = {
+  VALUE: number,
+  TYPE: ConfigPropertyType
+}
 
 enum ConfigPropertyType {
   Angle = 'angle',
@@ -9,12 +12,37 @@ enum ConfigPropertyType {
   Time = 'time'
 }
 
-interface ConfigProperty {
-  VALUE: any,
-  TYPE: ConfigPropertyType
+export type CustomConfig = {
+  scaleMin?: number,
+  scaleMax?: number,
+  scaleNumSteps?: number,
+  scaleDefaultStep?: number,
+  scaleRounding?: number,
+  scaleGlideFactor?: number,
+
+  perspectiveValue?: number,
+  perspectiveFactor?: number,
+
+  tiltMin?: number,
+  tiltMax?: number,
+  tiltRounding?: number,
+
+  edgeMoveEnabled?: number,
+  edgeMoveArea?: number,
+  edgeMoveSpeed?: number,
+
+  animationScaleTime?: number,
+  animationGlideTime?: number,
+
+  durationForToss?: number,
+  tossGlideFactor?: number,
+  animationTossTime?: number,
+
+  coordRoundingInterim?: number,
+  coordRoundingFinal?: number
 }
 
-export interface ConfigProperties {
+export type Config = {
   SCALE_MIN: ConfigProperty,
   SCALE_MAX: ConfigProperty,
   SCALE_NUM_STEPS: ConfigProperty,
@@ -44,140 +72,108 @@ export interface ConfigProperties {
   COORD_ROUNDING_FINAL: ConfigProperty // Rounding of coordinates after animation
 }
 
-export function setupConfig(configCustom: {}) : ConfigProperties {
-  let config = {
-    $scaleMin: 0.25, // The smallest surface can be scaled to, e.g. 25% of its actual size as per default
-    $scaleMax: 1.00, // The largest surface can be scaled to, e.g. 100% of its actual size as per default
-    $scaleNumSteps: 15, // Num scaling steps, more steps -> more granularity in scaling and longer to scale all the way
-    $scaleDefaultStep: 8, // Scaling step that will be set by default - min is 1, max is scaleNumSteps
-    $scaleRounding: 3, // Scale value and everything related will be rounded to this number of decimals
-    $scaleGlideFactor: 1, // Multiplier of glide vector length when scaling towards mouse cursor
-
-    $perspectiveValue: 750, // Default perspective distance in pixels
-    $perspectiveFactor: 1, // Multiplier of perspective distance, use whatever fits you between this and value
-
-    $tiltMin: 0, // Angle of surface tilt at scaleMin
-    $tiltMax: 35, // Angle of surface tilt at scaleMax
-    $tiltRounding: 2, // Tilt value and everything related will be rounded to this number of decimals
-
-    $edgeMoveEnabled: 0, // If surface moving by moving mouse cursor to the edge of viewport is enabled
-    $edgeMoveArea: 20, // Edge move area width in pixels
-    $edgeMoveSpeed: 10, // Max speed of surface edge moving, actual depends on cursor position inside edge etc.
-    
-    $animationScaleTime: 400, // Default duration of scale animation in ms, can be shortened for small shifts 
-    $animationGlideTime: 400, // Default duration of glide animation in ms, note that scale glides use animationScaleTime
-
-    $durationForToss: 150, // Dragging with duration fewer than this will result in toss
-    $tossGlideFactor: 1, // Multiplier of toss glide vector, which itself is roughly equal to dragging distance
-    $animationTossTime: 1000, // Default duration of toss animation in ms
-
-    $coordRoundingInterim: 1, // Surface coords during movement will be rounded to this number of decimals
-    $coordRoundingFinal: 0 // Surface coords after movement ends will be rounded to this number of decimals
-  }
-
-  for (const parameter in configCustom) {
-    if ((config as any).hasOwnProperty('$' + parameter)) {
-      let value = (configCustom as any)[parameter];
-      if (value === true) {
-        value = 1;
-      } else if (value === false) {
-        value = 0;
+export function setupConfig(custom: CustomConfig) : Config {
+  let customValue = (name: keyof CustomConfig, round: boolean = false) : number|undefined => {
+    if (typeof custom[name] === 'number') {
+      if (round) {
+        return Math.round(custom[name]);
       }
-      (config as any)['$' + parameter] = value;
+      return custom[name];
+    } else if (typeof custom[name] === 'boolean') {
+      return custom[name] ? 1 : 0;
     }
+    return undefined;
   }
-
-  false && console.log('Scale steps: ', calculateSteps(config.$scaleMin, config.$scaleMax, config.$scaleNumSteps, config.$scaleRounding));
 
   const CONFIG = {
-    SCALE_MIN: {
-      VALUE: config.$scaleMin,
+    SCALE_MIN: { // The smallest surface can be scaled to, e.g. 25% of its actual size as per default
+      VALUE: customValue('scaleMin') || 0.25,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_MAX: {
-      VALUE: config.$scaleMax,
+    SCALE_MAX: { // The largest surface can be scaled to, e.g. 100% of its actual size as per default
+      VALUE: customValue('scaleMax') || 1.00,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_NUM_STEPS: {
-      VALUE: config.$scaleNumSteps,
+    SCALE_NUM_STEPS: { // Num scaling steps, more steps -> more granularity in scaling and longer to scale all the way
+      VALUE: customValue('scaleNumSteps') || 15,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_DEFAULT_STEP: {
-      VALUE: config.$scaleDefaultStep,
+    SCALE_DEFAULT_STEP: { // Scaling step that will be set by default - min is 1, max is scaleNumSteps
+      VALUE: customValue('scaleDefaultStep') || 8,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_ROUNDING: {
-      VALUE: config.$scaleRounding,
+    SCALE_ROUNDING: { // Scale value and everything related will be rounded to this number of decimals
+      VALUE: customValue('scaleRounding') || 3,
       TYPE: ConfigPropertyType.Number
     },
-    SCALE_GLIDE_FACTOR: {
-      VALUE: config.$scaleGlideFactor,
+    SCALE_GLIDE_FACTOR: { // Multiplier of glide vector length when scaling towards mouse cursor
+      VALUE: customValue('scaleGlideFactor') || 1,
       TYPE: ConfigPropertyType.Number
     },
 
-    PERSPECTIVE_VALUE: {
-      VALUE: config.$perspectiveValue,
+    PERSPECTIVE_VALUE: { // Default perspective distance in pixels
+      VALUE: customValue('perspectiveValue') || 750,
       TYPE: ConfigPropertyType.Integer
     },
-    PERSPECTIVE_FACTOR: {
-      VALUE: Math.round(config.$perspectiveFactor),
+    PERSPECTIVE_FACTOR: { // Multiplier of perspective distance, use whatever fits you between this and value
+      VALUE: customValue('perspectiveFactor', true) || 1,
       TYPE: ConfigPropertyType.Length
     },
 
-    TILT_MIN: {
-      VALUE: Math.round(config.$tiltMin),
+    TILT_MIN: { // Angle of surface tilt at scaleMin
+      VALUE: customValue('tiltMin', true) || 0,
       TYPE: ConfigPropertyType.Angle
     },
-    TILT_MAX: {
-      VALUE: Math.round(config.$tiltMax),
+    TILT_MAX: { // Angle of surface tilt at scaleMax
+      VALUE: customValue('tiltMax', true) || 35,
       TYPE: ConfigPropertyType.Angle
     },
-    TILT_ROUNDING: {
-      VALUE: config.$tiltRounding,
+    TILT_ROUNDING: { // Tilt value and everything related will be rounded to this number of decimals
+      VALUE: customValue('tiltRounding', true) || 2,
       TYPE: ConfigPropertyType.Integer
     },
 
-    EDGE_MOVE_ENABLED: {
-      VALUE: config.$edgeMoveEnabled,
+    EDGE_MOVE_ENABLED: { // If surface moving by moving mouse cursor to the edge of viewport is enabled
+      VALUE: customValue('edgeMoveEnabled') ? 1 : 0,
       TYPE: ConfigPropertyType.Integer
     },
-    EDGE_MOVE_AREA: {
-      VALUE: Math.round(config.$edgeMoveArea),
+    EDGE_MOVE_AREA: { // Edge move area width in pixels
+      VALUE: customValue('edgeMoveArea', true) || 20,
       TYPE: ConfigPropertyType.Length
     },
-    EDGE_MOVE_SPEED: {
-      VALUE: Math.round(config.$edgeMoveSpeed),
+    EDGE_MOVE_SPEED: { // Max speed of surface edge moving, actual depends on cursor position inside edge etc.
+      VALUE: customValue('edgeMoveSpeed', true) || 10,
       TYPE: ConfigPropertyType.Length
     },
 
-    ANIMATION_SCALE_TIME: {
-      VALUE: Math.round(config.$animationScaleTime),
+    ANIMATION_SCALE_TIME: { // Default duration of scale animation in ms, can be shortened for small shifts
+      VALUE: customValue('animationScaleTime', true) || 400,
       TYPE: ConfigPropertyType.Time
     },
-    ANIMATION_GLIDE_TIME: {
-      VALUE: Math.round(config.$animationGlideTime),
+    ANIMATION_GLIDE_TIME: { // Default duration of glide animation in ms, note that scale glides use animationScaleTime
+      VALUE: customValue('animationGlideTime', true) || 400,
       TYPE: ConfigPropertyType.Time
     },
     
-    DURATION_FOR_TOSS: {
-      VALUE: Math.round(config.$durationForToss),
+    DURATION_FOR_TOSS: { // Dragging with duration fewer than this will result in toss
+      VALUE: customValue('durationForToss', true) || 150,
       TYPE: ConfigPropertyType.Time
     },
-    TOSS_GLIDE_FACTOR: {
-      VALUE: config.$tossGlideFactor,
+    TOSS_GLIDE_FACTOR: { // Multiplier of toss glide vector, which itself is roughly equal to dragging distance
+      VALUE: customValue('tossGlideFactor') || 1,
       TYPE: ConfigPropertyType.Number
     },
-    ANIMATION_TOSS_TIME: {
-      VALUE: Math.round(config.$animationTossTime),
+    ANIMATION_TOSS_TIME: { // Default duration of toss animation in ms
+      VALUE: customValue('animationTossTime', true) || 1000,
       TYPE: ConfigPropertyType.Time
     },
 
-    COORD_ROUNDING_INTERIM: {
-      VALUE: config.$coordRoundingInterim,
+    COORD_ROUNDING_INTERIM: { // Surface coords during movement will be rounded to this number of decimals
+      VALUE: customValue('coordRoundingInterim', true) || 1,
       TYPE: ConfigPropertyType.Integer
     },
-    COORD_ROUNDING_FINAL: {
-      VALUE: config.$coordRoundingFinal,
+    COORD_ROUNDING_FINAL: { // Surface coords after movement ends will be rounded to this number of decimals
+      VALUE: customValue('coordRoundingFinal', true) || 0,
       TYPE: ConfigPropertyType.Integer
     }
   };

@@ -1,5 +1,5 @@
 import { roundFloat, Coords } from './utils.js';
-import { ConfigProperties, setupConfig } from './config.js';
+import { Config, setupConfig } from './config.js';
 import { initControls } from './controls/controls.js';
 
 import AnimationExecutor from './animation/executor.js';
@@ -42,7 +42,7 @@ export default class Surface {
   private set id(value: number) { this._id = value; }
   public get id() : number {return this._id;}
 
-  public readonly CONFIG: ConfigProperties;
+  public readonly CONFIG: Config;
 
   // @ts-ignore Doesn't understand setters and getters
   private _elements: SurfaceElements;

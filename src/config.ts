@@ -1,3 +1,5 @@
+import { getProperty } from "./utils.js"
+
 type ConfigProperty = {
   VALUE: number,
   TYPE: ConfigPropertyType
@@ -74,13 +76,14 @@ export type Config = {
 
 export function setupConfig(custom: CustomConfig) : Config {
   let customValue = (name: keyof CustomConfig, round: boolean = false) : number|undefined => {
-    if (typeof custom[name] === 'number') {
+    let value = getProperty(custom, name);
+    if (typeof value === 'number') {
       if (round) {
-        return Math.round(custom[name]);
+        return Math.round(value);
       }
-      return custom[name];
-    } else if (typeof custom[name] === 'boolean') {
-      return custom[name] ? 1 : 0;
+      return value;
+    } else if (typeof value === 'boolean') {
+      return value ? 1 : 0;
     }
     return undefined;
   }

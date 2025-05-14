@@ -102,5 +102,8 @@ export function multiplyCssDegrees(value: string, multipler: number, rounding: n
 }
 
 export function getProperty(object: any, name: string) : any {
+  if (!object || !object.hasOwnProperty(name)) {
+    return undefined;
+  }
   return object[name];
 }

@@ -1,3 +1,8 @@
+## 0.4.5
+
+- Fixed some content properties being ignored.
+- Shielding from property mangling is now applied by using getProperty and setProperty utility functions.
+
 ## 0.4.4
 
 - Renamed Entity into Content to avoid confusion with various other systems using this word.

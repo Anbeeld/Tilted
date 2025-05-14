@@ -36,12 +36,10 @@ const webConfig = {
         terserOptions: {
           compress: {
             ecma: 2015,
-            passes: 2,
+            passes: 2
           },
           mangle: {
-            properties: {
-              regex: /^[^\$].*$/
-            }
+            properties: true
           }
         }
       }),

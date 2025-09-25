@@ -1,3 +1,8 @@
+## 0.4.6
+
+- Fixed viewport position not adjusting on surface resizing.
+- Replaced get/set naming with (de)mangle for property obfuscating functions.
+
 ## 0.4.5
 
 - Fixed some content properties being ignored.

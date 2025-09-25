@@ -106,8 +106,16 @@ export default class Surface {
     initControls(this);
 
     this.updateViewport();
-    new ResizeObserver(() => {this.updateCssGenerated();this.updateViewport();this.position.enforceLimits();}).observe(this.elements.container);
-    new ResizeObserver(() => {this.updateCssGenerated();this.position.enforceLimits();}).observe(this.elements.surface);
+    new ResizeObserver(() => {
+      this.updateCssGenerated();
+      this.updateViewport();
+      this.position.enforceLimits();
+    }).observe(this.elements.container);
+    new ResizeObserver(() => {
+      this.updateCssGenerated();
+      this.updateViewport();
+      this.position.enforceLimits();
+    }).observe(this.elements.surface);
 
     this.contents = [];
     for (let contentProps of contents) {

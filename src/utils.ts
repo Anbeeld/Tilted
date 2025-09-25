@@ -100,17 +100,3 @@ export function findClosestInArray(array: number[], value: number) : number {
 export function multiplyCssDegrees(value: string, multipler: number, rounding: number) : string {
   return roundFloat(parseFloat(value.replace('deg', '')) * multipler, rounding) + 'deg';
 }
-
-export function getProperty(object: any, name: string) : any {
-  if (!object || !object.hasOwnProperty(name)) {
-    return undefined;
-  }
-  return object[name];
-}
-
-export function setProperty(object: any, name: string, value: any) : void {
-  if (!object) {
-    return;
-  }
-  object[name] = value;
-}

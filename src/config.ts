@@ -1,4 +1,4 @@
-import { getProperty } from "./utils.js"
+import { mangleProperty } from "./mangle.js"
 
 type ConfigProperty = {
   VALUE: number,
@@ -76,7 +76,7 @@ export type Config = {
 
 export function setupConfig(custom: CustomConfig) : Config {
   let getConfigProperty = (name: keyof CustomConfig, round: boolean = false) : number|undefined => {
-    let value = getProperty(custom, name);
+    let value = mangleProperty(custom, name);
     if (typeof value === 'number') {
       if (round) {
         return Math.round(value);

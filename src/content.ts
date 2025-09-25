@@ -1,5 +1,6 @@
+import { mangleProperty } from "./mangle.js";
 import { Register } from "./register.js";
-import { getProperty, multiplyCssDegrees } from "./utils.js";
+import { multiplyCssDegrees } from "./utils.js";
 
 export enum ContentType {
   Scene = 'scene',
@@ -28,9 +29,9 @@ export class Content {
   constructor(surfaceId: number, props: ContentProps) {
     this.id = Register.id();
     this.surfaceId = surfaceId;
-    this.type = getProperty(props, 'type');
-    this.factor = getProperty(props, 'factor') || 1;
-    this.element = getProperty(props, 'element');
+    this.type = mangleProperty(props, 'type');
+    this.factor = mangleProperty(props, 'factor') || 1;
+    this.element = mangleProperty(props, 'element');
 
     if (!this.surface.elements.transform.contains(this.element)) {
       throw new Error(`Tilted id ${this.surface.id} transform element doesn't contain content id ${this.id} element`);

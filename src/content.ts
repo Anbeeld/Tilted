@@ -1,4 +1,4 @@
-import { mangleProperty } from "./mangle.js";
+import { demangleProperty, mangleProperty } from "./mangle.js";
 import { Register } from "./register.js";
 import { multiplyCssDegrees } from "./utils.js";
 
@@ -38,12 +38,12 @@ export class Content {
     }
 
     if (this.type === ContentType.Scene) {
-      this.element.classList.add(`tilted-${this.surfaceId}-scene`);
-      this.element.classList.add(`tilted-${this.surfaceId}-scene-${this.id}`);
+      this.element.classList.add(this.surface.selectors.scene);
     } else if (this.type === ContentType.Figure) {
-      this.element.classList.add(`tilted-${this.surfaceId}-figure`);
-      this.element.classList.add(`tilted-${this.surfaceId}-figure-${this.id}`);
+      this.element.classList.add(this.surface.selectors.figure);
     }
+    this.surface.addIdToDataset(this.element);
+    this.addIdToDataset(this.element);
 
     // Add parent element into 3D rendering context until transform is reached, forming a single context all the way
     let parentElement;
@@ -56,15 +56,21 @@ export class Content {
       if (!parentElement) {
         throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from content id ${this.id}`);
       }
-      parentElement.classList.add(`tilted-${this.surfaceId}-preserve-3d`);
+      parentElement.classList.add(this.surface.selectors.preverve3d);
       parentElement = parentElement.parentElement;
     }
+  }
+
+  public addIdToDataset(element: HTMLElement) {
+    demangleProperty(element.dataset, 'contentId', this.id.toString());
   }
 
   private initStyle() : void {
     if (!this.style) {
       this.style = document.createElement("style");
-      this.style.classList.add(`tilted-${this.surface.id}-css-${this.type}-${this.id}`);
+      this.style.classList.add(this.type == ContentType.Scene ? this.surface.selectors.cssScene : this.surface.selectors.cssFigure);
+      this.surface.addIdToDataset(this.style);
+      this.addIdToDataset(this.style);
       document.head.appendChild(this.style);
     }
   }
@@ -74,7 +80,7 @@ export class Content {
     if (this.type === ContentType.Scene) {
       this.initStyle();
       let newInnerHTML = 
-      `.tilted-${this.surfaceId}-scene-${this.id}>*:not(.tilted-${this.surfaceId}-figure){` +
+      `.${this.surface.selectors.scene}${this.surface.selectors.surfaceId}[data-content-id="${this.id}"]>*:not(.${this.surface.selectors.figure}${this.surface.selectors.surfaceId}){` +
         `transform:${transformValue}` +
       `}`;
       if (this.style!.innerHTML !== newInnerHTML) {

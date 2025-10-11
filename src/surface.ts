@@ -10,6 +10,7 @@ import Position from './position.js';
 
 import { Content, ContentProps } from './content.js';
 import { Register } from './register.js';
+import { demangleProperty } from './mangle.js';
 
 interface SurfaceElements {
   container: HTMLElement,
@@ -129,25 +130,59 @@ export default class Surface {
     this.scale = new Scale(this.id);
   }
 
+  public get selectors() {
+    let base = `tilted-`;
+    return {
+      container: `${base}container`,
+      viewport: `${base}viewport`,
+      transform: `${base}transform`,
+      preverve3d: `${base}preserve-3d`,
+      surface: `${base}surface`,
+      controls: `${base}controls`,
+      controlsZoomIn: `${base}controls-zoom-in`,
+      controlsZoomOut: `${base}controls-zoom-out`,
+      cssCore: `${base}css-core`,
+      cssGenerated: `${base}css-generated`,
+      surfaceId: `[data-surface-id="${this.id}"]`,
+      scene: `${base}scene`,
+      figure: `${base}figure`,
+      cssScene: `${base}css-scene`,
+      cssFigure: `${base}css-figure`,
+    }
+  }
+
+  public addIdToDataset(element: HTMLElement) {
+    demangleProperty(element.dataset, 'surfaceId', this.id.toString());
+  }
+
   private setupElements(elementContainer: HTMLElement, elementSurface: HTMLElement) : SurfaceElements {
-    elementContainer.classList.add(`tilted-${this.id}-container`);
+    elementContainer.classList.add(this.selectors.container);
+    this.addIdToDataset(elementContainer);
 
     let elementViewport = document.createElement('div');
-    elementViewport.classList.add(`tilted-${this.id}-viewport`);
+    elementViewport.classList.add(this.selectors.viewport);
+    this.addIdToDataset(elementViewport);
 
     let elementTransform = document.createElement('div');
-    elementTransform.classList.add(`tilted-${this.id}-transform`);
-    elementTransform.classList.add(`tilted-${this.id}-preserve-3d`);
+    elementTransform.classList.add(this.selectors.transform);
+    elementTransform.classList.add(this.selectors.preverve3d);
+    this.addIdToDataset(elementTransform);
 
-    elementSurface.classList.add(`tilted-${this.id}-surface`);
+    elementSurface.classList.add(this.selectors.surface);
+    this.addIdToDataset(elementSurface);
 
     let elementControls = document.createElement('div');
-    elementControls.classList.add(`tilted-${this.id}-controls`);
+    elementControls.classList.add(this.selectors.controls);
+    this.addIdToDataset(elementControls);
+
     let elementControlsZoomIn = document.createElement('div');
-    elementControlsZoomIn.classList.add(`tilted-${this.id}-controls-zoom-in`);
-    let elementControlsZoomOut = document.createElement('div');
-    elementControlsZoomOut.classList.add(`tilted-${this.id}-controls-zoom-out`);
+    elementControlsZoomIn.classList.add(this.selectors.controlsZoomIn);
+    this.addIdToDataset(elementControlsZoomIn);
     elementControls.appendChild(elementControlsZoomIn);
+
+    let elementControlsZoomOut = document.createElement('div');
+    elementControlsZoomOut.classList.add(this.selectors.controlsZoomOut);
+    this.addIdToDataset(elementControlsZoomOut);
     elementControls.appendChild(elementControlsZoomOut);
 
     let children = new Array();
@@ -177,12 +212,14 @@ export default class Surface {
 
   private setupStyles() : SurfaceStyles {
     let elementStyleCore = document.createElement('style');
-    elementStyleCore.classList.add(`tilted-${this.id}-css-core`);
+    elementStyleCore.classList.add(this.selectors.cssCore);
+    this.addIdToDataset(elementStyleCore);
     elementStyleCore.innerHTML = cssCore(this);
     document.head.appendChild(elementStyleCore);
 
     let elementStyleGenerated = document.createElement('style');
-    elementStyleGenerated.classList.add(`tilted-${this.id}-css-generated`);
+    elementStyleGenerated.classList.add(this.selectors.cssGenerated);
+    this.addIdToDataset(elementStyleGenerated);
     elementStyleGenerated.innerHTML = cssGenerated(this);
     document.head.appendChild(elementStyleGenerated);
 

@@ -36,7 +36,7 @@ export function cssCore(surface: Surface) {
   }
 
   string +=
-  `.tilted-${surface.id}-container{` +
+  `.${surface.selectors.container}${surface.selectors.surfaceId}{` +
     `position:relative !important;` +
     `cursor:move;` +
     `cursor:grab;` +
@@ -50,13 +50,13 @@ export function cssCore(surface: Surface) {
     `user-select:none;` +
   `}` +
 
-  `.tilted-${surface.id}-container:active{` +
+  `.${surface.selectors.container}${surface.selectors.surfaceId}:active{` +
     `cursor:grabbing;` +
     `cursor:-moz-grabbing;` +
     `cursor:-webkit-grabbing;` +
   `}` +
   
-  `.tilted-${surface.id}-controls{` +
+  `.${surface.selectors.controls}${surface.selectors.surfaceId}{` +
     `position:absolute;` +
     `top:100px;` +
     `right:30px;` +
@@ -67,8 +67,8 @@ export function cssCore(surface: Surface) {
     `overflow:hidden;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in,` +
-  `.tilted-${surface.id}-controls-zoom-out{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId},` +
+  `.${surface.selectors.controlsZoomOut}${surface.selectors.surfaceId}{` +
     `position:relative;` +
     `width:30px;` +
     `height:30px;` +
@@ -77,63 +77,63 @@ export function cssCore(surface: Surface) {
     `box-sizing:content-box;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}{` +
     `border-bottom:1px solid #444444;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in:active,` +
-  `.tilted-${surface.id}-controls-zoom-out:active{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}:active,` +
+  `.${surface.selectors.controlsZoomOut}${surface.selectors.surfaceId}:active{` +
     `background:#ffffff;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in:before,` +
-  `.tilted-${surface.id}-controls-zoom-in:after,` +
-  `.tilted-${surface.id}-controls-zoom-out:before{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}:before,` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}:after,` +
+  `.${surface.selectors.controlsZoomOut}${surface.selectors.surfaceId}:before{` +
     `content:"";` +
     `display:block;` +
     `position:absolute;` +
     `background:#444444;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in:before,` +
-  `.tilted-${surface.id}-controls-zoom-out:before{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}:before,` +
+  `.${surface.selectors.controlsZoomOut}${surface.selectors.surfaceId}:before{` +
     `height:2px;` +
     `width:18px;` +
     `top:14px;` +
     `left:6px;` +
   `}` +
 
-  `.tilted-${surface.id}-controls-zoom-in:after{` +
+  `.${surface.selectors.controlsZoomIn}${surface.selectors.surfaceId}:after{` +
     `height:18px;` +
     `width:2px;` +
     `top:6px;` +
     `left:14px;` +
   `}` +
 
-  `.tilted-${surface.id}-viewport{` +
-    `width:var(--tilted-` + surface.id + `-surface-width) !important;` +
-    `height:var(--tilted-` + surface.id + `-surface-height) !important;` +
+  `.${surface.selectors.viewport}${surface.selectors.surfaceId}{` +
+    `width:var(--tilted-${surface.id}-surface-width) !important;` +
+    `height:var(--tilted-${surface.id}-surface-height) !important;` +
     `position:relative !important;` +
     `will-change:top,left;` +
   `}` +
 
-  `.tilted-${surface.id}-transform{` +
-    `width:var(--tilted-` + surface.id + `-surface-width) !important;` +
-    `height:var(--tilted-` + surface.id + `-surface-height) !important;` +
+  `.${surface.selectors.transform}${surface.selectors.surfaceId}{` +
+    `width:var(--tilted-${surface.id}-surface-width) !important;` +
+    `height:var(--tilted-${surface.id}-surface-height) !important;` +
     `will-change:transform;` +
   `}` +
 
-  `.tilted-${surface.id}-surface{` +
+  `.${surface.selectors.surface}${surface.selectors.surfaceId}{` +
     `position:relative !important;` +
     `overflow:visible !important;` +
     `z-index:100 !important;` +
   `}` +
 
-  `.tilted-${surface.id}-scene>*:not(.tilted-${surface.id}-figure),` +
-  `.tilted-${surface.id}-figure{` +
+  `.${surface.selectors.scene}${surface.selectors.surfaceId}>*:not(.${surface.selectors.figure}${surface.selectors.surfaceId}),` +
+  `.${surface.selectors.figure}${surface.selectors.surfaceId}{` +
     `transform-origin:bottom;` +
   `}` +
-  `.tilted-${surface.id}-preserve-3d{` +
+  `.${surface.selectors.preverve3d}${surface.selectors.surfaceId}{` +
     `transform-style:preserve-3d;` +
   `}`;
 

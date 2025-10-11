@@ -12,4 +12,8 @@ export default class Tilted {
   public addContent(content: ContentProps) {
     this.surface.addContent(content);
   }
+
+  public deleteContent(element: HTMLElement) {
+    this.surface.deleteContent(element);
+  }
 }

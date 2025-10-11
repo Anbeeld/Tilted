@@ -22,8 +22,11 @@ export class Content {
   private type: ContentType;
   private factor: number;
 
-  private element: HTMLElement;
-  // public get element() { return this.element; }
+  // @ts-ignore Doesn't understand setters and getters
+  private _element: HTMLElement;
+  private set element(value: HTMLElement) { this._element = value; }
+  public get element() { return this._element; }
+
   private style: HTMLElement|undefined;
 
   constructor(surfaceId: number, props: ContentProps) {
@@ -88,6 +91,34 @@ export class Content {
       }
     } else if (this.type === ContentType.Figure) {
       this.element.style.transform = transformValue;
+    }
+  }
+
+  public clearSideEffects() : void {
+    if (this.style) {
+      this.style.remove();
+    }
+
+    if (this.type === ContentType.Scene) {
+      this.element.classList.remove(this.surface.selectors.scene);
+    } else if (this.type === ContentType.Figure) {
+      this.element.classList.remove(this.surface.selectors.figure);
+    }
+    this.element.removeAttribute('data-surface-id');
+    this.element.removeAttribute('data-content-id');
+
+    let parentElement;
+    if (this.type === ContentType.Scene) {
+      parentElement = this.element;
+    } else if (this.type === ContentType.Figure) {
+      parentElement = this.element.parentElement;
+    }
+    while (parentElement !== this.surface.elements.transform) {
+      if (!parentElement) {
+        throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from content id ${this.id}`);
+      }
+      parentElement.classList.remove(this.surface.selectors.preverve3d);
+      parentElement = parentElement.parentElement;
     }
   }
 }

@@ -41,7 +41,8 @@ const webConfig = {
           mangle: {
             properties: {
               reserved: [
-                'addContent'
+                'addContent',
+                'deleteContent',
               ]
             }
           }

@@ -341,4 +341,13 @@ export default class Surface {
     }
     return content;
   }
+
+  public deleteContent(element: HTMLElement) : void {
+    for (let content of this.contents) {
+      if (content.element === element) {
+        content.clearSideEffects();
+        this.contents.splice(this.contents.indexOf(content), 1);
+      }
+    }
+  }
 }

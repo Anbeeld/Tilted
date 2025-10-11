@@ -1,3 +1,8 @@
+## 0.4.7
+
+- Added addContent, deleteContent and clearContents methods, allowing to interact with the system outside of initialization.
+- Moved IDs of surface and contents from class names to data attributes.
+
 ## 0.4.6
 
 - Fixed viewport position not adjusting on surface resizing.

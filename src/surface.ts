@@ -350,4 +350,11 @@ export default class Surface {
       }
     }
   }
+
+  public clearContents() : void {
+    for (let content of this.contents) {
+      content.clearSideEffects();
+    }
+    this.contents = [];
+  }
 }

@@ -16,4 +16,8 @@ export default class Tilted {
   public deleteContent(element: HTMLElement) {
     this.surface.deleteContent(element);
   }
+
+  public clearContents() {
+    this.surface.clearContents();
+  }
 }

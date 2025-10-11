@@ -8,4 +8,8 @@ export default class Tilted {
     this.surface = new Surface(elementContainer, elementSurface, config, content);
     this.surface;
   }
+
+  public addContent(content: ContentProps) {
+    this.surface.addContent(content);
+  }
 }

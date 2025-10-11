@@ -120,7 +120,7 @@ export default class Surface {
 
     this.contents = [];
     for (let contentProps of contents) {
-      this.contents.push(new Content(this.id, contentProps));
+      this.addContent(contentProps);
     }
 
     this.position = new Position(this.id);
@@ -329,5 +329,16 @@ export default class Surface {
 
   public cancelOngoingMoves() : void {
     this.animationStorage.destroy(Animations.SurfaceGlide);
+  }
+
+  public addContent(properties: ContentProps) : Content {
+    let content = new Content(this.id, properties);
+    this.contents.push(content);
+    for (let transformProperty of this.transform.properties) {
+      if (transformProperty.name === 'rotateX') {
+        content.applyTransformProperty(transformProperty.value);
+      }
+    }
+    return content;
   }
 }

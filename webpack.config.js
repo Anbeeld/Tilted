@@ -39,7 +39,11 @@ const webConfig = {
             passes: 2
           },
           mangle: {
-            properties: true
+            properties: {
+              reserved: [
+                'addContent'
+              ]
+            }
           }
         }
       }),

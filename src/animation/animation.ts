@@ -1,7 +1,7 @@
-import { Register } from '../register.js';
+import { Registry } from '../registry.js';
 export default class Animation {
   private surfaceId: number;
-  protected get surface() { return Register.surface(this.surfaceId)!; }
+  protected get surface() { return Registry.surface(this.surfaceId)!; }
 
   protected timestampStart: number = -1;
   protected timestampLast: number = -1;

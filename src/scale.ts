@@ -1,11 +1,11 @@
 import { clamp, clampRatio, EasingFunctions, roundFloat, Coords, calculateSteps, findClosestInArray, calculateShiftsToStep } from './utils.js';
 import { MouseParams } from './controls/mouse.js';
 import { Animations } from './animation/storage.js';
-import { Register } from './register.js';
+import { Registry } from './registry.js';
 
 export default class Scale {
   private surfaceId: number;
-  private get surface() { return Register.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surface(this.surfaceId)!; }
   private steps: number[] = [];
   private shiftsToStep: {up: number, down: number}[] = [];
 

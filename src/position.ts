@@ -1,10 +1,10 @@
 import { roundFloat, clamp, EasingFunctions, Coords } from './utils.js';
 import { Animations } from './animation/storage.js';
-import { Register } from './register.js';
+import { Registry } from './registry.js';
 
 export default class Position {
   private surfaceId: number;
-  private get surface() { return Register.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surface(this.surfaceId)!; }
 
   // @ts-ignore Doesn't understand setters and getters
   private _coords: Coords = {x: 0, y: 0};

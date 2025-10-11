@@ -1,5 +1,5 @@
 import { demangleProperty, mangleProperty } from "./mangle.js";
-import { Register } from "./register.js";
+import { Registry } from "./registry.js";
 import { multiplyCssDegrees } from "./utils.js";
 
 export enum ContentType {
@@ -17,7 +17,7 @@ export class Content {
   private id: number;
 
   private surfaceId: number;
-  private get surface() { return Register.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surface(this.surfaceId)!; }
 
   private type: ContentType;
   private factor: number;
@@ -30,7 +30,7 @@ export class Content {
   private style: HTMLElement|undefined;
 
   constructor(surfaceId: number, props: ContentProps) {
-    this.id = Register.id();
+    this.id = Registry.id();
     this.surfaceId = surfaceId;
     this.type = mangleProperty(props, 'type');
     this.factor = mangleProperty(props, 'factor') || 1;

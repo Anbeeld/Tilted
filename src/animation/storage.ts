@@ -4,7 +4,7 @@ import AnimationSurfaceEdge from './edge.js';
 import AnimationSurfaceDrag from './drag.js';
 import { MouseParams } from '../controls/mouse.js';
 import { EasingFunctions, Coords } from '../utils.js';
-import { Register } from '../register.js';
+import { Registry } from '../registry.js';
 
 export enum Animations {
   SurfaceGlide = 'surfaceGlide',
@@ -15,7 +15,7 @@ export enum Animations {
 
 export class AnimationStorage {
   private surfaceId: number;
-  private get surface() { return Register.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surface(this.surfaceId)!; }
 
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceGlide: AnimationSurfaceGlide | null = null;

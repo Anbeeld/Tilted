@@ -9,7 +9,7 @@ import Scale from './scale.js';
 import Position from './position.js';
 
 import { Content, ContentProps } from './content.js';
-import { Register } from './register.js';
+import { Registry } from './registry.js';
 import { demangleProperty } from './mangle.js';
 
 interface SurfaceElements {
@@ -84,8 +84,8 @@ export default class Surface {
   private transform: Transform;
 
   public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, contents: ContentProps[]) {
-    this.id = Register.id();
-    Register.add(this);
+    this.id = Registry.id();
+    Registry.add(this);
     this.CONFIG = setupConfig(config);
 
     this.elements = this.setupElements(elementContainer, elementSurface);

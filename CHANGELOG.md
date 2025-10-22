@@ -1,3 +1,8 @@
+## 0.4.8
+
+- Added support for configurable offsets for surface position limits.
+- Multipliers for surface position limits based on container and surface dimentions are now configurable.
+
 ## 0.4.7
 
 - Added addContent, deleteContent and clearContents methods, allowing to interact with the system outside of initialization.

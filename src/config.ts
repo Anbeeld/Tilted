@@ -28,6 +28,16 @@ export type CustomConfig = {
   tiltMin?: number,
   tiltMax?: number,
   tiltRounding?: number,
+  
+  limitTopOffset?: number,
+  limitRightOffset?: number,
+  limitBottomOffset?: number,
+  limitLeftOffset?: number,
+
+  limitSurfaceWidthFactor?: number,
+  limitSurfaceHeightFactor?: number,
+  limitContainerWidthFactor?: number,
+  limitContainerHeightFactor?: number,
 
   edgeMoveEnabled?: number,
   edgeMoveArea?: number,
@@ -58,6 +68,16 @@ export type Config = {
   TILT_MIN: ConfigProperty,
   TILT_MAX: ConfigProperty,
   TILT_ROUNDING: ConfigProperty,
+
+  LIMIT_TOP_OFFSET: ConfigProperty,
+  LIMIT_RIGHT_OFFSET: ConfigProperty,
+  LIMIT_BOTTOM_OFFSET: ConfigProperty,
+  LIMIT_LEFT_OFFSET: ConfigProperty,
+
+  LIMIT_SURFACE_WIDTH_FACTOR: ConfigProperty,
+  LIMIT_SURFACE_HEIGHT_FACTOR: ConfigProperty,
+  LIMIT_CONTAINER_WIDTH_FACTOR: ConfigProperty,
+  LIMIT_CONTAINER_HEIGHT_FACTOR: ConfigProperty,
 
   EDGE_MOVE_ENABLED: ConfigProperty,
   EDGE_MOVE_AREA: ConfigProperty,
@@ -134,6 +154,40 @@ export function setupConfig(custom: CustomConfig) : Config {
     TILT_ROUNDING: { // Tilt value and everything related will be rounded to this number of decimals
       VALUE: getConfigProperty('tiltRounding', true) || 2,
       TYPE: ConfigPropertyType.Integer
+    },
+    
+    LIMIT_TOP_OFFSET: { // Top limit in pixels
+      VALUE: getConfigProperty('limitTopOffset', true) || 0,
+      TYPE: ConfigPropertyType.Integer
+    },
+    LIMIT_RIGHT_OFFSET: { // Right limit in pixels
+      VALUE: getConfigProperty('limitRightOffset', true) || 0,
+      TYPE: ConfigPropertyType.Integer
+    },
+    LIMIT_BOTTOM_OFFSET: { // Bottom limit in pixels
+      VALUE: getConfigProperty('limitBottomOffset', true) || 0,
+      TYPE: ConfigPropertyType.Integer
+    },
+    LIMIT_LEFT_OFFSET: { // Left limit in pixels
+      VALUE: getConfigProperty('limitLeftOffset', true) || 0,
+      TYPE: ConfigPropertyType.Integer
+    },
+
+    LIMIT_SURFACE_WIDTH_FACTOR: { // Multiplier of surface width at scaleMin
+      VALUE: getConfigProperty('limitSurfaceWidthFactor') || 0.50,
+      TYPE: ConfigPropertyType.Number
+    },
+    LIMIT_SURFACE_HEIGHT_FACTOR: { // Multiplier of surface height at scaleMin
+      VALUE: getConfigProperty('limitSurfaceHeightFactor') || 0.50,
+      TYPE: ConfigPropertyType.Number
+    },
+    LIMIT_CONTAINER_WIDTH_FACTOR: { // Multiplier of container width at scaleMin
+      VALUE: getConfigProperty('limitContainerWidthFactor') || 0.25,
+      TYPE: ConfigPropertyType.Number
+    },
+    LIMIT_CONTAINER_HEIGHT_FACTOR: { // Multiplier of container height at scaleMin
+      VALUE: getConfigProperty('limitContainerHeightFactor') || 0.25,
+      TYPE: ConfigPropertyType.Number
     },
 
     EDGE_MOVE_ENABLED: { // If surface moving by moving mouse cursor to the edge of viewport is enabled

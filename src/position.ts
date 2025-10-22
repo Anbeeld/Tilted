@@ -17,21 +17,21 @@ export default class Position {
 
   public get limit() : Coords {
     return {
-      x: Math.round(this.surface.surfaceWidth / 2 - this.surface.containerWidth * 0.25),
-      y: Math.round(this.surface.surfaceHeight / 2 - this.surface.containerHeight * 0.25)
+      x: Math.round(this.surface.surfaceWidth * this.surface.CONFIG.LIMIT_SURFACE_WIDTH_FACTOR.VALUE - this.surface.containerWidth * this.surface.CONFIG.LIMIT_CONTAINER_WIDTH_FACTOR.VALUE),
+      y: Math.round(this.surface.surfaceHeight * this.surface.CONFIG.LIMIT_SURFACE_HEIGHT_FACTOR.VALUE - this.surface.containerHeight * this.surface.CONFIG.LIMIT_CONTAINER_HEIGHT_FACTOR.VALUE)
     };
   }
 
   public get min() : Coords {
     return {
-      x: this.limit.x * -1,
-      y: this.limit.y * -1
+      x: this.limit.x * -1 - this.surface.CONFIG.LIMIT_LEFT_OFFSET.VALUE,
+      y: this.limit.y * -1 - this.surface.CONFIG.LIMIT_TOP_OFFSET.VALUE
     };
   }
   public get max() : Coords {
     return {
-      x: this.limit.x,
-      y: this.limit.y
+      x: this.limit.x + this.surface.CONFIG.LIMIT_RIGHT_OFFSET.VALUE,
+      y: this.limit.y + this.surface.CONFIG.LIMIT_BOTTOM_OFFSET.VALUE
     };
   }
 

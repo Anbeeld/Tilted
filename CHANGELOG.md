@@ -1,3 +1,38 @@
+## 0.4.9
+
+- Added destroy() to release event listeners, observers, generated styles and registry entries when a Tilted instance is no longer needed.
+- Fixed dragging stopping when the pointer leaves the container during an active drag.
+- Fixed scaleGlideFactor having no effect on zoom gliding towards the pointer.
+- Improved public typings by exporting CustomConfig and ContentProps/ContentType, and by typing the constructor config parameter accordingly.
+- Added unit coverage for dragging, teardown cleanup, zoom glide factor and the public API surface.
+- Fixed config values set to 0 being silently ignored and replaced with their defaults.
+- Fixed deleteContent incorrectly handling removal when iterating over the contents list.
+- Fixed deleting a content element removing the 3D rendering context from sibling content elements that share the same parent.
+- Fixed ResizeObserver potentially firing before the surface position was initialized.
+- Fixed content factor set to 0 being silently ignored and replaced with the default.
+- Fixed surface transforms breaking when scaleMin and scaleMax are set to the same value.
+- Fixed scaleDefaultStep being out of range causing scale to be uninitialized.
+- Fixed edge movement animation continuing after the cursor leaves the container.
+- Fixed glideTo crashing due to a missing rounding guard when combining with an ongoing animation.
+- Fixed movement animation continuing to run after the surface reaches a position limit.
+- Fixed scale animation continuing to run after the surface reaches a scale limit.
+- Fixed a redundant animation being created when a new movement cancels out an ongoing one.
+- Fixed movement animation applying an incorrect zoom-based position adjustment after the zoom reached a scale limit and stopped early.
+- Fixed position limits inverting and locking the surface when it is smaller than the container.
+- Fixed wheel event listener being passive by default in modern browsers, causing page scroll during zoom interactions.
+- Fixed edge movement animation stutter on its first frame due to zero time delta.
+- Fixed glide animation stopping entirely when only one movement axis hits its limit instead of continuing on the unrestricted axis.
+- Fixed drag toss never triggering for very quick click-and-release drags when timestamps were not initialized.
+- Fixed division by zero risk from scale value when scaleMin is set to 0 by adding config validation.
+- Fixed inconsistent handling of edgeMoveEnabled config value.
+- Renamed singedSqrt to signedSqrt to fix typo.
+- Removed dead debug logging and unused utility code (MoveChain, coordsToDirections, roundTo).
+- Used ConfigPropertyType enum in CSS generation instead of string literals for type safety.
+- Replaced unsafe non-null assertions on Registry.surface() lookups with explicit runtime checks that throw descriptive errors.
+- Removed unnecessary executor initiate for SurfaceDrag animation.
+- Moved keyboard event listener from document.body to document for more reliable event capture.
+- Added guard to ResizeObserver callbacks to prevent operations on mid-destruction surfaces.
+
 ## 0.4.8
 
 - Added support for configurable offsets for surface position limits.

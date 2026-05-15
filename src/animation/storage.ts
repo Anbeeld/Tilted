@@ -15,7 +15,7 @@ export enum Animations {
 
 export class AnimationStorage {
   private surfaceId: number;
-  private get surface() { return Registry.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
   // @ts-ignore Doesn't understand setters and getters
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
@@ -61,7 +61,9 @@ export class AnimationStorage {
         this.createSurfaceDrag(...args);
         break;
     }
-    this.surface.animationExecutor.initiate();
+    if (animation !== Animations.SurfaceDrag) {
+      this.surface.animationExecutor.initiate();
+    }
   }
   public destroy(animation: Animations) : void {
     switch (animation) {

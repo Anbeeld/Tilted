@@ -5,7 +5,7 @@ import { Registry } from './registry.js';
 
 export default class Scale {
   private surfaceId: number;
-  private get surface() { return Registry.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surfaceRequired(this.surfaceId); }
   private steps: number[] = [];
   private shiftsToStep: {up: number, down: number}[] = [];
 
@@ -18,7 +18,8 @@ export default class Scale {
     this.surfaceId = surfaceId;
     this.steps = calculateSteps(this.surface.CONFIG.SCALE_MIN.VALUE, this.surface.CONFIG.SCALE_MAX.VALUE, this.surface.CONFIG.SCALE_NUM_STEPS.VALUE, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
     this.shiftsToStep = calculateShiftsToStep(this.steps, this.surface.CONFIG.SCALE_ROUNDING.VALUE);
-    this.value = this.steps[this.surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1]!;
+    const defaultStepIndex = Math.min(Math.max(this.surface.CONFIG.SCALE_DEFAULT_STEP.VALUE - 1, 0), this.steps.length - 1);
+    this.value = this.steps[defaultStepIndex]!;
 
     this.surface.updateRotate(this.value);
     this.setTransformValues(true);
@@ -134,6 +135,10 @@ export default class Scale {
     let newShift = shift;
     // Add remaining shift to get "combined" one
     shift += this.ongoing;
+    // Check if shift is zero
+    if (shift === 0) {
+      return false;
+    }
     // Calculate ratio of initial vs combined shift, clamped because we only want shorter animations
     let ratio = clampRatio(Math.abs(shift / initialShift));
     time = time * ratio;
@@ -155,12 +160,12 @@ export default class Scale {
   }
 
   public step(steps: number) : boolean {
-    let positive = steps > 0 ? true : false;
+    let positive = steps > 0;
     return this.surface.scale.zoom(steps * this.surface.scale.shiftToStep(positive)) !== false;
   }
   
   public stepAndGlide(steps: number, mouse: MouseParams|null = null) : void {
-    let positive = steps > 0 ? true : false;
+    let positive = steps > 0;
 
     if ((positive && this.projection === this.surface.CONFIG.SCALE_MAX.VALUE) || (!positive && this.projection === this.surface.CONFIG.SCALE_MIN.VALUE)) {
       return;
@@ -177,7 +182,7 @@ export default class Scale {
     if (zoom !== false && mouse !== null && !this.surface.animationStorage.exists(Animations.SurfaceEdge)) {
       let vector = this.glideToMouse(mouse, initialProjection, zoom.new);
 
-      let factor = Math.abs(zoom.new / initialShift);
+      let factor = Math.abs(zoom.new / initialShift) * this.surface.CONFIG.SCALE_GLIDE_FACTOR.VALUE;
       vector.x *= factor;
       vector.y *= factor;
 
@@ -191,7 +196,7 @@ export default class Scale {
   }
 
   private getDisplayedSurface(scale?: number, position?: Coords) {
-    if (!scale) {
+    if (scale === undefined) {
       scale = this.surface.scale.value;
     }
 

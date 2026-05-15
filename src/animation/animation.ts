@@ -1,12 +1,13 @@
 import { Registry } from '../registry.js';
 export default class Animation {
   private surfaceId: number;
-  protected get surface() { return Registry.surface(this.surfaceId)!; }
+  protected get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
   protected timestampStart: number = -1;
   protected timestampLast: number = -1;
 
   protected destroyed: boolean = false;
+  public get isDestroyed() { return this.destroyed; }
 
   constructor(surfaceId: number) {
     this.surfaceId = surfaceId;

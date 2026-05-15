@@ -4,7 +4,7 @@ import { Registry } from './registry.js';
 
 export default class Position {
   private surfaceId: number;
-  private get surface() { return Registry.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
   // @ts-ignore Doesn't understand setters and getters
   private _coords: Coords = {x: 0, y: 0};
@@ -17,8 +17,8 @@ export default class Position {
 
   public get limit() : Coords {
     return {
-      x: Math.round(this.surface.surfaceWidth * this.surface.CONFIG.LIMIT_SURFACE_WIDTH_FACTOR.VALUE - this.surface.containerWidth * this.surface.CONFIG.LIMIT_CONTAINER_WIDTH_FACTOR.VALUE),
-      y: Math.round(this.surface.surfaceHeight * this.surface.CONFIG.LIMIT_SURFACE_HEIGHT_FACTOR.VALUE - this.surface.containerHeight * this.surface.CONFIG.LIMIT_CONTAINER_HEIGHT_FACTOR.VALUE)
+      x: Math.max(0, Math.round(this.surface.surfaceWidth * this.surface.CONFIG.LIMIT_SURFACE_WIDTH_FACTOR.VALUE - this.surface.containerWidth * this.surface.CONFIG.LIMIT_CONTAINER_WIDTH_FACTOR.VALUE)),
+      y: Math.max(0, Math.round(this.surface.surfaceHeight * this.surface.CONFIG.LIMIT_SURFACE_HEIGHT_FACTOR.VALUE - this.surface.containerHeight * this.surface.CONFIG.LIMIT_CONTAINER_HEIGHT_FACTOR.VALUE))
     };
   }
 
@@ -97,10 +97,6 @@ export default class Position {
     if (this.coords.x === coords.x && this.coords.y === coords.y) {
       return false;
     }
-    false && this.surface.log([
-      {desc: 'moveTo coords.x', from: this.coords.x, to: coords.x},
-      {desc: 'moveTo coords.y', from: this.coords.y, to: coords.y}
-    ]);
     return this.move({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, -1, finalRounding);
   }
 
@@ -153,15 +149,21 @@ export default class Position {
     if (vector.x === 0 && vector.y === 0) {
       return false;
     }
-    // Log
-    false && this.surface.log([
-      {desc: 'glide coords.x', to: vector.x},
-      {desc: 'glide coords.y', to: vector.y}
-    ]);
     // Add remaining vector of current animation as it will get overwritten
-    vector = {
-      x: roundFloat(vector.x + this.ongoing.x, interimRounding),
-      y: roundFloat(vector.y + this.ongoing.y, interimRounding)
+    if (interimRounding >= 0) {
+      vector = {
+        x: roundFloat(vector.x + this.ongoing.x, interimRounding),
+        y: roundFloat(vector.y + this.ongoing.y, interimRounding)
+      }
+    } else {
+      vector = {
+        x: vector.x + this.ongoing.x,
+        y: vector.y + this.ongoing.y
+      }
+    }
+    // Check if vector is zero
+    if (vector.x === 0 && vector.y === 0) {
+      return false;
     }
     // Perform animation
     this.surface.animationStorage.create(Animations.SurfaceGlide, [{x: vector.x, y: vector.y}, time, easingFormula]);
@@ -179,10 +181,6 @@ export default class Position {
     if (this.coords.x === coords.x && this.coords.y === coords.y) {
       return false;
     }
-    false && this.surface.log([
-      {desc: 'glideTo coords.x', from: this.coords.x, to: coords.x},
-      {desc: 'glideTo coords.y', from: this.coords.y, to: coords.y}
-    ]);
     return this.glide({x: coords.x - this.coords.x, y: coords.y - this.coords.y}, time, easingFormula, -1, finalRounding);
   }
 

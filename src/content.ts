@@ -17,7 +17,7 @@ export class Content {
   private id: number;
 
   private surfaceId: number;
-  private get surface() { return Registry.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
   private type: ContentType;
   private factor: number;
@@ -33,7 +33,7 @@ export class Content {
     this.id = Registry.id();
     this.surfaceId = surfaceId;
     this.type = mangleProperty(props, 'type');
-    this.factor = mangleProperty(props, 'factor') || 1;
+    this.factor = mangleProperty(props, 'factor') ?? 1;
     this.element = mangleProperty(props, 'element');
 
     if (!this.surface.elements.transform.contains(this.element)) {
@@ -59,7 +59,7 @@ export class Content {
       if (!parentElement) {
         throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from content id ${this.id}`);
       }
-      parentElement.classList.add(this.surface.selectors.preverve3d);
+      parentElement.classList.add(this.surface.selectors.preserve3d);
       parentElement = parentElement.parentElement;
     }
   }
@@ -71,7 +71,7 @@ export class Content {
   private initStyle() : void {
     if (!this.style) {
       this.style = document.createElement("style");
-      this.style.classList.add(this.type == ContentType.Scene ? this.surface.selectors.cssScene : this.surface.selectors.cssFigure);
+      this.style.classList.add(this.type === ContentType.Scene ? this.surface.selectors.cssScene : this.surface.selectors.cssFigure);
       this.surface.addIdToDataset(this.style);
       this.addIdToDataset(this.style);
       document.head.appendChild(this.style);
@@ -94,7 +94,16 @@ export class Content {
     }
   }
 
-  public clearSideEffects() : void {
+  public usesParent(el: HTMLElement) : boolean {
+    let p: HTMLElement | null = this.type === ContentType.Scene ? this.element : this.element.parentElement;
+    while (p && p !== this.surface.elements.transform) {
+      if (p === el) return true;
+      p = p.parentElement;
+    }
+    return false;
+  }
+
+  public clearSideEffects(survivingContents: Content[] = []) : void {
     if (this.style) {
       this.style.remove();
     }
@@ -107,17 +116,20 @@ export class Content {
     this.element.removeAttribute('data-surface-id');
     this.element.removeAttribute('data-content-id');
 
-    let parentElement;
+    let parentElement: HTMLElement | null;
     if (this.type === ContentType.Scene) {
       parentElement = this.element;
-    } else if (this.type === ContentType.Figure) {
+    } else {
       parentElement = this.element.parentElement;
     }
     while (parentElement !== this.surface.elements.transform) {
       if (!parentElement) {
         throw new Error(`Couldn't reach Tilted id ${this.surface.id} transform element from content id ${this.id}`);
       }
-      parentElement.classList.remove(this.surface.selectors.preverve3d);
+      const stillNeeded = survivingContents.some(c => c !== this && c.usesParent(parentElement!));
+      if (!stillNeeded) {
+        parentElement.classList.remove(this.surface.selectors.preserve3d);
+      }
       parentElement = parentElement.parentElement;
     }
   }

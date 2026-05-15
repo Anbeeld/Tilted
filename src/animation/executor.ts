@@ -3,7 +3,7 @@ import { Animations } from './storage.js';
 
 export default class AnimationExecutor {
   private surfaceId: number;
-  private get surface() { return Registry.surface(this.surfaceId)!; }
+  private get surface() { return Registry.surface(this.surfaceId); }
 
   private isExecuting: boolean = false;
   
@@ -20,13 +20,19 @@ export default class AnimationExecutor {
 
   private step() : void {
     requestAnimationFrame((timestampCurrent) => {
+      let surface = this.surface;
+      if (!surface) {
+        this.isExecuting = false;
+        return;
+      }
+
       let continueSurfaceGlide = this.stepSurfaceGlide(timestampCurrent);
       let continueSurfaceZoom = this.stepSurfaceZoom(timestampCurrent);
       let continueSurfaceEdge = this.stepSurfaceEdge(timestampCurrent);
 
-      this.surface.applyTransformProperty();
+      surface.applyTransformProperty();
 
-      this.isExecuting = false || continueSurfaceGlide || continueSurfaceZoom || continueSurfaceEdge;
+      this.isExecuting = continueSurfaceGlide || continueSurfaceZoom || continueSurfaceEdge;
       if (this.isExecuting) {
         this.step();
       }
@@ -34,39 +40,42 @@ export default class AnimationExecutor {
   }
 
   private stepSurfaceGlide(timestampCurrent: number) {
-    if (!this.surface.animationStorage.exists(Animations.SurfaceGlide)) {
+    let surface = this.surface;
+    if (!surface || !surface.animationStorage.exists(Animations.SurfaceGlide)) {
       return false;
     }
 
-    let shouldContinue = this.surface.animationStorage.surfaceGlide!.step(timestampCurrent);
+    let shouldContinue = surface.animationStorage.surfaceGlide!.step(timestampCurrent);
     if (!shouldContinue) {
-      this.surface.animationStorage.destroy(Animations.SurfaceGlide);
+      surface.animationStorage.destroy(Animations.SurfaceGlide);
     }
     
     return shouldContinue;
   }
 
   private stepSurfaceZoom(timestampCurrent: number) {
-    if (!this.surface.animationStorage.exists(Animations.SurfaceZoom)) {
+    let surface = this.surface;
+    if (!surface || !surface.animationStorage.exists(Animations.SurfaceZoom)) {
       return false;
     }
 
-    let shouldContinue = this.surface.animationStorage.surfaceZoom!.step(timestampCurrent);
+    let shouldContinue = surface.animationStorage.surfaceZoom!.step(timestampCurrent);
     if (!shouldContinue) {
-      this.surface.animationStorage.destroy(Animations.SurfaceZoom);
+      surface.animationStorage.destroy(Animations.SurfaceZoom);
     }
     
     return shouldContinue;
   }
 
   private stepSurfaceEdge(timestampCurrent: number) : boolean {
-    if (!this.surface.animationStorage.exists(Animations.SurfaceEdge)) {
+    let surface = this.surface;
+    if (!surface || !surface.animationStorage.exists(Animations.SurfaceEdge)) {
       return false;
     }
 
-    let shouldContinue = this.surface.animationStorage.surfaceEdge!.step(timestampCurrent);
+    let shouldContinue = surface.animationStorage.surfaceEdge!.step(timestampCurrent);
     if (!shouldContinue) {
-      this.surface.animationStorage.destroy(Animations.SurfaceEdge);
+      surface.animationStorage.destroy(Animations.SurfaceEdge);
     }
     
     return shouldContinue;

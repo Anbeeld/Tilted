@@ -1,10 +1,8 @@
 import { MouseParams } from '../controls/mouse.js';
 import Animation from './animation.js';
 import { EasingFunctions } from '../utils.js';
-import { Registry } from '../registry.js';
 
 export default class AnimationSurfaceDrag extends Animation {
-  public id: number = Registry.id();
   private prev = {x: 0, y: 0};
   private cumulated = {x: 0, y: 0};
 
@@ -35,6 +33,9 @@ export default class AnimationSurfaceDrag extends Animation {
   }
 
   public override destroy() : void {
+    if (this.timestampStart < 0) {
+      this.initTimestamps();
+    }
     if (performance.now() - this.timestampStart < this.surface.CONFIG.DURATION_FOR_TOSS.VALUE) {
       this.toss();
     }

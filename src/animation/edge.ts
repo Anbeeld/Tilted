@@ -24,9 +24,11 @@ export default class AnimationSurfaceEdge extends Animation {
       return false;
     }
     
+    let isFirstStep = this.timestampStart < 0;
     this.initTimestamps(timestampCurrent);
 
-    let timeFactor = Math.max(1, (timestampCurrent - this.timestampLast)) / 10;
+    let deltaTime = isFirstStep ? 16.67 : (timestampCurrent - this.timestampLast);
+    let timeFactor = Math.max(1, deltaTime) / 10;
 
     let x = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE * this.vector.x / this.surface.scale.value * timeFactor;
     let y = this.surface.CONFIG.EDGE_MOVE_SPEED.VALUE  * this.vector.y / this.surface.scale.value * timeFactor;

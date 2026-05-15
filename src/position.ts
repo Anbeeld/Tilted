@@ -129,7 +129,7 @@ export default class Position {
         y: this.coords.y + vector.y
       }
     }
-    // Set vector = result - current, enforsing limits and final rounding
+    // Set vector = result - current, enforcing limits and final rounding
     vector = {
       x: clamp(result.x, this.min.x, this.max.x) - this.coords.x,
       y: clamp(result.y, this.min.y, this.max.y) - this.coords.y

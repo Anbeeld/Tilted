@@ -76,6 +76,6 @@ export function findClosestInArray(array: number[], value: number) : number {
   });
 }
 
-export function multiplyCssDegrees(value: string, multipler: number, rounding: number) : string {
-  return roundFloat(parseFloat(value.replace('deg', '')) * multipler, rounding) + 'deg';
+export function multiplyCssDegrees(value: string, multiplier: number, rounding: number) : string {
+  return roundFloat(parseFloat(value.replace('deg', '')) * multiplier, rounding) + 'deg';
 }

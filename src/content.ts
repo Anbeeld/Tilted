@@ -52,7 +52,7 @@ export class Content {
     let parentElement;
     if (this.type === ContentType.Scene) {
       parentElement = this.element;
-    } else if (this.type === ContentType.Figure) {
+    } else {
       parentElement = this.element.parentElement;
     }
     while (parentElement !== this.surface.elements.transform) {

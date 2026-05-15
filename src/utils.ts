@@ -1,30 +1,7 @@
 export type Coords = {x: number, y: number};
 
-export interface MoveChain {
-  uuid: string,
-  direction: {
-    x: Direction,
-    y: Direction
-  },
-  vector: {
-    x: number,
-    y: number
-  }
-}
-
 export function roundFloat(value: number, precision: number) : number {
   return parseFloat(value.toFixed(precision));
-}
-
-export function roundTo(value: number, precision: number) : number {
-  return Math.round(value / precision) * precision;
-}
-
-export function coordsToDirections(x: number, y: number) : {x: Direction, y: Direction} {
-  return {
-    x: x === 0 ? Direction.None : x < 0 ? Direction.Left : Direction.Right,
-    y: y === 0 ? Direction.None : y < 0 ? Direction.Top : Direction.Bottom
-  }
 }
 
 export enum Direction {
@@ -35,7 +12,7 @@ export enum Direction {
   None = 'none'
 }
 
-export function singedSqrt(value: number) : number {
+export function signedSqrt(value: number) : number {
   return Math.sign(value) * Math.sqrt(Math.abs(value));
 }
 
@@ -59,6 +36,8 @@ export function applyEasingFunction(x: number, easingFunction: EasingFunctions =
       return x;
     case EasingFunctions.EaseOutCirc:
       return Math.sqrt(1 - Math.pow(x - 1, 2));
+    default:
+      return x;
   }
 }
 

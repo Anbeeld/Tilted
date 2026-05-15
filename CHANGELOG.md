@@ -32,6 +32,11 @@
 - Removed unnecessary executor initiate for SurfaceDrag animation.
 - Moved keyboard event listener from document.body to document for more reliable event capture.
 - Added guard to ResizeObserver callbacks to prevent operations on mid-destruction surfaces.
+- Fixed scaleMin: 0 allowing division by zero in edge and drag animations and breaking logarithmic step calculation; validation now requires scaleMin > 0.
+- Guarded stepNumByValue against returning -1 from indexOf on floating-point edge cases.
+- Fixed typo in multiplyCssDegrees parameter name (multipler -> multiplier).
+- Fixed typo in Position.glide comment (enforsing -> enforcing).
+- Simplified Content constructor parent-walk branch to match clearSideEffects pattern.
 
 ## 0.4.8
 

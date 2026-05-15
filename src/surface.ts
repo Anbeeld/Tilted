@@ -1,5 +1,5 @@
 import { roundFloat, Coords } from './utils.js';
-import { Config, setupConfig } from './config.js';
+import { Config, setupConfig, CustomConfig } from './config.js';
 import { initControls } from './controls/controls.js';
 
 import AnimationExecutor from './animation/executor.js';
@@ -51,6 +51,9 @@ export default class Surface {
   public get elements() : SurfaceElements {return this._elements;}
 
   private styles: SurfaceStyles;
+  private cleanupControls: () => void = () => {};
+  private resizeObservers: ResizeObserver[] = [];
+  private destroyed: boolean = false;
 
   // @ts-ignore Doesn't understand setters and getters
   private _position: Position;
@@ -83,7 +86,7 @@ export default class Surface {
 
   private transform: Transform;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {}, contents: ContentProps[]) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: CustomConfig = {}, contents: ContentProps[]) {
     this.id = Registry.id();
     Registry.add(this);
     this.CONFIG = setupConfig(config);
@@ -104,30 +107,45 @@ export default class Surface {
     this.animationStorage = new AnimationStorage(this.id);
     this.animationExecutor = new AnimationExecutor(this.id);
 
-    initControls(this);
+    this.cleanupControls = initControls(this);
 
     this.updateViewport();
-    new ResizeObserver(() => {
-      this.updateCssGenerated();
-      this.updateViewport();
-      this.position.enforceLimits();
-    }).observe(this.elements.container);
-    new ResizeObserver(() => {
-      this.updateCssGenerated();
-      this.updateViewport();
-      this.position.enforceLimits();
-    }).observe(this.elements.surface);
 
     this.contents = [];
-    for (let contentProps of contents) {
-      this.addContent(contentProps);
-    }
 
     this.position = new Position(this.id);
 
     this.updatePerspective();
 
     this.scale = new Scale(this.id);
+
+    for (let contentProps of contents) {
+      this.addContent(contentProps);
+    }
+
+    let containerResizeObserver = new ResizeObserver(() => {
+      if (this.destroyed) return;
+      this.updateCssGenerated();
+      this.updateViewport();
+      this.position.enforceLimits();
+    });
+    containerResizeObserver.observe(this.elements.container);
+    this.resizeObservers.push(containerResizeObserver);
+
+    let surfaceResizeObserver = new ResizeObserver(() => {
+      if (this.destroyed) return;
+      this.updateCssGenerated();
+      this.updateViewport();
+      this.position.enforceLimits();
+    });
+    surfaceResizeObserver.observe(this.elements.surface);
+    this.resizeObservers.push(surfaceResizeObserver);
+  }
+
+  private assertNotDestroyed() : void {
+    if (this.destroyed) {
+      throw new Error('This Tilted surface has been destroyed');
+    }
   }
 
   public get selectors() {
@@ -136,7 +154,7 @@ export default class Surface {
       container: `${base}container`,
       viewport: `${base}viewport`,
       transform: `${base}transform`,
-      preverve3d: `${base}preserve-3d`,
+      preserve3d: `${base}preserve-3d`,
       surface: `${base}surface`,
       controls: `${base}controls`,
       controlsZoomIn: `${base}controls-zoom-in`,
@@ -165,7 +183,7 @@ export default class Surface {
 
     let elementTransform = document.createElement('div');
     elementTransform.classList.add(this.selectors.transform);
-    elementTransform.classList.add(this.selectors.preverve3d);
+    elementTransform.classList.add(this.selectors.preserve3d);
     this.addIdToDataset(elementTransform);
 
     elementSurface.classList.add(this.selectors.surface);
@@ -185,7 +203,7 @@ export default class Surface {
     this.addIdToDataset(elementControlsZoomOut);
     elementControls.appendChild(elementControlsZoomOut);
 
-    let children = new Array();
+    let children: Element[] = [];
     for (let child of elementContainer.children) {
       children.push(child);
     }
@@ -302,7 +320,8 @@ export default class Surface {
     if (scale === null) {
       scale = this.scale.value;
     }
-    let percentOfMaxScale = (scale - this.CONFIG.SCALE_MIN.VALUE) / (this.CONFIG.SCALE_MAX.VALUE - this.CONFIG.SCALE_MIN.VALUE);
+    const range = this.CONFIG.SCALE_MAX.VALUE - this.CONFIG.SCALE_MIN.VALUE;
+    let percentOfMaxScale = range === 0 ? 0 : (scale - this.CONFIG.SCALE_MIN.VALUE) / range;
     this.rotate = {
       x: roundFloat(this.CONFIG.TILT_MIN.VALUE + percentOfMaxScale * (this.CONFIG.TILT_MAX.VALUE - this.CONFIG.TILT_MIN.VALUE), this.CONFIG.TILT_ROUNDING.VALUE),
       y: 0
@@ -332,6 +351,7 @@ export default class Surface {
   }
 
   public addContent(properties: ContentProps) : Content {
+    this.assertNotDestroyed();
     let content = new Content(this.id, properties);
     this.contents.push(content);
     for (let transformProperty of this.transform.properties) {
@@ -343,18 +363,80 @@ export default class Surface {
   }
 
   public deleteContent(element: HTMLElement) : void {
-    for (let content of this.contents) {
-      if (content.element === element) {
-        content.clearSideEffects();
-        this.contents.splice(this.contents.indexOf(content), 1);
-      }
+    this.assertNotDestroyed();
+    const index = this.contents.findIndex(c => c.element === element);
+    if (index !== -1) {
+      this.contents[index]!.clearSideEffects(this.contents);
+      this.contents.splice(index, 1);
     }
   }
 
   public clearContents() : void {
+    this.assertNotDestroyed();
     for (let content of this.contents) {
       content.clearSideEffects();
     }
     this.contents = [];
+  }
+
+  public destroy() : void {
+    if (this.destroyed) {
+      return;
+    }
+    this.destroyed = true;
+
+    this.cleanupControls();
+    this.cleanupControls = () => {};
+
+    for (let observer of this.resizeObservers) {
+      observer.disconnect();
+    }
+    this.resizeObservers = [];
+
+    this.animationStorage.destroy(Animations.SurfaceDrag);
+    this.animationStorage.destroy(Animations.SurfaceEdge);
+    this.animationStorage.destroy(Animations.SurfaceGlide);
+    this.animationStorage.destroy(Animations.SurfaceZoom);
+
+    for (let content of this.contents) {
+      content.clearSideEffects();
+    }
+    this.contents = [];
+
+    this.styles.core.remove();
+    this.styles.generated.remove();
+
+    this.elements.container.classList.remove(this.selectors.container);
+    this.elements.container.removeAttribute('data-surface-id');
+    this.elements.surface.classList.remove(this.selectors.surface);
+    this.elements.surface.removeAttribute('data-surface-id');
+    this.elements.transform.classList.remove(this.selectors.transform);
+    this.elements.transform.classList.remove(this.selectors.preserve3d);
+    this.elements.transform.removeAttribute('data-surface-id');
+    this.elements.transform.style.transform = '';
+    this.elements.viewport.classList.remove(this.selectors.viewport);
+    this.elements.viewport.removeAttribute('data-surface-id');
+    this.elements.viewport.style.top = '';
+    this.elements.viewport.style.left = '';
+    this.elements.controls.classList.remove(this.selectors.controls);
+    this.elements.controls.removeAttribute('data-surface-id');
+    this.elements.controlsZoomIn.classList.remove(this.selectors.controlsZoomIn);
+    this.elements.controlsZoomIn.removeAttribute('data-surface-id');
+    this.elements.controlsZoomOut.classList.remove(this.selectors.controlsZoomOut);
+    this.elements.controlsZoomOut.removeAttribute('data-surface-id');
+
+    let transformChildren: HTMLElement[] = [];
+    for (let child of this.elements.transform.children) {
+      if (child instanceof HTMLElement) {
+        transformChildren.push(child);
+      }
+    }
+    for (let child of transformChildren) {
+      this.elements.container.appendChild(child);
+    }
+    this.elements.viewport.remove();
+    this.elements.controls.remove();
+
+    Registry.remove(this.id);
   }
 }

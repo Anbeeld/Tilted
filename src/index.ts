@@ -1,12 +1,16 @@
 import Surface from './surface.js';
 import { ContentProps } from './content.js';
+import { CustomConfig } from './config.js';
+
+export type { ContentProps } from './content.js';
+export { ContentType } from './content.js';
+export type { CustomConfig } from './config.js';
 
 export default class Tilted {
   private surface: Surface;
 
-  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: {} = {}, content: ContentProps[] = []) {
+  public constructor(elementContainer: HTMLElement, elementSurface: HTMLElement, config: CustomConfig = {}, content: ContentProps[] = []) {
     this.surface = new Surface(elementContainer, elementSurface, config, content);
-    this.surface;
   }
 
   public addContent(content: ContentProps) {
@@ -19,5 +23,9 @@ export default class Tilted {
 
   public clearContents() {
     this.surface.clearContents();
+  }
+
+  public destroy() {
+    this.surface.destroy();
   }
 }

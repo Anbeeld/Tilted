@@ -43,7 +43,8 @@ const webConfig = {
               reserved: [
                 'addContent',
                 'deleteContent',
-                'clearContents'
+                'clearContents',
+                'destroy'
               ]
             }
           }

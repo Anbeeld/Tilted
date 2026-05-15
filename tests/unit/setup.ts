@@ -10,19 +10,34 @@ const ResizeObserverMock = vi.fn(() => ({
 // Stub the global ResizeObserver
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
 
-// Create HTML structure required for Surface object
-const containerElement = document.createElement('div');
-const surfaceElement = document.createElement('div');
-containerElement.appendChild(surfaceElement);
+export function createElements(containerSize = { width: 3200, height: 1800 }, surfaceSize = { width: 1600, height: 900 }) {
+  const containerElement = document.createElement('div');
+  const surfaceElement = document.createElement('div');
+  containerElement.appendChild(surfaceElement);
+  document.body.appendChild(containerElement);
 
-// Set width and height of elements
-Object.defineProperties(containerElement, {
-  offsetWidth: { value: 3200 },
-  offsetHeight: { value: 1800 },
-});
-Object.defineProperties(surfaceElement, {
-  offsetWidth: { value: 1600 },
-  offsetHeight: { value: 900 },
-});
+  Object.defineProperties(containerElement, {
+    offsetWidth: { value: containerSize.width },
+    offsetHeight: { value: containerSize.height },
+  });
+  Object.defineProperties(surfaceElement, {
+    offsetWidth: { value: surfaceSize.width },
+    offsetHeight: { value: surfaceSize.height },
+  });
 
-export { containerElement, surfaceElement };
+  containerElement.getBoundingClientRect = () => ({
+    left: 0,
+    top: 0,
+    right: containerSize.width,
+    bottom: containerSize.height,
+    width: containerSize.width,
+    height: containerSize.height,
+    x: 0,
+    y: 0,
+    toJSON() {
+      return {};
+    },
+  });
+
+  return { containerElement, surfaceElement };
+}

@@ -37,7 +37,11 @@ export default class Scale {
   }
   
   private stepNumByValue(value?: number): number {
-    return this.steps.indexOf(findClosestInArray(this.steps, value ?? this.value));
+    let index = this.steps.indexOf(findClosestInArray(this.steps, value ?? this.value));
+    if (index < 0) {
+      index = 0;
+    }
+    return index;
   }
 
   private shiftToStep(positive: boolean, value?: number) : number {

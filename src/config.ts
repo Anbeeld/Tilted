@@ -235,8 +235,8 @@ export function setupConfig(custom: CustomConfig) : Config {
     }
   };
 
-  if (CONFIG.SCALE_MIN.VALUE < 0) {
-    throw new Error(`scaleMin must be >= 0, got ${CONFIG.SCALE_MIN.VALUE}`);
+  if (CONFIG.SCALE_MIN.VALUE <= 0) {
+    throw new Error(`scaleMin must be > 0, got ${CONFIG.SCALE_MIN.VALUE}`);
   }
   if (CONFIG.SCALE_MAX.VALUE <= 0) {
     throw new Error(`scaleMax must be > 0, got ${CONFIG.SCALE_MAX.VALUE}`);

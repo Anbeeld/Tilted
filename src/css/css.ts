@@ -1,4 +1,5 @@
 import Surface from '../surface.js';
+import { ConfigPropertyType } from '../config.js';
 
 export function cssGenerated(surface: Surface) {
   let template = (name: string, value: number) => {
@@ -21,11 +22,11 @@ export function cssCore(surface: Surface) {
 
   for (const parameter in (surface.CONFIG as any)) {
     let measure = '';
-    if ((surface.CONFIG as any)[parameter].TYPE === 'length') {
+    if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Length) {
       measure = 'px';
-    } else if ((surface.CONFIG as any)[parameter].TYPE === 'angle') {
+    } else if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Angle) {
       measure = 'deg';
-    } else if ((surface.CONFIG as any)[parameter].TYPE === 'time') {
+    } else if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Time) {
       measure = 'ms';
     }
 
@@ -133,7 +134,7 @@ export function cssCore(surface: Surface) {
   `.${surface.selectors.figure}${surface.selectors.surfaceId}{` +
     `transform-origin:bottom;` +
   `}` +
-  `.${surface.selectors.preverve3d}${surface.selectors.surfaceId}{` +
+  `.${surface.selectors.preserve3d}${surface.selectors.surfaceId}{` +
     `transform-style:preserve-3d;` +
   `}`;
 

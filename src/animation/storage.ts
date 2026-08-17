@@ -17,22 +17,18 @@ export class AnimationStorage {
   private surfaceId: number;
   private get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
-  // @ts-ignore Doesn't understand setters and getters
   private _surfaceGlide: AnimationSurfaceGlide | null = null;
   private set surfaceGlide(value: AnimationSurfaceGlide | null) { this._surfaceGlide = value; }
   public get surfaceGlide() : AnimationSurfaceGlide | null { return this._surfaceGlide; }
 
-  // @ts-ignore Doesn't understand setters and getters
   private _surfaceZoom: AnimationSurfaceZoom | null = null;
   private set surfaceZoom(value: AnimationSurfaceZoom | null) { this._surfaceZoom = value; }
   public get surfaceZoom() : AnimationSurfaceZoom | null { return this._surfaceZoom; }
 
-  // @ts-ignore Doesn't understand setters and getters
   private _surfaceEdge: AnimationSurfaceEdge | null = null;
   private set surfaceEdge(value: AnimationSurfaceEdge | null) { this._surfaceEdge = value; }
   public get surfaceEdge() : AnimationSurfaceEdge | null { return this._surfaceEdge; }
 
-  // @ts-ignore Doesn't understand setters and getters
   private _surfaceDrag: AnimationSurfaceDrag | null = null;
   private set surfaceDrag(value: AnimationSurfaceDrag | null) { this._surfaceDrag = value; }
   public get surfaceDrag() : AnimationSurfaceDrag | null { return this._surfaceDrag; }
@@ -45,20 +41,16 @@ export class AnimationStorage {
   public create(animation: Animations, args: any) : void {
     switch (animation) {
       case Animations.SurfaceGlide:
-        // @ts-ignore
-        this.createSurfaceGlide(...args);
+        this.createSurfaceGlide(...(args as [Coords, number, EasingFunctions]));
         break;
       case Animations.SurfaceZoom:
-        // @ts-ignore
-        this.createSurfaceZoom(...args);
+        this.createSurfaceZoom(...(args as [number, number, EasingFunctions]));
         break;
       case Animations.SurfaceEdge:
-        // @ts-ignore
-        this.createSurfaceEdge(...args);
+        this.createSurfaceEdge(...(args as [Coords]));
         break;
       case Animations.SurfaceDrag:
-        // @ts-ignore
-        this.createSurfaceDrag(...args);
+        this.createSurfaceDrag(...(args as [MouseParams]));
         break;
     }
     if (animation !== Animations.SurfaceDrag) {

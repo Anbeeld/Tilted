@@ -17,21 +17,37 @@ export function cssGenerated(surface: Surface) {
   template('surface-height', surface.surfaceHeight);
 }
 
+function getSyntaxToken(type: ConfigPropertyType): string {
+  switch (type) {
+    case ConfigPropertyType.Angle: return '<angle>';
+    case ConfigPropertyType.Color: return '<color>';
+    case ConfigPropertyType.Integer: return '<integer>';
+    case ConfigPropertyType.Number: return '<number>';
+    case ConfigPropertyType.Length: return '<length>';
+    case ConfigPropertyType.Time: return '<time>';
+    default: return '<number>';
+  }
+}
+
+function getMeasure(type: ConfigPropertyType): string {
+  switch (type) {
+    case ConfigPropertyType.Angle: return 'deg';
+    case ConfigPropertyType.Length: return 'px';
+    case ConfigPropertyType.Time: return 'ms';
+    default: return '';
+  }
+}
+
 export function cssCore(surface: Surface) {
   let string = '';
 
   for (const parameter in (surface.CONFIG as any)) {
-    let measure = '';
-    if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Length) {
-      measure = 'px';
-    } else if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Angle) {
-      measure = 'deg';
-    } else if ((surface.CONFIG as any)[parameter].TYPE === ConfigPropertyType.Time) {
-      measure = 'ms';
-    }
+    const type = (surface.CONFIG as any)[parameter].TYPE as ConfigPropertyType;
+    const measure = getMeasure(type);
+    const syntaxToken = getSyntaxToken(type);
 
     string += `@property --${parameter} { `;
-    string += `syntax:"<${(surface.CONFIG as any)[parameter].TYPE}>"; `;
+    string += `syntax:"${syntaxToken}"; `;
     string += `inherits:true; `;
     string += `initial-value:${(surface.CONFIG as any)[parameter].VALUE}${measure}; } `;
   }

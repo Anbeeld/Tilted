@@ -23,7 +23,7 @@ It goes well with my other library, [Elemap](https://github.com/Anbeeld/Elemap),
 
 ## Installation
 
-`npm i tilted` or grab [JS dist file](https://github.com/Anbeeld/Tilted/tree/main/dist) from GitHub repo.
+`npm i tilted` or grab the JS dist file from the [GitHub Releases](https://github.com/Anbeeld/Tilted/releases).
 
 ## Usage
 

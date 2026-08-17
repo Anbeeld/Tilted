@@ -38,15 +38,13 @@ type TransformProperty = {
 }
 
 export default class Surface {
-  // @ts-ignore Doesn't understand setters and getters
-  private _id: number;
+  private _id!: number;
   private set id(value: number) { this._id = value; }
   public get id() : number {return this._id;}
 
   public readonly CONFIG: Config;
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _elements: SurfaceElements;
+  private _elements!: SurfaceElements;
   private set elements(value: SurfaceElements) { this._elements = value; }
   public get elements() : SurfaceElements {return this._elements;}
 
@@ -55,31 +53,26 @@ export default class Surface {
   private resizeObservers: ResizeObserver[] = [];
   private destroyed: boolean = false;
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _position: Position;
+  private _position!: Position;
   private set position(value: Position) { this._position = value; }
   public get position() : Position {return this._position;}
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _scale: Scale;
+  private _scale!: Scale;
   private set scale(value: Scale) { this._scale = value; }
   public get scale() : Scale {return this._scale;}
 
   private contents: Content[];
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _animationExecutor: AnimationExecutor;
+  private _animationExecutor!: AnimationExecutor;
   private set animationExecutor(value: AnimationExecutor) { this._animationExecutor = value; }
   public get animationExecutor() : AnimationExecutor {return this._animationExecutor;}
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _animationStorage: AnimationStorage;
+  private _animationStorage!: AnimationStorage;
   private set animationStorage(value: AnimationStorage) { this._animationStorage = value; }
   public get animationStorage() : AnimationStorage {return this._animationStorage;}
 
   private viewport: Coords = {x: 0, y: 0};
 
-  // @ts-ignore Doesn't understand setters and getters
   private _rotate: Coords = {x: 0, y: 0};
   private set rotate(value: Coords) { this._rotate = value; }
   public get rotate() : Coords { return this._rotate; }
@@ -326,24 +319,6 @@ export default class Surface {
       x: roundFloat(this.CONFIG.TILT_MIN.VALUE + percentOfMaxScale * (this.CONFIG.TILT_MAX.VALUE - this.CONFIG.TILT_MIN.VALUE), this.CONFIG.TILT_ROUNDING.VALUE),
       y: 0
     }
-  }
-
-  public log(changes: {desc: string, from?: number, to?: number}[]|false = false) : void {
-    let changesString = '';
-    if (changes) {
-      for (let change of changes) {
-        changesString += change.desc + (change.from !== undefined ? ' from ' + change.from : '') + (change.to !== undefined ? ' to ' + change.to : '') + '\n';
-      }
-    }
-
-    console.log(
-      changesString +
-      `x: ${this.position.coords.x}\n` +
-      `y: ${this.position.coords.y}\n` +
-      `limit.x: ${this.position.limit.x}\n` +
-      `limit.y: ${this.position.limit.y}\n` +
-      `scale: ${this.scale.value}`
-    );
   }
 
   public cancelOngoingMoves() : void {

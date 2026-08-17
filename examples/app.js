@@ -3,115 +3,57 @@ const portHttp = 8080;
 
 import * as fs from 'fs';
 import * as http from 'http';
+import * as path from 'path';
+
+const rootDir = process.cwd();
+const safeRoot = path.resolve(rootDir);
+
+function sendFile(filePath, contentType, res) {
+  const full = path.resolve(safeRoot, filePath);
+  if (!full.startsWith(safeRoot)) {
+    res.statusCode = 403;
+    res.end('Forbidden.');
+    return;
+  }
+  fs.readFile(full, function(err, data) {
+    if (err) {
+      res.statusCode = err.code === 'ENOENT' ? 404 : 500;
+      res.end(err.code === 'ENOENT' ? 'Not found.' : 'Internal server error.');
+    } else {
+      res.setHeader('Content-type', contentType);
+      res.writeHead(200);
+      res.end(data);
+    }
+  });
+}
 
 const server = http.createServer((req, res) => {
   if (req.url === '/main.css') {
-    fs.readFile('./examples/main.css', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/css');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples/main.css', 'text/css', res);
     return;
   } else if (req.url === '/js/tilted.js') {
-    fs.readFile('./dist/tilted.js', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/javascript');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./dist/tilted.js', 'text/javascript', res);
     return;
   } else if (req.url.startsWith('/js/') && req.url.endsWith('.js')) {
-    fs.readFile('./examples' + req.url, function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/javascript');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples' + req.url, 'text/javascript', res);
     return;
   } else if (req.url.startsWith('/tilted/world-map/') && req.url.endsWith('.jpg')) {
-    fs.readFile('./' + req.url.replace('/tilted/', '/examples/'), function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'image/jpeg');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./' + req.url.replace('/tilted/', '/examples/'), 'image/jpeg', res);
     return;
   } else if (req.url.startsWith('/tilted/world-map/') && req.url.endsWith('.png')) {
-    fs.readFile('./' + req.url.replace('/tilted/', '/examples/'), function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'image/png');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./' + req.url.replace('/tilted/', '/examples/'), 'image/png', res);
     return;
   } else if (req.url === '/tile-map') {
-    fs.readFile('./examples/tile-map.html', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/html');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples/tile-map.html', 'text/html', res);
     return;
   } else if (req.url === '/world-map') {
-    fs.readFile('./examples/world-map.html', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/html');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples/world-map.html', 'text/html', res);
     return;
   } else if (req.url === '/elemap') {
-    fs.readFile('./examples/elemap.html', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/html');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples/elemap.html', 'text/html', res);
     return;
   } else if (req.url === '/') {
-    fs.readFile('./examples/index.html', function(err, data) {
-      if (err) {
-        res.statusCode = 500;
-        res.end(`Error getting the file: ${err}.`);
-      } else {
-        res.setHeader('Content-type', 'text/html');
-        res.writeHead(200);
-        res.end(data);
-      }
-    });
+    sendFile('./examples/index.html', 'text/html', res);
     return;
   } else {
     res.writeHead(404);
@@ -121,5 +63,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(portHttp, hostname, () => {
-  console.log(`Server running at https://${hostname}:${portHttp}/`);
+  console.log(`Server running at http://${hostname}:${portHttp}/`);
 });

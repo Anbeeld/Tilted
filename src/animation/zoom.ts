@@ -2,8 +2,7 @@ import { roundFloat, clampRatio, EasingFunctions, applyEasingFunction } from '..
 import Animation from './animation.js';
 
 export default class AnimationSurfaceZoom extends Animation {
-  // @ts-ignore Doesn't understand setters and getters
-  private _initial: number;
+  private _initial!: number;
   private set initial(value: number) { this._initial = value; }
   public get initial() { return this._initial; }
 

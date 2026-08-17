@@ -9,8 +9,7 @@ export default class Scale {
   private steps: number[] = [];
   private shiftsToStep: {up: number, down: number}[] = [];
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _value: number;
+  private _value!: number;
   private set value(value: number) { this._value = value; }
   public get value() { return this._value; }
 

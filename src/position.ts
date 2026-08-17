@@ -6,7 +6,6 @@ export default class Position {
   private surfaceId: number;
   private get surface() { return Registry.surfaceRequired(this.surfaceId); }
 
-  // @ts-ignore Doesn't understand setters and getters
   private _coords: Coords = {x: 0, y: 0};
   private set coords(value: Coords) { this._coords = value; }
   public get coords() : Coords { return this._coords; }

@@ -37,6 +37,13 @@
 - Fixed typo in multiplyCssDegrees parameter name (multipler -> multiplier).
 - Fixed typo in Position.glide comment (enforsing -> enforcing).
 - Simplified Content constructor parent-walk branch to match clearSideEffects pattern.
+- Fixed path traversal and error detail leakage in the examples dev server by restricting file paths to the project root and returning generic error responses.
+- Fixed the examples dev server reporting an HTTPS URL for an HTTP server.
+- Fixed invalid @property syntax tokens generated for CSS custom properties by mapping config property types to valid CSS syntax values.
+- Removed the leftover debug log() method from the Surface class.
+- Removed redundant @ts-ignore comments for accessors and spread arguments, using definite assignment and typed casts where needed.
+- Added dist/ to .gitignore and updated README to direct users to GitHub Releases for the JS dist file.
+- Removed dist/tilted.js from version control.
 
 ## 0.4.8
 

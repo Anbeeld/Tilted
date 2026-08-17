@@ -22,8 +22,7 @@ export class Content {
   private type: ContentType;
   private factor: number;
 
-  // @ts-ignore Doesn't understand setters and getters
-  private _element: HTMLElement;
+  private _element!: HTMLElement;
   private set element(value: HTMLElement) { this._element = value; }
   public get element() { return this._element; }
 
